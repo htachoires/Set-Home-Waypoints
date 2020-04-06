@@ -1,0 +1,46 @@
+## Based on GitHub's Eclipse .gitignore
+
+run/
+.gradle/
+build/
+gradle-app.setting
+
+## Eclipse
+/usercache.json
+/usernamecache.json
+eclipse/
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+/debug/
+*.lock
+/config/
+/crash-reports/
+/logs/
+options.txt
+/saves/
+/design
+/classes/
+/bin/
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
