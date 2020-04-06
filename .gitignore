@@ -22,7 +22,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+/mods/
 /debug/
 *.lock
 /config/

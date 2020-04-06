@@ -1,0 +1,16 @@
+[
+{
+  "modid": "shw",
+  "name": "Set Home & Waypoints",
+  "description": "Add home and waypoints to teleport through the world !",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/htachoires",
+  "updateUrl": "",
+  "authorList": ["Hugo Tachoires"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
