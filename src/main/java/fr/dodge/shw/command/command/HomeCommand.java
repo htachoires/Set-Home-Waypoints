@@ -1,6 +1,7 @@
 package fr.dodge.shw.command.command;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import fr.dodge.shw.Reference;
 import fr.dodge.shw.command.view.HomeCommandView;
@@ -19,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -42,19 +44,21 @@ public class HomeCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (!(sender instanceof EntityPlayer)) {
-			System.err.println("Only player can use this command.");
+			TextComponentTranslation wrongSender = new TextComponentTranslation("commands.shw.error_sender");
+			sender.sendMessage(wrongSender);
 			return;
 		}
 
 		EntityPlayer player = (EntityPlayer) sender;
 		NBTTagCompound tag = player.getEntityData();
 		HomeCommandView view = new HomeCommandView(player);
-
+		
 		long date = tag.getLong(SetHomeCommand.prefixDate + "date");
 		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.homeConfig.COOLDOWN;
 
 		if (cooldownRemaining < 0) {
-			view.messageCooldown(player, cooldownRemaining, SHWConfiguration.homeConfig.COOLDOWN, COMMAND);
+			view.messageCooldown(player, TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining),
+					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.homeConfig.COOLDOWN), COMMAND);
 			return;
 		}
 
@@ -62,7 +66,7 @@ public class HomeCommand extends CommandBase {
 
 		if (!position.isEmpty()) {
 			tag.setLong(SetHomeCommand.prefixDate + "date", new Date().getTime());
-			TextComponentString success = new TextComponentString("Teleporting to your home...");
+			TextComponentTranslation success = new TextComponentTranslation("commands.shw.home.teleport");
 			ITextComponent result = CommandManager.teleportPlayer(server, sender, position, success);
 			if (!success.equals(result))
 				view.sendMessage(result);

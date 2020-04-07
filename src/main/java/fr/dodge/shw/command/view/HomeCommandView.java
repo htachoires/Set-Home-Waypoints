@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -20,17 +21,15 @@ public class HomeCommandView extends CommandView {
 	}
 
 	public void messageSetHomeBefore(EntityPlayer player) {
-		String[] message = new String[] { "Use ", '/' + SetHomeCommand.COMMAND, " to create you home point" };
+		String[] message = new String[] { "commands.shw.use", '/' + SetHomeCommand.COMMAND, "commands.shw.home.create" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString link = new TextComponentString(message[1]);
-		TextComponentString end = new TextComponentString(message[2]);
+		TextComponentTranslation use = new TextComponentTranslation(message[0]);
+		TextComponentString command = new TextComponentString(message[1]);
+		TextComponentTranslation create = new TextComponentTranslation(message[2]);
 
-		link.setStyle(StyleCommand.link("Want to set your home ?", SetHomeCommand.COMMAND));
+		command.setStyle(StyleCommand.command("commands.shw.home.ask_set_home", SetHomeCommand.COMMAND));
 
-		start.appendSibling(link);
-		start.appendSibling(end);
-		player.sendMessage(start);
+		player.sendMessage(use.appendSibling(command).appendSibling(create));
 	}
 
 }

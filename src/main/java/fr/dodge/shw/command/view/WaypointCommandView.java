@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 
@@ -22,114 +23,123 @@ public class WaypointCommandView extends CommandView {
 	}
 
 	public void messageSuccessAddWaypoint(EntityPlayerMP player, String name) {
-		String[] message = new String[] { "Your waypoint has been added !\n", "Use ",
+		String[] message = new String[] { "commands.shw.wp.success_waypoint", "commands.shw.use",
 				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, name),
-				" to teleport at this waypoint" };
+				"commands.shw.wp.to_teleport_at" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString after = new TextComponentString(message[1]);
-		TextComponentString link = new TextComponentString(message[2]);
-		TextComponentString end = new TextComponentString(message[3]);
+		TextComponentTranslation success = new TextComponentTranslation(message[0]);
+		TextComponentTranslation use = new TextComponentTranslation(message[1]);
+		TextComponentString command = new TextComponentString(message[2]);
+		TextComponentTranslation toTeleportAt = new TextComponentTranslation(message[3]);
 
-		start.setStyle((new Style().setColor(TextFormatting.GREEN)));
-		after.setStyle(new Style().setColor(TextFormatting.WHITE));
-		link.setStyle(StyleCommand.link("To use this waypoint", message[2]));
+		success.setStyle((new Style().setColor(TextFormatting.GREEN)));
+		use.setStyle(new Style().setColor(TextFormatting.WHITE));
+		command.setStyle(StyleCommand.command("commands.shw.wp.to_use_waypoint", message[2]));
 
-		player.sendMessage(start.appendSibling(after.appendSibling(link).appendSibling(end)));
+		success.appendText("\n");
+
+		player.sendMessage(success.appendSibling(use.appendSibling(command).appendSibling(toTeleportAt)));
 	}
 
 	public void messageErrorRemove(EntityPlayerMP player, String name) {
-		String[] message = new String[] { "Cannot remove waypoint ", "<", name, ">. ", "It hasn't been set yet" };
+		String[] message = new String[] { "commands.shw.wp.cannot_remove", "<", name, ">. ",
+				"commands.shw.wp.not_set_yet" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString after = new TextComponentString(message[1]);
-		TextComponentString tName = new TextComponentString(message[2]);
-		TextComponentString middle = new TextComponentString(message[3]);
-		TextComponentString end = new TextComponentString(message[4]);
+		TextComponentTranslation cannotRemove = new TextComponentTranslation(message[0]);
+		TextComponentString separatorLeft = new TextComponentString(message[1]);
+		TextComponentString invalidName = new TextComponentString(message[2]);
+		TextComponentString separatorRight = new TextComponentString(message[3]);
+		TextComponentString notSetYet = new TextComponentString(message[4]);
 
-		tName.setStyle(StyleCommand.link("To add this waypoint",
-				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.add, message[2])));
+		invalidName.setStyle(StyleCommand.command("commands.shw.wp.ask_set",
+				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.set, message[2])));
 
-		start.setStyle((new Style().setColor(TextFormatting.RED)));
-		after.setStyle(new Style().setColor(TextFormatting.WHITE));
+		cannotRemove.setStyle((new Style().setColor(TextFormatting.RED)));
+		separatorLeft.setStyle(new Style().setColor(TextFormatting.WHITE));
 
-		player.sendMessage(start.appendSibling(after.appendSibling(tName).appendSibling(middle).appendSibling(end)));
+		player.sendMessage(cannotRemove.appendSibling(
+				separatorLeft.appendSibling(invalidName).appendSibling(separatorRight).appendSibling(notSetYet)));
 	}
 
 	public void messageSuccessRemove(EntityPlayerMP player, String name) {
-		String[] message = new String[] { "Waypoint '" + name + "' has been removed" };
-		TextComponentString start = new TextComponentString(message[0]);
-		start.setStyle(new Style().setColor(TextFormatting.GREEN));
-		player.sendMessage(start);
+		String[] message = new String[] { "commands.shw.wp.success_remove" };
+
+		TextComponentTranslation success = new TextComponentTranslation(message[0], name);
+		success.setStyle(new Style().setColor(TextFormatting.GREEN));
+
+		player.sendMessage(success);
 	}
 
 	public void messageErrorInvalidName(EntityPlayerMP player, String name) {
-		String[] message = new String[] { "Cannot use ", name, " has waypoint name\n",
-				"Hover '" + name + "' for more details" };
+		String[] message = new String[] { "commands.shw.wp.cannot_use", name, "commands.shw.wp.as_waypoint_name",
+				"commands.wp.hover_for_details" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString fName = new TextComponentString(message[1]);
-		TextComponentString end = new TextComponentString(message[2]);
-		TextComponentString hover = new TextComponentString(message[3]);
+		TextComponentTranslation cannotUse = new TextComponentTranslation(message[0]);
+		TextComponentString invalidName = new TextComponentString(message[1]);
+		TextComponentTranslation end = new TextComponentTranslation(message[2]);
+		TextComponentTranslation hoverTextC = new TextComponentTranslation(message[3], name);
 
 		StringJoiner fNames = new StringJoiner(", ");
 		for (String n : WaypointCommand.commandArgs) {
 			fNames.add(n);
 		}
 
-		hover.setStyle(new Style().setColor(TextFormatting.GRAY));
+		hoverTextC.setStyle(new Style().setColor(TextFormatting.GRAY));
 
-		fName.setStyle(new Style().setColor(TextFormatting.RED).setHoverEvent(new HoverEvent(
+		invalidName.setStyle(new Style().setColor(TextFormatting.RED).setHoverEvent(new HoverEvent(
 				HoverEvent.Action.SHOW_TEXT,
 				(new TextComponentString(WaypointCommand.pattern + "\n")
 						.setStyle(new Style().setColor(TextFormatting.GREEN)))
 								.appendSibling((new TextComponentString(fNames.toString())
 										.setStyle(new Style().setStrikethrough(true).setColor(TextFormatting.RED)))))));
-
-		player.sendMessage(start.appendSibling(fName).appendSibling(end).appendSibling(hover));
+		end.appendText("\n");
+		player.sendMessage(cannotUse.appendSibling(invalidName).appendSibling(end).appendSibling(hoverTextC));
 	}
 
 	public void messageErrorUsing(EntityPlayerMP player, String command) {
-		String[] message = new String[] { "Usage: ", String.format("/%s %s ", WaypointCommand.COMMAND, command),
-				"<name>" };
+		String[] message = new String[] { "commands.shw.usage",
+				String.format("/%s %s ", WaypointCommand.COMMAND, command), "commands.shw.name_var" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString link = new TextComponentString(message[1]);
-		TextComponentString end = new TextComponentString(message[2]);
+		TextComponentTranslation usage = new TextComponentTranslation(message[0]);
+		TextComponentString commandTextC = new TextComponentString(message[1]);
+		TextComponentTranslation variable = new TextComponentTranslation(message[2]);
 
-		start.setStyle(new Style().setColor(TextFormatting.GREEN));
-		link.setStyle(StyleCommand.link("To correct your command", message[1]));
-		end.setStyle(new Style().setColor(TextFormatting.WHITE));
+		usage.setStyle(new Style().setColor(TextFormatting.GREEN));
+		commandTextC.setStyle(StyleCommand.command("commands.shw.correct_command", message[1]));
+		variable.setStyle(new Style().setColor(TextFormatting.WHITE));
 
-		player.sendMessage(start.appendSibling(link).appendSibling(end));
+		player.sendMessage(usage.appendSibling(commandTextC).appendSibling(variable));
 	}
 
-	public void messageListWaypoint(EntityPlayerMP player, Set<String> wp) {
+	public void messageListWaypoint(EntityPlayerMP player, Set<String> waypoints) {
 		String[] message = new String[] { String.format("/%s %s [ ", WaypointCommand.COMMAND, WaypointCommand.use),
 				"]" };
 
-		ArrayList<ITextComponent> textWps = new ArrayList<>();
+		ArrayList<ITextComponent> waypointsTextC = new ArrayList<>();
 		String separator = ", ";
 		String space = " ";
-		for (String sWp : wp) {
-			TextComponentString link = new TextComponentString(sWp);
-			TextComponentString coma = new TextComponentString(
-					(textWps.size() + 2 < wp.size() * 2 ? separator : space));
-			link.setStyle(StyleCommand.link("To teleport at this waypoint",
-					String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, sWp)));
-			coma.setStyle(new Style().setColor(TextFormatting.WHITE));
-			textWps.add(link);
-			textWps.add(coma);
+		for (String waypoint : waypoints) {
+			TextComponentString command = new TextComponentString(waypoint);
+
+			command.setStyle(StyleCommand.command("commands.shw.wp.To_teleport_at",
+					String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, waypoint)));
+
+			TextComponentString comma = new TextComponentString(
+					(waypointsTextC.size() + 2 < waypoints.size() * 2 ? separator : space));
+			comma.setStyle(new Style().setColor(TextFormatting.WHITE));
+
+			waypointsTextC.add(command);
+			waypointsTextC.add(comma);
 		}
-		TextComponentString start = new TextComponentString(message[0]);
+		TextComponentString startTextC = new TextComponentString(message[0]);
 
-		for (ITextComponent textWp : textWps) {
-			start.appendSibling(textWp);
+		for (ITextComponent waypointTextC : waypointsTextC) {
+			startTextC.appendSibling(waypointTextC);
 		}
 
-		TextComponentString end = new TextComponentString(message[1]);
+		TextComponentString endListTextC = new TextComponentString(message[1]);
 
-		player.sendMessage(start.appendSibling(end));
+		player.sendMessage(startTextC.appendSibling(endListTextC));
 	}
 
 	public void messageHelp() {
@@ -143,9 +153,9 @@ public class WaypointCommandView extends CommandView {
 				String.format("\n%s %s %s", limit, Reference.NAME, limit));
 		textStartLimit.setStyle(new Style().setColor(TextFormatting.GREEN));
 
-		TextComponentString add = new TextComponentString(
-				String.format(patternWithArg + "\n", WaypointCommand.add + '/' + WaypointCommand.set));
-		add.setStyle(new Style().setColor(TextFormatting.WHITE));
+		TextComponentString set = new TextComponentString(
+				String.format(patternWithArg + "\n", WaypointCommand.set + '/' + WaypointCommand.set));
+		set.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 		TextComponentString use = new TextComponentString(String.format(patternWithArg + "\n", WaypointCommand.use));
 
@@ -156,24 +166,24 @@ public class WaypointCommandView extends CommandView {
 		TextComponentString help = new TextComponentString(String.format(pattern, WaypointCommand.help));
 
 		sendMessage(textStartLimit
-				.appendSibling(add.appendSibling(use).appendSibling(remove).appendSibling(list).appendSibling(help))
+				.appendSibling(set.appendSibling(use).appendSibling(remove).appendSibling(list).appendSibling(help))
 				.appendSibling(textEndLimit));
 	}
 
 	public void messageMaxWaypoints() {
-		String[] message = new String[] { "You reach the limit of waypoints (%s) ! Cannot add a new one" };
-		TextComponentString start = new TextComponentString(
-				String.format(message[0], SHWConfiguration.waypointsConfig.MAX_WAYPOINTS));
-		start.setStyle(new Style().setColor(TextFormatting.RED));
-		sendMessage(start);
+		String[] message = new String[] { "commands.shw.wp.max" };
+		TextComponentTranslation errorMax = new TextComponentTranslation(message[0],
+				SHWConfiguration.waypointsConfig.MAX_WAYPOINTS);
+		errorMax.setStyle(new Style().setColor(TextFormatting.RED));
+		sendMessage(errorMax);
 	}
 
 	public ITextComponent messageTeleportingTo(String name) {
-		String[] message = new String[] { "Teleporting to ", name };
+		String[] message = new String[] { "commands.shw.wp.teleport_to", name };
 
-		ITextComponent result = new TextComponentString(message[0]);
-
+		TextComponentTranslation result = new TextComponentTranslation(message[0]);
 		TextComponentString destination = new TextComponentString(message[1]);
+
 		destination.setStyle(new Style().setItalic(true).setColor(TextFormatting.GRAY));
 
 		return result.appendSibling(destination);

@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
@@ -17,8 +18,8 @@ public class CommandManager {
 	public static ITextComponent teleportPlayer(MinecraftServer server, ICommandSender sender, String position,
 			ITextComponent message) {
 		if (position.isEmpty())
-			return (new TextComponentString("This position is not defined or is invalid !"))
-					.setStyle(new Style().setColor(TextFormatting.RED));
+			return (new TextComponentTranslation("commands.shw.error_position")
+					.setStyle(new Style().setColor(TextFormatting.RED)));
 
 		EntityPlayerMP player = (EntityPlayerMP) sender;
 

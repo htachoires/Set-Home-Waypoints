@@ -1,10 +1,10 @@
 package fr.dodge.shw;
 
+import fr.dodge.shw.client.HomeEventHandler;
 import fr.dodge.shw.command.command.HomeCommand;
 import fr.dodge.shw.command.command.SetHomeCommand;
 import fr.dodge.shw.command.command.WaypointCommand;
 import fr.dodge.shw.config.SHWConfiguration;
-import fr.dodge.shw.network.HomeEventHandler;
 import fr.dodge.shw.network.MyMessage;
 import fr.dodge.shw.network.SHWPacketHandler;
 import fr.dodge.shw.proxy.ServerProxy;

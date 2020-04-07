@@ -5,6 +5,7 @@ import fr.dodge.shw.command.style.StyleCommand;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class SetHomeCommandView extends CommandView {
@@ -14,18 +15,18 @@ public class SetHomeCommandView extends CommandView {
 	}
 
 	public void messageSetHomeCreated() {
-		String[] message = new String[] { "Your home has been set. ", "Use ", '/' + HomeCommand.COMMAND,
-				" to teleport" };
+		String[] message = new String[] { "commands.shw.sethome.success", "commands.shw.use", '/' + HomeCommand.COMMAND,
+				"commands.shw.to_teleport" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString middle = new TextComponentString(message[1]);
-		TextComponentString link = new TextComponentString(message[2]);
-		TextComponentString end = new TextComponentString(message[3]);
+		TextComponentTranslation success = new TextComponentTranslation(message[0]);
+		TextComponentTranslation use = new TextComponentTranslation(message[1]);
+		TextComponentString command = new TextComponentString(message[2]);
+		TextComponentTranslation toTeleport = new TextComponentTranslation(message[3]);
 
-		start.setStyle(new Style().setColor(TextFormatting.GREEN));
-		link.setStyle(StyleCommand.link("Want to telport now ?", HomeCommand.COMMAND));
-		middle.setStyle(new Style().setColor(TextFormatting.WHITE));
+		success.setStyle(new Style().setColor(TextFormatting.GREEN));
+		command.setStyle(StyleCommand.command("commands.shw.want_to_teleport", HomeCommand.COMMAND));
+		use.setStyle(new Style().setColor(TextFormatting.WHITE));
 
-		player.sendMessage(start.appendSibling(middle.appendSibling(link).appendSibling(end)));
+		player.sendMessage(success.appendSibling(use.appendSibling(command).appendSibling(toTeleport)));
 	}
 }

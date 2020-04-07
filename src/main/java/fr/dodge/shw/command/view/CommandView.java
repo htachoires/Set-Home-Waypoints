@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class CommandView {
 
@@ -20,23 +21,22 @@ public class CommandView {
 		player.sendMessage(message);
 	}
 
-	public void messageCooldown(EntityPlayer player, long time, int cooldown, String command) {
-		String[] message = new String[] { "Wait ", Long.toString(Math.abs(time)) + "ms", " before use " };
+	public void messageCooldown(EntityPlayer player, long time, long cooldown, String command) {
+		String[] message = new String[] { "commands.shw.wait", "~" + Long.toString(Math.abs(time)) + "s",
+				"commands.shw.before_use" };
 
-		TextComponentString start = new TextComponentString(message[0]);
-		TextComponentString textCooldown = new TextComponentString(message[1]);
-		TextComponentString middle = new TextComponentString(message[2]);
+		TextComponentTranslation wait = new TextComponentTranslation(message[0]);
+		TextComponentString cooldownText = new TextComponentString(message[1]);
+		TextComponentTranslation beforeUse = new TextComponentTranslation(message[2]);
 
-		textCooldown.setStyle(StyleCommand.cooldown(cooldown));
+		cooldownText.setStyle(StyleCommand.cooldown(cooldown));
 
-		start.appendSibling(textCooldown);
-		start.appendSibling(middle);
-		start.appendSibling(viewLink(command));
-		player.sendMessage(start);
+		player.sendMessage(
+				wait.appendSibling(cooldownText).appendSibling(beforeUse).appendSibling(commandView(command)));
 	}
 
-	protected ITextComponent viewLink(String command) {
+	protected ITextComponent commandView(String command) {
 		return (new TextComponentString((command.startsWith("/") ? "" : '/') + command))
-				.setStyle(StyleCommand.link("Want to teleport now ?", command));
+				.setStyle(StyleCommand.command("commands.shw.want_to_teleport", command));
 	}
 }

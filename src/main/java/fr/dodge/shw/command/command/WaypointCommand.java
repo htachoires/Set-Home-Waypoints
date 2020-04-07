@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraft.util.text.event.HoverEvent;
@@ -35,7 +37,6 @@ import scala.actors.threadpool.Arrays;
 
 public class WaypointCommand extends CommandBase {
 
-	public static final String add = "add";
 	public static final String set = "set";
 	public static final String list = "list";
 	public static final String use = "use";
@@ -47,7 +48,7 @@ public class WaypointCommand extends CommandBase {
 
 	public static final String COMMAND = "wp";
 
-	public static final String[] commandArgs = { add, set, help, list, use, remove };
+	public static final String[] commandArgs = { set, help, list, use, remove };
 	public static final String pattern = "^[a-zA-Z]{3,10}$";
 
 	@Override
@@ -63,7 +64,8 @@ public class WaypointCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (!(sender instanceof EntityPlayerMP)) {
-			System.err.println("Only player can use this command.");
+			TextComponentTranslation wrongSender = new TextComponentTranslation("commands.shw.error_sender");
+			sender.sendMessage(wrongSender);
 			return;
 		}
 
@@ -79,7 +81,6 @@ public class WaypointCommand extends CommandBase {
 			case list:
 				list(player, view);
 				break;
-			case add:
 			case set:
 			case use:
 			case remove:
@@ -91,9 +92,8 @@ public class WaypointCommand extends CommandBase {
 			}
 		} else if (args.length == 2) {
 			switch (args[0]) {
-			case add:
 			case set:
-				add(player, args[1], view);
+				set(player, args[1], view);
 				break;
 			case list:
 				list(player, view);
@@ -117,7 +117,7 @@ public class WaypointCommand extends CommandBase {
 	 * @param name   Waypoint name enter by the player
 	 * @param view   View that send messages to the player
 	 */
-	private void add(EntityPlayerMP player, String name, WaypointCommandView view) {
+	private void set(EntityPlayerMP player, String name, WaypointCommandView view) {
 		for (String fname : commandArgs) {
 			if (name.equals(fname)) {
 				view.messageErrorInvalidName(player, name);
@@ -158,10 +158,6 @@ public class WaypointCommand extends CommandBase {
 	private void list(EntityPlayerMP player, WaypointCommandView view) {
 		NBTTagCompound tag = player.getEntityData();
 		Set<String> wp = getWaypoints(player);
-		StringJoiner res = new StringJoiner(", ");
-		for (String s : wp) {
-			res.add("§6" + s + "§f");
-		}
 		view.messageListWaypoint(player, wp);
 	}
 
@@ -178,15 +174,21 @@ public class WaypointCommand extends CommandBase {
 		NBTTagCompound tag = player.getEntityData();
 		long date = tag.getLong(prefixDate + "date");
 		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.waypointsConfig.COOLDOWN;
+
 		if (cooldownRemaining < 0) {
-			view.messageCooldown(player, cooldownRemaining, SHWConfiguration.waypointsConfig.COOLDOWN,
+			view.messageCooldown(player, TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining),
+					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.waypointsConfig.COOLDOWN),
 					String.format("/%s %s %s", COMMAND, use, name));
 			return;
 		}
-		tag.setLong(prefixDate + "date", new Date().getTime());
-
+		ITextComponent successMessage = view.messageTeleportingTo(name);
 		ITextComponent result = CommandManager.teleportPlayer(server, sender, tag.getString(prefix + name),
-				view.messageTeleportingTo(name));
+				successMessage);
+
+		if (successMessage.equals(result)) {
+			tag.setLong(prefixDate + "date", new Date().getTime());
+		}
+
 		view.sendMessage(result);
 	}
 

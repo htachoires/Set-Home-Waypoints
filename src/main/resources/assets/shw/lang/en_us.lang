@@ -1,0 +1,38 @@
+#Commands
+commands.shw.error_sender=Only players can use this command
+commands.shw.error_position=This position is not defined or is invalid !
+
+commands.shw.home.teleport=Teleporting to your home...
+
+commands.shw.wp.teleport_to=Teleporting to 
+commands.shw.to_teleport= to teleport
+commands.shw.want_to_teleport=Want to telport now ?
+commands.shw.wp.To_teleport_at=To teleport at this waypoint
+commands.shw.wp.to_teleport_at= to teleport at this waypoint
+commands.shw.wp.to_use_waypoint=To use this waypoint
+
+commands.shw.wait=Wait 
+commands.shw.before_use= before use 
+commands.shw.wp.max=You reach the limit of waypoints (%s) ! Cannot add a new one
+
+commands.shw.wp.cannot_remove=Cannot remove waypoint 
+commands.shw.wp.not_set_yet=It hasn't been set yet
+commands.shw.wp.success_waypoint=Your waypoint has been set !
+commands.shw.wp.ask_set=To set this waypoint
+
+commands.shw.wp.success_remove=Waypoint '%s' has been removed
+
+commands.shw.wp.cannot_use=Cannot use 
+commands.shw.wp.as_waypoint_name= as waypoint name
+commands.wp.hover_for_details=Hover '%s' for more details
+
+commands.shw.usage=Usage: 
+commands.shw.name_var=<name>
+commands.shw.correct_command=To correct your command
+
+commands.shw.clickhere=Click Here !
+commands.shw.use=Use 
+commands.shw.home.create= to create you home point
+commands.shw.home.ask_set_home=Want to set your home ?
+commands.shw.sethome.success=Your home has been set. 
+commands.shw.cooldown=cooldown %ds
