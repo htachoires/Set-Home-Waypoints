@@ -1,4 +1,4 @@
-#Commands
+# Commands
 commands.shw.error_sender=Only players can use this command
 commands.shw.error_position=This position is not defined or is invalid !
 
@@ -36,3 +36,6 @@ commands.shw.home.create= to create you home point
 commands.shw.home.ask_set_home=Want to set your home ?
 commands.shw.sethome.success=Your home has been set. 
 commands.shw.cooldown=cooldown %ds
+
+# Key bindings
+key.teleport.comment=Fast teleport to your home

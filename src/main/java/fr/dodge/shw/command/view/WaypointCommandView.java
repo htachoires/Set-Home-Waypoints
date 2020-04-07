@@ -27,10 +27,10 @@ public class WaypointCommandView extends CommandView {
 				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, name),
 				"commands.shw.wp.to_teleport_at" };
 
-		TextComponentTranslation success = new TextComponentTranslation(message[0]);
-		TextComponentTranslation use = new TextComponentTranslation(message[1]);
-		TextComponentString command = new TextComponentString(message[2]);
-		TextComponentTranslation toTeleportAt = new TextComponentTranslation(message[3]);
+		ITextComponent success = new TextComponentTranslation(message[0]);
+		ITextComponent use = new TextComponentTranslation(message[1]);
+		ITextComponent command = new TextComponentString(message[2]);
+		ITextComponent toTeleportAt = new TextComponentTranslation(message[3]);
 
 		success.setStyle((new Style().setColor(TextFormatting.GREEN)));
 		use.setStyle(new Style().setColor(TextFormatting.WHITE));
@@ -45,11 +45,11 @@ public class WaypointCommandView extends CommandView {
 		String[] message = new String[] { "commands.shw.wp.cannot_remove", "<", name, ">. ",
 				"commands.shw.wp.not_set_yet" };
 
-		TextComponentTranslation cannotRemove = new TextComponentTranslation(message[0]);
-		TextComponentString separatorLeft = new TextComponentString(message[1]);
-		TextComponentString invalidName = new TextComponentString(message[2]);
-		TextComponentString separatorRight = new TextComponentString(message[3]);
-		TextComponentString notSetYet = new TextComponentString(message[4]);
+		ITextComponent cannotRemove = new TextComponentTranslation(message[0]);
+		ITextComponent separatorLeft = new TextComponentString(message[1]);
+		ITextComponent invalidName = new TextComponentString(message[2]);
+		ITextComponent separatorRight = new TextComponentString(message[3]);
+		ITextComponent notSetYet = new TextComponentString(message[4]);
 
 		invalidName.setStyle(StyleCommand.command("commands.shw.wp.ask_set",
 				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.set, message[2])));
@@ -64,7 +64,7 @@ public class WaypointCommandView extends CommandView {
 	public void messageSuccessRemove(EntityPlayerMP player, String name) {
 		String[] message = new String[] { "commands.shw.wp.success_remove" };
 
-		TextComponentTranslation success = new TextComponentTranslation(message[0], name);
+		ITextComponent success = new TextComponentTranslation(message[0], name);
 		success.setStyle(new Style().setColor(TextFormatting.GREEN));
 
 		player.sendMessage(success);
@@ -74,10 +74,10 @@ public class WaypointCommandView extends CommandView {
 		String[] message = new String[] { "commands.shw.wp.cannot_use", name, "commands.shw.wp.as_waypoint_name",
 				"commands.wp.hover_for_details" };
 
-		TextComponentTranslation cannotUse = new TextComponentTranslation(message[0]);
-		TextComponentString invalidName = new TextComponentString(message[1]);
-		TextComponentTranslation end = new TextComponentTranslation(message[2]);
-		TextComponentTranslation hoverTextC = new TextComponentTranslation(message[3], name);
+		ITextComponent cannotUse = new TextComponentTranslation(message[0]);
+		ITextComponent invalidName = new TextComponentString(message[1]);
+		ITextComponent end = new TextComponentTranslation(message[2]);
+		ITextComponent hoverTextC = new TextComponentTranslation(message[3], name);
 
 		StringJoiner fNames = new StringJoiner(", ");
 		for (String n : WaypointCommand.commandArgs) {
@@ -100,9 +100,9 @@ public class WaypointCommandView extends CommandView {
 		String[] message = new String[] { "commands.shw.usage",
 				String.format("/%s %s ", WaypointCommand.COMMAND, command), "commands.shw.name_var" };
 
-		TextComponentTranslation usage = new TextComponentTranslation(message[0]);
-		TextComponentString commandTextC = new TextComponentString(message[1]);
-		TextComponentTranslation variable = new TextComponentTranslation(message[2]);
+		ITextComponent usage = new TextComponentTranslation(message[0]);
+		ITextComponent commandTextC = new TextComponentString(message[1]);
+		ITextComponent variable = new TextComponentTranslation(message[2]);
 
 		usage.setStyle(new Style().setColor(TextFormatting.GREEN));
 		commandTextC.setStyle(StyleCommand.command("commands.shw.correct_command", message[1]));
@@ -119,51 +119,52 @@ public class WaypointCommandView extends CommandView {
 		String separator = ", ";
 		String space = " ";
 		for (String waypoint : waypoints) {
-			TextComponentString command = new TextComponentString(waypoint);
+			ITextComponent command = new TextComponentString(waypoint);
 
 			command.setStyle(StyleCommand.command("commands.shw.wp.To_teleport_at",
 					String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, waypoint)));
 
-			TextComponentString comma = new TextComponentString(
+			ITextComponent comma = new TextComponentString(
 					(waypointsTextC.size() + 2 < waypoints.size() * 2 ? separator : space));
 			comma.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 			waypointsTextC.add(command);
 			waypointsTextC.add(comma);
 		}
-		TextComponentString startTextC = new TextComponentString(message[0]);
+		ITextComponent startTextC = new TextComponentString(message[0]);
 
 		for (ITextComponent waypointTextC : waypointsTextC) {
 			startTextC.appendSibling(waypointTextC);
 		}
 
-		TextComponentString endListTextC = new TextComponentString(message[1]);
+		ITextComponent endListTextC = new TextComponentString(message[1]);
 
 		player.sendMessage(startTextC.appendSibling(endListTextC));
 	}
 
 	public void messageHelp() {
 		String pattern = "/" + WaypointCommand.COMMAND + " %s";
-		String patternWithArg = "/" + WaypointCommand.COMMAND + " %s <name>";
+		String patternWithArg = "/" + WaypointCommand.COMMAND + " %s ";
+		ITextComponent nameVar = new TextComponentTranslation("commands.shw.name_var");
 
 		String limit = "====";
-		TextComponentString textStartLimit = new TextComponentString(
+		ITextComponent textStartLimit = new TextComponentString(
 				String.format("%s %s %s\n", limit, Reference.NAME, limit));
-		TextComponentString textEndLimit = new TextComponentString(
+		ITextComponent textEndLimit = new TextComponentString(
 				String.format("\n%s %s %s", limit, Reference.NAME, limit));
 		textStartLimit.setStyle(new Style().setColor(TextFormatting.GREEN));
 
-		TextComponentString set = new TextComponentString(
-				String.format(patternWithArg + "\n", WaypointCommand.set + '/' + WaypointCommand.set));
-		set.setStyle(new Style().setColor(TextFormatting.WHITE));
+		ITextComponent set = new TextComponentString(String.format(patternWithArg, WaypointCommand.set))
+				.appendSibling(nameVar).appendText("\n").setStyle(new Style().setColor(TextFormatting.WHITE));
 
-		TextComponentString use = new TextComponentString(String.format(patternWithArg + "\n", WaypointCommand.use));
+		ITextComponent use = new TextComponentString(String.format(patternWithArg, WaypointCommand.use))
+				.appendSibling(nameVar).appendText("\n");
 
-		TextComponentString remove = new TextComponentString(
-				String.format(patternWithArg + "\n", WaypointCommand.remove));
+		ITextComponent remove = new TextComponentString(String.format(patternWithArg, WaypointCommand.remove))
+				.appendSibling(nameVar).appendText("\n");
 
-		TextComponentString list = new TextComponentString(String.format(pattern + "\n", WaypointCommand.list));
-		TextComponentString help = new TextComponentString(String.format(pattern, WaypointCommand.help));
+		ITextComponent list = new TextComponentString(String.format(pattern + "\n", WaypointCommand.list));
+		ITextComponent help = new TextComponentString(String.format(pattern, WaypointCommand.help));
 
 		sendMessage(textStartLimit
 				.appendSibling(set.appendSibling(use).appendSibling(remove).appendSibling(list).appendSibling(help))
@@ -172,17 +173,16 @@ public class WaypointCommandView extends CommandView {
 
 	public void messageMaxWaypoints() {
 		String[] message = new String[] { "commands.shw.wp.max" };
-		TextComponentTranslation errorMax = new TextComponentTranslation(message[0],
-				SHWConfiguration.waypointsConfig.MAX_WAYPOINTS);
-		errorMax.setStyle(new Style().setColor(TextFormatting.RED));
+		ITextComponent errorMax = new TextComponentTranslation(message[0],
+				SHWConfiguration.WAYPOINTS_CONFIG.MAX_WAYPOINTS).setStyle(new Style().setColor(TextFormatting.RED));
 		sendMessage(errorMax);
 	}
 
 	public ITextComponent messageTeleportingTo(String name) {
 		String[] message = new String[] { "commands.shw.wp.teleport_to", name };
 
-		TextComponentTranslation result = new TextComponentTranslation(message[0]);
-		TextComponentString destination = new TextComponentString(message[1]);
+		ITextComponent result = new TextComponentTranslation(message[0]);
+		ITextComponent destination = new TextComponentString(message[1]);
 
 		destination.setStyle(new Style().setItalic(true).setColor(TextFormatting.GRAY));
 

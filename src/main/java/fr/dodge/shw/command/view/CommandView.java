@@ -22,7 +22,7 @@ public class CommandView {
 	}
 
 	public void messageCooldown(EntityPlayer player, long time, long cooldown, String command) {
-		String[] message = new String[] { "commands.shw.wait", "~" + Long.toString(Math.abs(time)) + "s",
+		String[] message = new String[] { "commands.shw.wait", "~" + Long.toString(Math.max(1, Math.abs(time))) + "s",
 				"commands.shw.before_use" };
 
 		TextComponentTranslation wait = new TextComponentTranslation(message[0]);

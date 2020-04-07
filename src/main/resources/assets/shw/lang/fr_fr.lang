@@ -36,3 +36,6 @@ commands.shw.home.create= pour créer votre home
 commands.shw.home.ask_set_home=Envie de créer votre home ?
 commands.shw.sethome.success=Votre home a été créé. 
 commands.shw.cooldown=Temps de rechargement %ds
+
+# Key bindings
+key.teleport.comment=Téléportation rapide sur home

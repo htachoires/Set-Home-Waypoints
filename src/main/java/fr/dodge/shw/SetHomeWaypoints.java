@@ -1,6 +1,6 @@
 package fr.dodge.shw;
 
-import fr.dodge.shw.client.HomeEventHandler;
+import fr.dodge.shw.client.SHWEventHandler;
 import fr.dodge.shw.command.command.HomeCommand;
 import fr.dodge.shw.command.command.SetHomeCommand;
 import fr.dodge.shw.command.command.WaypointCommand;
@@ -31,7 +31,7 @@ public class SetHomeWaypoints {
 	public static ServerProxy proxy;
 
 	public SetHomeWaypoints() {
-		MinecraftForge.EVENT_BUS.register(HomeEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(SHWEventHandler.class);
 	}
 
 	@EventHandler
@@ -42,12 +42,12 @@ public class SetHomeWaypoints {
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		if (SHWConfiguration.ENABLE) {
-			if (SHWConfiguration.homeConfig.ENABLE) {
+			if (SHWConfiguration.HOME_CONFIG.ENABLE) {
 				event.registerServerCommand(new HomeCommand());
 				event.registerServerCommand(new SetHomeCommand());
 			}
 
-			if (SHWConfiguration.waypointsConfig.ENABLE) {
+			if (SHWConfiguration.WAYPOINTS_CONFIG.ENABLE) {
 				event.registerServerCommand(new WaypointCommand());
 			}
 		}

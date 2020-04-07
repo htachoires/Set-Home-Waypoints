@@ -10,7 +10,7 @@ public class SHWPacketHandler {
 	public static SimpleNetworkWrapper INSTANCE;
 	private static int ID = 0;
 
-	private static int ID() {
+	private static int nextID() {
 		return ID++;
 	}
 
@@ -18,9 +18,9 @@ public class SHWPacketHandler {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
 
 		// Server packets
-		INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, ID(), Side.SERVER);
+		INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, nextID(), Side.SERVER);
 
-		// Server packets
-		INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, ID(), Side.CLIENT);
+		// Client packets
+		//INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, ID(), Side.CLIENT);
 	}
 }

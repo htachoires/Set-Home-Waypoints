@@ -131,7 +131,7 @@ public class WaypointCommand extends CommandBase {
 		}
 
 		Set<String> wp = getWaypoints(player);
-		if (!wp.contains(name) && wp.size() >= SHWConfiguration.waypointsConfig.MAX_WAYPOINTS) {
+		if (!wp.contains(name) && wp.size() >= SHWConfiguration.WAYPOINTS_CONFIG.MAX_WAYPOINTS) {
 			view.messageMaxWaypoints();
 			return;
 		}
@@ -173,11 +173,11 @@ public class WaypointCommand extends CommandBase {
 			WaypointCommandView view) {
 		NBTTagCompound tag = player.getEntityData();
 		long date = tag.getLong(prefixDate + "date");
-		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.waypointsConfig.COOLDOWN;
+		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.WAYPOINTS_CONFIG.COOLDOWN;
 
 		if (cooldownRemaining < 0) {
 			view.messageCooldown(player, TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining),
-					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.waypointsConfig.COOLDOWN),
+					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.WAYPOINTS_CONFIG.COOLDOWN),
 					String.format("/%s %s %s", COMMAND, use, name));
 			return;
 		}

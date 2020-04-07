@@ -54,11 +54,11 @@ public class HomeCommand extends CommandBase {
 		HomeCommandView view = new HomeCommandView(player);
 		
 		long date = tag.getLong(SetHomeCommand.prefixDate + "date");
-		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.homeConfig.COOLDOWN;
+		long cooldownRemaining = new Date().getTime() - date - SHWConfiguration.HOME_CONFIG.COOLDOWN;
 
 		if (cooldownRemaining < 0) {
 			view.messageCooldown(player, TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining),
-					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.homeConfig.COOLDOWN), COMMAND);
+					TimeUnit.MILLISECONDS.toSeconds(SHWConfiguration.HOME_CONFIG.COOLDOWN), COMMAND);
 			return;
 		}
 
