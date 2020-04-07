@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -38,6 +39,7 @@ public class CommandWaypoint extends CommandBase {
 
 	public static final String[] commandArgs = { set, help, limit, list, use, remove };
 	public static final String pattern = "^[a-zA-Z]{3,10}$";
+	public static final String removeAll = "*";
 
 	@Override
 	public String getName() {
@@ -126,7 +128,7 @@ public class CommandWaypoint extends CommandBase {
 			return;
 		}
 
-		Set<String> waypoints = getWaypoints(server, player);
+		List<String> waypoints = getWaypoints(server, player);
 		if (!waypoints.contains(name) && waypoints.size() >= SHWConfiguration.WAYPOINTS_CONFIG.MAX_WAYPOINTS) {
 			view.messageMaxWaypoints();
 			return;
@@ -152,8 +154,7 @@ public class CommandWaypoint extends CommandBase {
 	 * @param view   View that send messages to the player
 	 */
 	private void list(MinecraftServer server, EntityPlayerMP player, CommandViewWaypoint view) {
-		Set<String> waypoints = getWaypoints(server, player);
-		view.messageListWaypoint(player, waypoints);
+		view.messageListWaypoint(player, getWaypoints(server, player));
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class CommandWaypoint extends CommandBase {
 	 */
 	private void remove(MinecraftServer server, EntityPlayerMP player, String name, CommandViewWaypoint view) {
 
-		if (name.equals("*")) {
+		if (name.equals(removeAll)) {
 			SHWWorldSavedData.removeAllWaypoints(server, player);
 			view.messageSuccessRemoveAllWaypoints();
 			return;
@@ -212,16 +213,9 @@ public class CommandWaypoint extends CommandBase {
 	 * @param player Player that execute command
 	 * @return Set of waypoints of the player
 	 */
-	private Set<String> getWaypoints(MinecraftServer server, EntityPlayerMP player) {
-
-		Set<String> waypoints = new HashSet<>();
-
-		for (String s : SHWWorldSavedData.getDataOfPlayer(player, server)) {
-			if (s.startsWith(prefix)) {
-				waypoints.add(s.substring(prefix.length()));
-			}
-		}
-		return waypoints;
+	private List<String> getWaypoints(MinecraftServer server, EntityPlayerMP player) {
+		return SHWWorldSavedData.getDataOfPlayer(player, server).stream().filter(e -> e.startsWith(prefix))
+				.map(e -> e.substring(prefix.length())).collect(Collectors.toList());
 	}
 
 	/**
@@ -243,7 +237,7 @@ public class CommandWaypoint extends CommandBase {
 		if (args.length == 2 && (args[0].equals(remove) || args[0].equals(use))) {
 			List<String> result = getListOfStringsMatchingLastWord(args, getWaypoints(server, (EntityPlayerMP) sender));
 			if (args[0].equals(remove))
-				result.add("*");
+				result.add(removeAll);
 			return result;
 		}
 		return Collections.emptyList();

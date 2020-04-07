@@ -32,10 +32,6 @@ public class SHWConfiguration {
 		@RequiresWorldRestart
 		public boolean ENABLE = true;
 
-		@Comment({ "After a player die he will lose his home set... homeless" })
-		@Name("Keep home set after death")
-		public boolean KEEP_HOME_AFTER_DEATH = true;
-
 		@Comment({ "Cooldown in millis for home command" })
 		@Name("Cooldown (ms)")
 		@RangeInt(min = 0, max = 86400000)
@@ -49,10 +45,6 @@ public class SHWConfiguration {
 		@Name("Enable")
 		@RequiresWorldRestart
 		public boolean ENABLE = true;
-
-		@Comment({ "After a player die he will lose hiw waypoints...pouf" })
-		@Name("Keep waypoints after death")
-		public boolean KEEP_WAYPOINTS_AFTER_DEATH = true;
 
 		@Comment({ "Cooldown in millis for waypoints command" })
 		@Name("Cooldown (ms)")

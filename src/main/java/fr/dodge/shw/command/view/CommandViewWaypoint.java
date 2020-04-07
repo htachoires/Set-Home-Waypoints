@@ -1,6 +1,7 @@
 package fr.dodge.shw.command.view;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -111,21 +112,21 @@ public class CommandViewWaypoint extends CommandViewBase {
 		player.sendMessage(usage.appendSibling(commandTextC).appendSibling(variable));
 	}
 
-	public void messageListWaypoint(EntityPlayerMP player, Set<String> waypoints) {
+	public void messageListWaypoint(EntityPlayerMP player, List<String> list) {
 		String[] message = new String[] { String.format("/%s %s [ ", CommandWaypoint.COMMAND, CommandWaypoint.use),
 				"]" };
 
 		ArrayList<ITextComponent> waypointsTextC = new ArrayList<>();
 		String separator = ", ";
 		String space = " ";
-		for (String waypoint : waypoints) {
+		for (String waypoint : list) {
 			ITextComponent command = new TextComponentString(waypoint);
 
 			command.setStyle(CommandStyle.command("commands.shw.wp.To_teleport_at",
 					String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.use, waypoint)));
 
 			ITextComponent comma = new TextComponentString(
-					(waypointsTextC.size() + 2 < waypoints.size() * 2 ? separator : space));
+					(waypointsTextC.size() + 2 < list.size() * 2 ? separator : space));
 			comma.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 			waypointsTextC.add(command);
@@ -147,12 +148,12 @@ public class CommandViewWaypoint extends CommandViewBase {
 		String patternWithArg = "/" + CommandWaypoint.COMMAND + " %s ";
 		ITextComponent nameVar = new TextComponentTranslation("commands.shw.name_var");
 
-		String limit = "====";
-		ITextComponent textStartLimit = new TextComponentString(
-				String.format("%s %s %s\n", limit, Reference.NAME, limit));
-		ITextComponent textEndLimit = new TextComponentString(
-				String.format("\n%s %s %s", limit, Reference.NAME, limit));
-		textStartLimit.setStyle(new Style().setColor(TextFormatting.GREEN));
+		String limitText = "====";
+		ITextComponent startLimitTextC = new TextComponentString(
+				String.format("%s %s %s\n", limitText, Reference.NAME, limitText));
+		ITextComponent endLimitTextC = new TextComponentString(
+				String.format("\n%s %s %s", limitText, Reference.NAME, limitText));
+		startLimitTextC.setStyle(new Style().setColor(TextFormatting.GREEN));
 
 		ITextComponent set = new TextComponentString(String.format(patternWithArg, CommandWaypoint.set))
 				.appendSibling(nameVar).appendText("\n").setStyle(new Style().setColor(TextFormatting.WHITE));
@@ -164,11 +165,11 @@ public class CommandViewWaypoint extends CommandViewBase {
 				.appendSibling(nameVar).appendText("\n");
 
 		ITextComponent list = new TextComponentString(String.format(pattern + "\n", CommandWaypoint.list));
+		ITextComponent limit = new TextComponentString(String.format(pattern + "\n", CommandWaypoint.limit));
 		ITextComponent help = new TextComponentString(String.format(pattern, CommandWaypoint.help));
 
-		sendMessage(textStartLimit
-				.appendSibling(set.appendSibling(use).appendSibling(remove).appendSibling(list).appendSibling(help))
-				.appendSibling(textEndLimit));
+		sendMessage(startLimitTextC.appendSibling(set.appendSibling(use).appendSibling(remove).appendSibling(list)
+				.appendSibling(limit).appendSibling(help)).appendSibling(endLimitTextC));
 	}
 
 	public void messageMaxWaypoints() {
