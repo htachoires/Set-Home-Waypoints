@@ -2,9 +2,7 @@ package fr.dodge.shw.command;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -48,7 +46,7 @@ public class CommandWaypoint extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands." + Reference.MODID + "." + getName();
+		return "commands.shw.wp.usage";
 	}
 
 	@Override

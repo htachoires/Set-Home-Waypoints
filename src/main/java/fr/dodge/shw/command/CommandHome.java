@@ -26,7 +26,7 @@ public class CommandHome extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands." + Reference.MODID + "." + getName();
+		return "commands.shw.home.usage";
 	}
 
 	@Override

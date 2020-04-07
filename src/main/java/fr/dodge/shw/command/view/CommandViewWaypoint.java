@@ -2,7 +2,6 @@ package fr.dodge.shw.command.view;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.StringJoiner;
 
 import fr.dodge.shw.Reference;
@@ -112,21 +111,21 @@ public class CommandViewWaypoint extends CommandViewBase {
 		player.sendMessage(usage.appendSibling(commandTextC).appendSibling(variable));
 	}
 
-	public void messageListWaypoint(EntityPlayerMP player, List<String> list) {
+	public void messageListWaypoint(EntityPlayerMP player, List<String> waypoints) {
 		String[] message = new String[] { String.format("/%s %s [ ", CommandWaypoint.COMMAND, CommandWaypoint.use),
 				"]" };
 
 		ArrayList<ITextComponent> waypointsTextC = new ArrayList<>();
 		String separator = ", ";
 		String space = " ";
-		for (String waypoint : list) {
+		for (String waypoint : waypoints) {
 			ITextComponent command = new TextComponentString(waypoint);
 
 			command.setStyle(CommandStyle.command("commands.shw.wp.To_teleport_at",
 					String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.use, waypoint)));
 
 			ITextComponent comma = new TextComponentString(
-					(waypointsTextC.size() + 2 < list.size() * 2 ? separator : space));
+					(waypointsTextC.size() + 2 < waypoints.size() * 2 ? separator : space));
 			comma.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 			waypointsTextC.add(command);

@@ -23,7 +23,7 @@ public class CommandSetHome extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands." + Reference.MODID + "." + getName();
+		return "commands.shw.sethome.usage";
 	}
 
 	@Override
