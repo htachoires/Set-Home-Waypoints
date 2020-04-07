@@ -1,19 +1,16 @@
 package fr.dodge.shw.command.view;
 
-import fr.dodge.shw.command.command.HomeCommand;
-import fr.dodge.shw.command.style.StyleCommand;
-import fr.dodge.shw.config.SHWConfiguration;
+import fr.dodge.shw.command.style.CommandStyle;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class CommandView {
+public class CommandViewBase {
 
 	protected EntityPlayer player;
 
-	public CommandView(EntityPlayer player) {
+	public CommandViewBase(EntityPlayer player) {
 		this.player = player;
 	}
 
@@ -29,7 +26,7 @@ public class CommandView {
 		TextComponentString cooldownText = new TextComponentString(message[1]);
 		TextComponentTranslation beforeUse = new TextComponentTranslation(message[2]);
 
-		cooldownText.setStyle(StyleCommand.cooldown(cooldown));
+		cooldownText.setStyle(CommandStyle.cooldown(cooldown));
 
 		player.sendMessage(
 				wait.appendSibling(cooldownText).appendSibling(beforeUse).appendSibling(commandView(command)));
@@ -37,6 +34,6 @@ public class CommandView {
 
 	protected ITextComponent commandView(String command) {
 		return (new TextComponentString((command.startsWith("/") ? "" : '/') + command))
-				.setStyle(StyleCommand.command("commands.shw.want_to_teleport", command));
+				.setStyle(CommandStyle.command("commands.shw.want_to_teleport", command));
 	}
 }

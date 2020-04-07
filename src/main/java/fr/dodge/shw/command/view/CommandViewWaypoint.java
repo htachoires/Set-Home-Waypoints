@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import fr.dodge.shw.Reference;
-import fr.dodge.shw.command.command.WaypointCommand;
-import fr.dodge.shw.command.style.StyleCommand;
+import fr.dodge.shw.command.CommandWaypoint;
+import fr.dodge.shw.command.style.CommandStyle;
 import fr.dodge.shw.config.SHWConfiguration;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
@@ -16,15 +16,15 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 
-public class WaypointCommandView extends CommandView {
+public class CommandViewWaypoint extends CommandViewBase {
 
-	public WaypointCommandView(EntityPlayerMP player) {
+	public CommandViewWaypoint(EntityPlayerMP player) {
 		super(player);
 	}
 
 	public void messageSuccessAddWaypoint(EntityPlayerMP player, String name) {
 		String[] message = new String[] { "commands.shw.wp.success_waypoint", "commands.shw.use",
-				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, name),
+				String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.use, name),
 				"commands.shw.wp.to_teleport_at" };
 
 		ITextComponent success = new TextComponentTranslation(message[0]);
@@ -34,7 +34,7 @@ public class WaypointCommandView extends CommandView {
 
 		success.setStyle((new Style().setColor(TextFormatting.GREEN)));
 		use.setStyle(new Style().setColor(TextFormatting.WHITE));
-		command.setStyle(StyleCommand.command("commands.shw.wp.to_use_waypoint", message[2]));
+		command.setStyle(CommandStyle.command("commands.shw.wp.to_use_waypoint", message[2]));
 
 		success.appendText("\n");
 
@@ -51,8 +51,8 @@ public class WaypointCommandView extends CommandView {
 		ITextComponent separatorRight = new TextComponentString(message[3]);
 		ITextComponent notSetYet = new TextComponentString(message[4]);
 
-		invalidName.setStyle(StyleCommand.command("commands.shw.wp.ask_set",
-				String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.set, message[2])));
+		invalidName.setStyle(CommandStyle.command("commands.shw.wp.ask_set",
+				String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.set, message[2])));
 
 		cannotRemove.setStyle((new Style().setColor(TextFormatting.RED)));
 		separatorLeft.setStyle(new Style().setColor(TextFormatting.WHITE));
@@ -80,7 +80,7 @@ public class WaypointCommandView extends CommandView {
 		ITextComponent hoverTextC = new TextComponentTranslation(message[3], name);
 
 		StringJoiner fNames = new StringJoiner(", ");
-		for (String n : WaypointCommand.commandArgs) {
+		for (String n : CommandWaypoint.commandArgs) {
 			fNames.add(n);
 		}
 
@@ -88,7 +88,7 @@ public class WaypointCommandView extends CommandView {
 
 		invalidName.setStyle(new Style().setColor(TextFormatting.RED).setHoverEvent(new HoverEvent(
 				HoverEvent.Action.SHOW_TEXT,
-				(new TextComponentString(WaypointCommand.pattern + "\n")
+				(new TextComponentString(CommandWaypoint.pattern + "\n")
 						.setStyle(new Style().setColor(TextFormatting.GREEN)))
 								.appendSibling((new TextComponentString(fNames.toString())
 										.setStyle(new Style().setStrikethrough(true).setColor(TextFormatting.RED)))))));
@@ -98,21 +98,21 @@ public class WaypointCommandView extends CommandView {
 
 	public void messageErrorUsing(EntityPlayerMP player, String command) {
 		String[] message = new String[] { "commands.shw.usage",
-				String.format("/%s %s ", WaypointCommand.COMMAND, command), "commands.shw.name_var" };
+				String.format("/%s %s ", CommandWaypoint.COMMAND, command), "commands.shw.name_var" };
 
 		ITextComponent usage = new TextComponentTranslation(message[0]);
 		ITextComponent commandTextC = new TextComponentString(message[1]);
 		ITextComponent variable = new TextComponentTranslation(message[2]);
 
 		usage.setStyle(new Style().setColor(TextFormatting.GREEN));
-		commandTextC.setStyle(StyleCommand.command("commands.shw.correct_command", message[1]));
+		commandTextC.setStyle(CommandStyle.command("commands.shw.correct_command", message[1]));
 		variable.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 		player.sendMessage(usage.appendSibling(commandTextC).appendSibling(variable));
 	}
 
 	public void messageListWaypoint(EntityPlayerMP player, Set<String> waypoints) {
-		String[] message = new String[] { String.format("/%s %s [ ", WaypointCommand.COMMAND, WaypointCommand.use),
+		String[] message = new String[] { String.format("/%s %s [ ", CommandWaypoint.COMMAND, CommandWaypoint.use),
 				"]" };
 
 		ArrayList<ITextComponent> waypointsTextC = new ArrayList<>();
@@ -121,8 +121,8 @@ public class WaypointCommandView extends CommandView {
 		for (String waypoint : waypoints) {
 			ITextComponent command = new TextComponentString(waypoint);
 
-			command.setStyle(StyleCommand.command("commands.shw.wp.To_teleport_at",
-					String.format("/%s %s %s", WaypointCommand.COMMAND, WaypointCommand.use, waypoint)));
+			command.setStyle(CommandStyle.command("commands.shw.wp.To_teleport_at",
+					String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.use, waypoint)));
 
 			ITextComponent comma = new TextComponentString(
 					(waypointsTextC.size() + 2 < waypoints.size() * 2 ? separator : space));
@@ -143,8 +143,8 @@ public class WaypointCommandView extends CommandView {
 	}
 
 	public void messageHelp() {
-		String pattern = "/" + WaypointCommand.COMMAND + " %s";
-		String patternWithArg = "/" + WaypointCommand.COMMAND + " %s ";
+		String pattern = "/" + CommandWaypoint.COMMAND + " %s";
+		String patternWithArg = "/" + CommandWaypoint.COMMAND + " %s ";
 		ITextComponent nameVar = new TextComponentTranslation("commands.shw.name_var");
 
 		String limit = "====";
@@ -154,17 +154,17 @@ public class WaypointCommandView extends CommandView {
 				String.format("\n%s %s %s", limit, Reference.NAME, limit));
 		textStartLimit.setStyle(new Style().setColor(TextFormatting.GREEN));
 
-		ITextComponent set = new TextComponentString(String.format(patternWithArg, WaypointCommand.set))
+		ITextComponent set = new TextComponentString(String.format(patternWithArg, CommandWaypoint.set))
 				.appendSibling(nameVar).appendText("\n").setStyle(new Style().setColor(TextFormatting.WHITE));
 
-		ITextComponent use = new TextComponentString(String.format(patternWithArg, WaypointCommand.use))
+		ITextComponent use = new TextComponentString(String.format(patternWithArg, CommandWaypoint.use))
 				.appendSibling(nameVar).appendText("\n");
 
-		ITextComponent remove = new TextComponentString(String.format(patternWithArg, WaypointCommand.remove))
+		ITextComponent remove = new TextComponentString(String.format(patternWithArg, CommandWaypoint.remove))
 				.appendSibling(nameVar).appendText("\n");
 
-		ITextComponent list = new TextComponentString(String.format(pattern + "\n", WaypointCommand.list));
-		ITextComponent help = new TextComponentString(String.format(pattern, WaypointCommand.help));
+		ITextComponent list = new TextComponentString(String.format(pattern + "\n", CommandWaypoint.list));
+		ITextComponent help = new TextComponentString(String.format(pattern, CommandWaypoint.help));
 
 		sendMessage(textStartLimit
 				.appendSibling(set.appendSibling(use).appendSibling(remove).appendSibling(list).appendSibling(help))

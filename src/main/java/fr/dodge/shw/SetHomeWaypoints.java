@@ -1,28 +1,22 @@
 package fr.dodge.shw;
 
 import fr.dodge.shw.client.SHWEventHandler;
-import fr.dodge.shw.command.command.HomeCommand;
-import fr.dodge.shw.command.command.SetHomeCommand;
-import fr.dodge.shw.command.command.WaypointCommand;
+import fr.dodge.shw.command.CommandHome;
+import fr.dodge.shw.command.CommandSetHome;
+import fr.dodge.shw.command.CommandWaypoint;
 import fr.dodge.shw.config.SHWConfiguration;
-import fr.dodge.shw.network.MyMessage;
 import fr.dodge.shw.network.SHWPacketHandler;
 import fr.dodge.shw.proxy.ServerProxy;
-
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config.Type;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = Reference.MINECRAFT_VERSION)
 public class SetHomeWaypoints {
@@ -43,12 +37,12 @@ public class SetHomeWaypoints {
 	public void serverStarting(FMLServerStartingEvent event) {
 		if (SHWConfiguration.ENABLE) {
 			if (SHWConfiguration.HOME_CONFIG.ENABLE) {
-				event.registerServerCommand(new HomeCommand());
-				event.registerServerCommand(new SetHomeCommand());
+				event.registerServerCommand(new CommandHome());
+				event.registerServerCommand(new CommandSetHome());
 			}
 
 			if (SHWConfiguration.WAYPOINTS_CONFIG.ENABLE) {
-				event.registerServerCommand(new WaypointCommand());
+				event.registerServerCommand(new CommandWaypoint());
 			}
 		}
 	}

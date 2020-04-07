@@ -1,24 +1,13 @@
 package fr.dodge.shw.config;
 
-import java.io.File;
-
 import fr.dodge.shw.Reference;
-import fr.dodge.shw.SetHomeWaypoints;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
-import net.minecraftforge.common.config.Config.LangKey;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
-import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.Config.RequiresWorldRestart;
 import net.minecraftforge.common.config.Config.SlidingOption;
 import net.minecraftforge.common.config.Config.Type;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = Reference.MODID, type = Type.INSTANCE, name = Reference.MODID)
 public class SHWConfiguration {

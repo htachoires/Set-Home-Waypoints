@@ -3,7 +3,6 @@ package fr.dodge.shw.proxy;
 import org.lwjgl.input.Keyboard;
 
 import fr.dodge.shw.Reference;
-import fr.dodge.shw.client.SHWEventHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 

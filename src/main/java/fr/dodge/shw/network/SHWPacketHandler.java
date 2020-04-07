@@ -1,7 +1,7 @@
 package fr.dodge.shw.network;
 
 import fr.dodge.shw.Reference;
-import fr.dodge.shw.network.MyMessage.MyMessageHandler;
+import fr.dodge.shw.network.TeleportToHomeMessage.MyMessageHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,9 +18,6 @@ public class SHWPacketHandler {
 		INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
 
 		// Server packets
-		INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, nextID(), Side.SERVER);
-
-		// Client packets
-		//INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, ID(), Side.CLIENT);
+		INSTANCE.registerMessage(MyMessageHandler.class, TeleportToHomeMessage.class, nextID(), Side.SERVER);
 	}
 }

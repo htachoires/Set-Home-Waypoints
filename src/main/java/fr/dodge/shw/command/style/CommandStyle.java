@@ -1,13 +1,12 @@
 package fr.dodge.shw.command.style;
 
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
-public class StyleCommand {
+public class CommandStyle {
 
 	public static Style command(String messageKey, String command) {
 		return new Style().setBold(true).setColor(TextFormatting.GOLD)

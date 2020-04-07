@@ -1,19 +1,16 @@
 package fr.dodge.shw.network;
 
-import fr.dodge.shw.command.command.HomeCommand;
+import fr.dodge.shw.command.CommandHome;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MyMessage implements IMessage {
+public class TeleportToHomeMessage implements IMessage {
 
-	public MyMessage() {
+	public TeleportToHomeMessage() {
 	}
 
 	@Override
@@ -24,13 +21,13 @@ public class MyMessage implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 	}
 
-	public static class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
+	public static class MyMessageHandler implements IMessageHandler<TeleportToHomeMessage, IMessage> {
 		@Override
-		public IMessage onMessage(MyMessage message, MessageContext ctx) {
+		public IMessage onMessage(TeleportToHomeMessage message, MessageContext ctx) {
 			EntityPlayerMP serverPlayer = ctx.getServerHandler().player;
 			serverPlayer.getServerWorld().addScheduledTask(() -> {
 				FMLCommonHandler.instance().getMinecraftServerInstance().commandManager.executeCommand(serverPlayer,
-						HomeCommand.COMMAND);
+						CommandHome.COMMAND);
 			});
 			return null;
 		}

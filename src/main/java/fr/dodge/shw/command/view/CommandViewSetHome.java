@@ -1,21 +1,21 @@
 package fr.dodge.shw.command.view;
 
-import fr.dodge.shw.command.command.HomeCommand;
-import fr.dodge.shw.command.style.StyleCommand;
+import fr.dodge.shw.command.CommandHome;
+import fr.dodge.shw.command.style.CommandStyle;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-public class SetHomeCommandView extends CommandView {
+public class CommandViewSetHome extends CommandViewBase {
 
-	public SetHomeCommandView(EntityPlayerMP player) {
+	public CommandViewSetHome(EntityPlayerMP player) {
 		super(player);
 	}
 
 	public void messageSetHomeCreated() {
-		String[] message = new String[] { "commands.shw.sethome.success", "commands.shw.use", '/' + HomeCommand.COMMAND,
+		String[] message = new String[] { "commands.shw.sethome.success", "commands.shw.use", '/' + CommandHome.COMMAND,
 				"commands.shw.to_teleport" };
 
 		TextComponentTranslation success = new TextComponentTranslation(message[0]);
@@ -24,7 +24,7 @@ public class SetHomeCommandView extends CommandView {
 		TextComponentTranslation toTeleport = new TextComponentTranslation(message[3]);
 
 		success.setStyle(new Style().setColor(TextFormatting.GREEN));
-		command.setStyle(StyleCommand.command("commands.shw.want_to_teleport", HomeCommand.COMMAND));
+		command.setStyle(CommandStyle.command("commands.shw.want_to_teleport", CommandHome.COMMAND));
 		use.setStyle(new Style().setColor(TextFormatting.WHITE));
 
 		player.sendMessage(success.appendSibling(use.appendSibling(command).appendSibling(toTeleport)));
