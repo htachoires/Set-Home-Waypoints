@@ -49,7 +49,7 @@ public class CommandViewWaypoint extends CommandViewBase {
 		ITextComponent separatorLeft = new TextComponentString(message[1]);
 		ITextComponent invalidName = new TextComponentString(message[2]);
 		ITextComponent separatorRight = new TextComponentString(message[3]);
-		ITextComponent notSetYet = new TextComponentString(message[4]);
+		ITextComponent notSetYet = new TextComponentTranslation(message[4]);
 
 		invalidName.setStyle(CommandStyle.command("commands.shw.wp.ask_set",
 				String.format("/%s %s %s", CommandWaypoint.COMMAND, CommandWaypoint.set, message[2])));
@@ -176,6 +176,17 @@ public class CommandViewWaypoint extends CommandViewBase {
 		ITextComponent errorMax = new TextComponentTranslation(message[0],
 				SHWConfiguration.WAYPOINTS_CONFIG.MAX_WAYPOINTS).setStyle(new Style().setColor(TextFormatting.RED));
 		sendMessage(errorMax);
+	}
+
+	public void messageLimitOfWaypointsPerPlayer() {
+		ITextComponent limit = new TextComponentTranslation("commands.shw.wp.limit",
+				SHWConfiguration.WAYPOINTS_CONFIG.MAX_WAYPOINTS);
+		sendMessage(limit);
+	}
+
+	public void messageSuccessRemoveAllWaypoints() {
+		ITextComponent success = new TextComponentTranslation("commands.shw.wp.success_clear");
+		sendMessage(success);
 	}
 
 	public ITextComponent messageTeleportingTo(String name) {

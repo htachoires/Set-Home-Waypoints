@@ -10,13 +10,15 @@ commands.shw.want_to_teleport=Envie de vous téléporter ?
 commands.shw.wp.To_teleport_at=Pour vous téléporter
 commands.shw.wp.to_teleport_at= pour vous téléporter
 commands.shw.wp.to_use_waypoint=Pour utiliser ce waypoint
+commands.shw.wp.success_clear=Tous vos waypoints ont été supprimé
 
 commands.shw.wait=Attendez 
 commands.shw.before_use= avant d'utiliser 
 commands.shw.wp.max=Vous avez atteint la limite de waypoints possible (%s) ! Vous ne pouvez plus en créer de nouveaux
+commands.shw.wp.limit=Vous pouvez avoir %d waypoints au maximum
 
 commands.shw.wp.cannot_remove=Impossible de supprimer 
-commands.shw.wp.not_set_yet=Il n'a pas été créé
+commands.shw.wp.not_set_yet=Il n'existe pas encore
 commands.shw.wp.success_waypoint=Votre waypoint a été créé !
 commands.shw.wp.ask_set=Pour ajouter ce waypoint
 

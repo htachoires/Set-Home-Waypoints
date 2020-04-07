@@ -10,10 +10,12 @@ commands.shw.want_to_teleport=Want to telport now ?
 commands.shw.wp.To_teleport_at=To teleport at this waypoint
 commands.shw.wp.to_teleport_at= to teleport at this waypoint
 commands.shw.wp.to_use_waypoint=To use this waypoint
+commands.shw.wp.success_clear=All your waypoints has been removed
 
 commands.shw.wait=Wait 
 commands.shw.before_use= before use 
 commands.shw.wp.max=You reach the limit of waypoints (%s) ! Cannot add a new one
+commands.shw.wp.limit=You can have %d waypoints maximum
 
 commands.shw.wp.cannot_remove=Cannot remove waypoint 
 commands.shw.wp.not_set_yet=It hasn't been set yet

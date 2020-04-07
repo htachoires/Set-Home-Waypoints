@@ -29,13 +29,14 @@ public class CommandWaypoint extends CommandBase {
 	public static final String use = "use";
 	public static final String remove = "remove";
 	public static final String help = "help";
+	public static final String limit = "limit";
 
 	public static final String prefix = "wp-";
 	public static final String prefixDate = "date-wp";
 
 	public static final String COMMAND = "wp";
 
-	public static final String[] commandArgs = { set, help, list, use, remove };
+	public static final String[] commandArgs = { set, help, limit, list, use, remove };
 	public static final String pattern = "^[a-zA-Z]{3,10}$";
 
 	@Override
@@ -66,6 +67,9 @@ public class CommandWaypoint extends CommandBase {
 			case list:
 				list(server, player, view);
 				break;
+			case limit:
+				limit(view);
+				break;
 			case set:
 			case use:
 			case remove:
@@ -94,6 +98,14 @@ public class CommandWaypoint extends CommandBase {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param view View that send messages to the player
+	 */
+	private void limit(CommandViewWaypoint view) {
+		view.messageLimitOfWaypointsPerPlayer();
 	}
 
 	/**
@@ -181,6 +193,12 @@ public class CommandWaypoint extends CommandBase {
 	 */
 	private void remove(MinecraftServer server, EntityPlayerMP player, String name, CommandViewWaypoint view) {
 
+		if (name.equals("*")) {
+			SHWWorldSavedData.removeAllWaypoints(server, player);
+			view.messageSuccessRemoveAllWaypoints();
+			return;
+		}
+
 		if (SHWWorldSavedData.remove(server, player, prefix + name)) {
 			view.messageSuccessRemove(player, name);
 		} else {
@@ -220,10 +238,15 @@ public class CommandWaypoint extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args,
 			@Nullable BlockPos targetPos) {
-		return args.length == 1 ? getListOfStringsMatchingLastWord(args, commandArgs)
-				: args.length == 2 && (args[0].equals(remove) || args[0].equals(use))
-						? getListOfStringsMatchingLastWord(args, getWaypoints(server, (EntityPlayerMP) sender))
-						: Collections.emptyList();
+		if (args.length == 1)
+			return getListOfStringsMatchingLastWord(args, commandArgs);
+		if (args.length == 2 && (args[0].equals(remove) || args[0].equals(use))) {
+			List<String> result = getListOfStringsMatchingLastWord(args, getWaypoints(server, (EntityPlayerMP) sender));
+			if (args[0].equals(remove))
+				result.add("*");
+			return result;
+		}
+		return Collections.emptyList();
 	}
 
 }

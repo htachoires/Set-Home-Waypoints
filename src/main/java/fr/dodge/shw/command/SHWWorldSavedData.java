@@ -57,10 +57,6 @@ public class SHWWorldSavedData extends WorldSavedData {
 		return SHWWorldSavedData.get(server.getWorld(0)).data.getLong(key + player.getUniqueID());
 	}
 
-	public static Set<String> getData(MinecraftServer server) {
-		return SHWWorldSavedData.get(server.getWorld(0)).data.getKeySet();
-	}
-
 	public static List<String> getDataOfPlayer(EntityPlayerMP player, MinecraftServer server) {
 		return SHWWorldSavedData.get(server.getWorld(0)).data.getKeySet().stream()
 				.filter(e -> e.contains(player.getUniqueID().toString()))
@@ -71,7 +67,12 @@ public class SHWWorldSavedData extends WorldSavedData {
 		SHWWorldSavedData ex = SHWWorldSavedData.get(server.getWorld(0));
 		boolean result = ex.data.getKeySet().remove(key + player.getUniqueID());
 		ex.markDirty();
-		return false;
+		return result;
+	}
+
+	public static void removeAllWaypoints(MinecraftServer server, EntityPlayerMP player) {
+		getDataOfPlayer(player, server).stream().filter(e -> e.startsWith(CommandWaypoint.prefix))
+				.forEach(e -> remove(server, player, e));
 	}
 
 	public static SHWWorldSavedData get(World world) {
