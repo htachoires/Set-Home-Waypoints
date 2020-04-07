@@ -1,5 +1,6 @@
 package fr.dodge.shw.command;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import scala.actors.threadpool.Arrays;
 
 public class CommandWaypoint extends CommandBase {
 
