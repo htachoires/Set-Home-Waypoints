@@ -5,12 +5,13 @@ run/
 build/
 gradle-app.setting
 
+
+.idea
 ## Eclipse
 /usercache.json
 /usernamecache.json
-eclipse/
+
 *.pydevproject
-.project
 .metadata
 bin/
 tmp/
@@ -19,7 +20,6 @@ tmp/
 *.swp
 *~.nib
 local.properties
-.classpath
 .settings/
 .loadpath
 /mods/

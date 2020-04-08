@@ -14,20 +14,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SHWEventHandler {
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onKeyPressed(KeyInputEvent event) {
-		if (ClientProxy.keyHome.isPressed()) {
-			SHWPacketHandler.INSTANCE.sendToServer(new TeleportToHomeMessage());
-		}
-	}
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void onKeyPressed(KeyInputEvent event) {
+        if (ClientProxy.keyHome.isPressed()) {
+            SHWPacketHandler.INSTANCE.sendToServer(new TeleportToHomeMessage());
+        }
+    }
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onConfigChanged(PostConfigChangedEvent event) {
-		if (event.getModID().equals(Reference.MODID)) {
-			ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-		}
-	}
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void onConfigChanged(PostConfigChangedEvent event) {
+        if (event.getModID().equals(Reference.MODID)) {
+            ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
+        }
+    }
 
 }
