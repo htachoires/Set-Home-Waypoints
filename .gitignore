@@ -1,46 +1,10 @@
-## Based on GitHub's Eclipse .gitignore
+# Intellij
+.idea
 
-run/
+# Gradle
 .gradle/
 build/
 gradle-app.setting
 
-
-.idea
-## Eclipse
-/usercache.json
-/usernamecache.json
-
-*.pydevproject
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-/mods/
-/debug/
-*.lock
-/config/
-/crash-reports/
-/logs/
-options.txt
-/saves/
-/design
-/classes/
-/bin/
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
+# Minecraft
+run/
