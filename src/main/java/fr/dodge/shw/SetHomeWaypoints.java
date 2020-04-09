@@ -21,41 +21,41 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = Reference.MINECRAFT_VERSION)
 public class SetHomeWaypoints {
 
-	@SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY, modId = Reference.MODID)
-	public static ServerProxy proxy;
+    @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY, modId = Reference.MODID)
+    public static ServerProxy proxy;
 
-	public SetHomeWaypoints() {
-		MinecraftForge.EVENT_BUS.register(SHWEventHandler.class);
-	}
+    public SetHomeWaypoints() {
+        MinecraftForge.EVENT_BUS.register(SHWEventHandler.class);
+    }
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		SHWPacketHandler.registerMessages(Reference.MODID);
-	}
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        SHWPacketHandler.registerMessages(Reference.MODID);
+    }
 
-	@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent event) {
-		if (SHWConfiguration.ENABLE) {
-			if (SHWConfiguration.HOME_CONFIG.ENABLE) {
-				event.registerServerCommand(new CommandHome());
-				event.registerServerCommand(new CommandSetHome());
-			}
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        if (SHWConfiguration.ENABLE) {
+            if (SHWConfiguration.HOME.ENABLE) {
+                event.registerServerCommand(new CommandHome());
+                event.registerServerCommand(new CommandSetHome());
+            }
 
-			if (SHWConfiguration.WAYPOINTS_CONFIG.ENABLE) {
-				event.registerServerCommand(new CommandWaypoint());
-			}
-		}
-	}
+            if (SHWConfiguration.WAYPOINTS.ENABLE) {
+                event.registerServerCommand(new CommandWaypoint());
+            }
+        }
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		proxy.register();
-		ConfigManager.sync(Reference.MODID, Type.INSTANCE);
-	}
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.register();
+        ConfigManager.sync(Reference.MODID, Type.INSTANCE);
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
 
-	}
+    }
 
 }

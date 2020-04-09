@@ -1,16 +1,18 @@
 [
-{
-  "modid": "shw",
-  "name": "Set Home & Waypoints",
-  "description": "Add home and waypoints to teleport through the world !",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://github.com/htachoires/shw",
-  "updateUrl": "",
-  "authorList": ["Dodge_Man_"],
-  "credits": "",
-  "logoFile": "assets/shw/textures/logo.png",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "shw",
+    "name": "Set Home & Waypoints",
+    "description": "Add home and waypoints to teleport through the world !",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/htachoires/shw",
+    "updateUrl": "",
+    "authorList": [
+      "Dodge_Man_"
+    ],
+    "credits": "",
+    "logoFile": "assets/shw/textures/logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]

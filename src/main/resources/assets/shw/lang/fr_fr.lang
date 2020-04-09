@@ -1,43 +1,43 @@
-#Commands
-commands.shw.error_sender=Seulement les joueurs ont accès à cette commande
-commands.shw.error_position=Cette position n'est pas définie ou est invalide !
+############
+# SET HOME & WAYPOINTS
+############
 
-commands.shw.home.teleport=Téléportation à votre home...
+# Commands
+commands.shw.error.sender=Only players can use this command
+commands.shw.error.position=Cette position n'est pas définie ou est invalide !
+commands.shw.error.cooldown=Attendez %ds avant d'utiliser %s
+commands.shw.totalCooldown=Le temps de rechargment est de %ds
 
-commands.shw.wp.teleport_to=Téléportation sur 
-commands.shw.to_teleport= pour vous téléporter
-commands.shw.want_to_teleport=Envie de vous téléporter ?
-commands.shw.wp.To_teleport_at=Pour vous téléporter
-commands.shw.wp.to_teleport_at= pour vous téléporter
-commands.shw.wp.to_use_waypoint=Pour utiliser ce waypoint
-commands.shw.wp.success_clear=Tous vos waypoints ont été supprimé
+# /sethome
+commands.shw.sethome.usage=/sethome
+commands.shw.sethome.success=Votre home a bien été créé
 
-commands.shw.wait=Attendez 
-commands.shw.before_use= avant d'utiliser 
-commands.shw.wp.max=Vous avez atteint la limite de waypoints possible (%s) ! Vous ne pouvez plus en créer de nouveaux
-commands.shw.wp.limit=Vous pouvez avoir %d waypoints au maximum
+# /home
+commands.shw.home.usage=/home
+commands.shw.home.success=Téléportation à home...
+commands.shw.home.error=Votre home n'a pas encore été créé
 
-commands.shw.wp.cannot_remove=Impossible de supprimer 
-commands.shw.wp.not_set_yet=Il n'existe pas encore
-commands.shw.wp.success_waypoint=Votre waypoint a été créé !
-commands.shw.wp.ask_set=Pour ajouter ce waypoint
+# /wp
+commands.shw.wp.usage1=/wp %s
+commands.shw.wp.usage2=/wp %s <nom>
+commands.shw.wp.success=Téléportation sur %s
 
-commands.shw.wp.success_remove=Le waypoint '%s' a été supprimé
+commands.shw.wp.error.max=Vous avez déjà atteint la limit de waypoints (%s) !
 
-commands.shw.wp.cannot_use=Vous ne pouvez pas utiliser 
-commands.shw.wp.as_waypoint_name= comme nom de waypoint
-commands.wp.hover_for_details=Passer sur '%s' pour plus de détails
+commands.shw.wp.list=/wp use %s
+commands.shw.wp.limit=Vous pouvez avoir au maximum %d waypoints
 
-commands.shw.usage=Utilisation: 
-commands.shw.name_var=<nom>
-commands.shw.correct_command=Pour corriger votre commande
+commands.shw.wp.use.error=Waypoint %s n'éxiste pas
 
-commands.shw.clickhere=Cliquez Ici !
-commands.shw.use=Lancez 
-commands.shw.home.create= pour créer votre home
-commands.shw.home.ask_set_home=Envie de créer votre home ?
-commands.shw.sethome.success=Votre home a été créé. 
-commands.shw.cooldown=Temps de rechargement %ds
+commands.shw.wp.update.success=Waypoint %s a bien été mis à jour !
+commands.shw.wp.set.success=Waypoint %s a bien été créé !
+commands.shw.wp.set.argError=Un waypoint ne peut pas prendre le nom d'un argument
+commands.shw.wp.set.nameError=Waypoint %s ne respecte pas le regex %s
 
-# Key bindings
-key.teleport.comment=Téléportation rapide sur home
+commands.shw.wp.clear.success=Tous vos waypoints ont été supprimé
+
+commands.shw.wp.remove.success=Waypoint %s a été supprimé
+commands.shw.wp.remove.error=Vous ne pouvez pas supprimer %s. Il n'existe pas
+
+# Key Bindings
+shw.key.teleport=Teleport to home

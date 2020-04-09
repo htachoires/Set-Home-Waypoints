@@ -17,7 +17,7 @@ public class SHWEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onKeyPressed(KeyInputEvent event) {
-        if (ClientProxy.keyHome.isPressed()) {
+        if (ClientProxy.KEY_HOME.isPressed()) {
             SHWPacketHandler.INSTANCE.sendToServer(new TeleportToHomeMessage());
         }
     }
