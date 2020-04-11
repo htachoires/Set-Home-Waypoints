@@ -36,12 +36,12 @@ public class SetHomeWaypoints {
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         if (SHWConfiguration.ENABLE) {
-            if (SHWConfiguration.HOME.ENABLE) {
+            if (SHWConfiguration.HOME.enable) {
                 event.registerServerCommand(new CommandHome());
                 event.registerServerCommand(new CommandSetHome());
             }
 
-            if (SHWConfiguration.WAYPOINTS.ENABLE) {
+            if (SHWConfiguration.WAYPOINTS.enable) {
                 event.registerServerCommand(new CommandWaypoint());
             }
         }

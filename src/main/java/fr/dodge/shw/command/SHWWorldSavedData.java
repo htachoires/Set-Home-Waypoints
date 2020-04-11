@@ -26,7 +26,7 @@ public class SHWWorldSavedData extends WorldSavedData {
 
     public static void setString(EntityPlayer player, MinecraftServer server, String key, String value) {
         SHWWorldSavedData ex = SHWWorldSavedData.get(server.getWorld(0));
-        ex.data.setString(key + player.getUniqueID(), value);
+        ex.data.setString(key.toLowerCase() + player.getUniqueID(), value);
         ex.markDirty();
     }
 
@@ -37,7 +37,7 @@ public class SHWWorldSavedData extends WorldSavedData {
     }
 
     public static String getString(EntityPlayer player, MinecraftServer server, String key) {
-        return SHWWorldSavedData.get(server.getWorld(0)).data.getString(key + player.getUniqueID());
+        return SHWWorldSavedData.get(server.getWorld(0)).data.getString(key.toLowerCase() + player.getUniqueID());
     }
 
     public static Long getLong(EntityPlayer player, MinecraftServer server, String key) {

@@ -3,19 +3,40 @@
 ############
 
 # Commands
-commands.shw.error.sender=Only players can use this command
 commands.shw.error.position=This position is not defined or is invalid !
 commands.shw.error.cooldown=Wait %ds before use %s
 commands.shw.totalCooldown=Cooldown is set to %ds
+commands.shw.error.travelThroughDimension=Travel through dimension is forbidden for %s
+
+commands.shw.server.info.cooldown=Cooldown of %s is set to %ds
+commands.shw.server.info.travelThroughDimension=Travel through dimension of %s is set to %s
+commands.shw.server.info.limit=Limit of %s is set to %d
+
+commands.shw.server.error.length=%s value cannot exceed %d digits
+commands.shw.server.error.negative=%s value cannot be negavite
+commands.shw.server.error.type=%s value has to be a %s
+commands.shw.server.error.limit=Limit of home is 1 forever !
+
+commands.shw.server.success.cooldown=Cooldown of %s has been uptated to %ds
+commands.shw.server.success.travelThroughDimension=Travel through dimension for %s has been set to '%s'
+commands.shw.server.success.limit=Maximum of %s has been set to %s
+
+commands.shw.boolean=boolean
+commands.shw.number=number
+
 # /sethome
+commands.shw.sethome.errorServer=Use /home to configure home command
 commands.shw.sethome.usage=/sethome
 commands.shw.sethome.success=Your home has been set
 
 # /home
-commands.shw.home.usage=/home
+commands.shw.home.usage=/home <argInfo-optional>
 commands.shw.home.success=Teleporting to your home...
 commands.shw.home.error=Your home hasn't been set yet
 
+commands.shw.server.usage=/%s %s <%s>
+commands.shw.usage=/%s %s
+commands.shw.info.configuration=To change the configuration, use the GUI in mod options or in the console for servers
 # /wp
 commands.shw.wp.usage1=/wp %s
 commands.shw.wp.usage2=/wp %s <name>

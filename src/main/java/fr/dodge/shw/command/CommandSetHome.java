@@ -24,11 +24,15 @@ public class CommandSetHome extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (!(sender instanceof EntityPlayer)) throw new CommandException("commands.shw.error.sender");
-        if (args.length > 0) throw new WrongUsageException("commands.shw.sethome.usage");
+        if (sender instanceof MinecraftServer) {
+            throw new CommandException("commands.shw.sethome.errorServer");
+        }
+        if (sender instanceof EntityPlayer) {
+            if (args.length > 0) throw new WrongUsageException("commands.shw.sethome.usage");
 
-        SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + "home", SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
-        sender.sendMessage(TextComponentCustom.textComponentSuccess("commands.shw.sethome.success"));
+            SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + "home", SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
+            sender.sendMessage(TextComponentCustom.textComponentSuccess("commands.shw.sethome.success"));
+        }
     }
 
     /**

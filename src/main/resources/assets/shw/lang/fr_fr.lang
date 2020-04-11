@@ -3,12 +3,29 @@
 ############
 
 # Commands
-commands.shw.error.sender=Only players can use this command
 commands.shw.error.position=Cette position n'est pas définie ou est invalide !
 commands.shw.error.cooldown=Attendez %ds avant d'utiliser %s
 commands.shw.totalCooldown=Le temps de rechargment est de %ds
+commands.shw.error.travelThroughDimension=Le voyage à travers les dimensions est interdit pour /%s
+
+commands.shw.server.info.cooldown=Le temps de rechargement de %s est de %ds
+commands.shw.server.info.travelThroughDimension=Le voyage à travers les dimensions de %s vaut '%s'
+commands.shw.server.info.limit=La limite de %s est de %d
+
+commands.shw.server.error.length=La valeur '%s' ne peut pas excéder %d chiffres
+commands.shw.server.error.negative=%s value cannot be negavite
+commands.shw.server.error.type=La valeur de %s doit être un %s
+commands.shw.server.error.limit=La limite de home sera de 1 pour toujours !
+
+commands.shw.server.success.cooldown=Le temps de rechargement de %s est maintenant de %ds
+commands.shw.server.success.travelThroughDimension=Voyage à travers les dimensions pour %s est maintenant '%b'
+commands.shw.server.success.limit=Le maximum de %s est maintenant de %d
+
+commands.shw.boolean=booléen
+commands.shw.number=nombre
 
 # /sethome
+commands.shw.sethome.errorServer=Utilisez /home pour configurer la commande home
 commands.shw.sethome.usage=/sethome
 commands.shw.sethome.success=Votre home a bien été créé
 
@@ -17,6 +34,9 @@ commands.shw.home.usage=/home
 commands.shw.home.success=Téléportation à home...
 commands.shw.home.error=Votre home n'a pas encore été créé
 
+commands.shw.server.usage=/%s %s <%s>
+commands.shw.usage=/%s %s
+commands.shw.info.configuration=Changer la configuration se fait dans le GUI mod config pour le solo ou dans la console pour les servers
 # /wp
 commands.shw.wp.usage1=/wp %s
 commands.shw.wp.usage2=/wp %s <nom>
@@ -40,4 +60,4 @@ commands.shw.wp.remove.success=Waypoint %s a été supprimé
 commands.shw.wp.remove.error=Vous ne pouvez pas supprimer %s. Il n'existe pas
 
 # Key Bindings
-shw.key.teleport=Teleport to home
+shw.key.teleport=Téléportation à home
