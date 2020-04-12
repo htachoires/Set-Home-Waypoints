@@ -201,7 +201,7 @@ public class CommandWaypoint extends CommandBase {
             String undoSave = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoValue);
             if (!undoName.isEmpty() && !undoSave.isEmpty()) {
                 SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + undoName, undoSave);
-                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.undo.success", this.getName(), undoName));
+                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.undo.success", SHWUtilsTextComponent.textComponentWaypoint(undoName)));
                 SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
                 SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
             } else {
@@ -268,10 +268,19 @@ public class CommandWaypoint extends CommandBase {
      */
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return
-                (args.length == 1) ? getListOfStringsMatchingLastWord(args, commandArgs) :
-                        (args.length == 2 && (Arrays.asList(use, remove).contains(args[0].toLowerCase()))) ? getListOfStringsMatchingLastWord(args, getWaypoints(server, sender))
-                                : Collections.emptyList();
+        if (sender instanceof EntityPlayer) {
+            if (args.length == 1)
+                return getListOfStringsMatchingLastWord(args, commandArgs);
+            else if ((args.length == 2 && (Arrays.asList(use, remove).contains(args[0].toLowerCase()))))
+                return getListOfStringsMatchingLastWord(args, getWaypoints(server, sender));
+        } else if (sender instanceof MinecraftServer)
+            if (args.length == 1)
+                return getListOfStringsMatchingLastWord(args, SHWUtilsCommand.commandArgs);
+            else if (args.length == 2 && Arrays.asList(SHWUtilsCommand.travelThroughDimensionLC).contains(args[0].toLowerCase()))
+                return getListOfStringsMatchingLastWord(args, "true", "false");
+            else if (args.length == 2 && Arrays.asList(SHWUtilsCommand.cooldown, SHWUtilsCommand.limit).contains(args[0].toLowerCase()))
+                return getListOfStringsMatchingLastWord(args, "10");
+        return Collections.emptyList();
     }
 
 }

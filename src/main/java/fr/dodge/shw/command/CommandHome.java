@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +73,16 @@ public class CommandHome extends CommandBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, SHWUtilsCommand.commandArgs)
-                : args.length == 2 && SHWUtilsCommand.travelThroughDimensionLC.equals(args[0].toLowerCase()) && sender instanceof MinecraftServer ? Arrays.asList("true", "false") :
-                Collections.emptyList();
+        if (sender instanceof EntityPlayer) {
+            if (args.length == 1)
+                return getListOfStringsMatchingLastWord(args,  SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension);
+        } else if (sender instanceof MinecraftServer)
+            if (args.length == 1)
+                return getListOfStringsMatchingLastWord(args, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension);
+            else if (args.length == 2 && SHWUtilsCommand.travelThroughDimensionLC.equals(args[0].toLowerCase()))
+                return getListOfStringsMatchingLastWord(args, "true", "false");
+            else if (args.length == 2 && SHWUtilsCommand.cooldown.equals(args[0].toLowerCase()))
+                return getListOfStringsMatchingLastWord(args, "10");
+        return Collections.emptyList();
     }
 }
