@@ -12,11 +12,12 @@ commands.shw.server.info.cooldown=Le temps de rechargement de %s est de %ds
 commands.shw.server.info.travelThroughDimension=Le voyage à travers les dimensions de %s vaut '%s'
 commands.shw.server.info.limit=La limite de %s est de %d
 
-commands.shw.undo.info=Si c'était un accident, lancez /%s %s pour annuler votre action
+commands.shw.undo.info=Si c'était un accident, lancez /%s %s pour annuler votre action. Créer un nouveau waypoint supprimera ce waypoint pour toujours
 commands.shw.wp.undo.success=Votre waypoint %s a été récupéré
 commands.shw.home.undo.success=Voter home a été récupéré
 commands.shw.wp.undo.error=Désolé, votre dernier waypoint supprimé ne peut pas être récupéré
 commands.shw.wp.undo.lost=Votre dernier waypoint supprimé est désormais perdu à tout jamais...
+commands.shw.wp.undo.error.limit=Impossible de faire cette action, vous avez déjà atteint le maximum de waypoints (%d)
 
 commands.shw.server.error.length=La valeur '%s' ne peut pas excéder %d chiffres
 commands.shw.server.error.negative=%s value cannot be negavite

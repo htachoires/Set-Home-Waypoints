@@ -219,7 +219,7 @@ public class CommandWaypoint extends CommandBase {
     private void list(MinecraftServer server, ICommandSender sender) {
         List<String> waypoints = getWaypoints(server, sender);
         sender.sendMessage(new TextComponentTranslation("commands.shw.wp.list",
-                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.DARK_PURPLE, waypoints.toArray(new String[0])))
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.LIGHT_PURPLE, waypoints.toArray(new String[0])))
                 .appendSibling(SHWUtilsTextComponent.textComponentNumberWaypoint(waypoints.size())));
     }
 
