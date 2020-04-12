@@ -1,6 +1,5 @@
 package fr.dodge.shw.command;
 
-import fr.dodge.shw.Reference;
 import fr.dodge.shw.config.SHWConfiguration;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -9,7 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -57,9 +59,6 @@ public class CommandWaypoint extends CommandBase {
                     case list:
                         list(server, sender);
                         break;
-                    case limit:
-                        sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.wp.limit", SHWConfiguration.WAYPOINTS.maxWaypoints));
-                        break;
                     case clear:
                         remove(server, sender, removeAll);
                         break;
@@ -68,9 +67,10 @@ public class CommandWaypoint extends CommandBase {
                     case remove:
                         sender.sendMessage(new TextComponentTranslation("commands.shw.wp.usage2", args[0]));
                         break;
+                    case SHWUtilsCommand.limit:
                     case SHWUtilsCommand.cooldown:
                     case SHWUtilsCommand.travelThroughDimensionLC:
-                        SHWUtilsCommand.info(sender, args[0], this.getName(), SHWConfiguration.WAYPOINTS);
+                        SHWUtilsCommand.info(sender, args, this.getName(), SHWConfiguration.WAYPOINTS);
                         break;
                     default:
                         help(sender);
@@ -93,7 +93,7 @@ public class CommandWaypoint extends CommandBase {
                     case SHWUtilsCommand.cooldown:
                     case SHWUtilsCommand.travelThroughDimensionLC:
                     case SHWUtilsCommand.limit:
-                        SHWUtilsCommand.help(sender, this.getName());
+                        SHWUtilsCommand.info(sender, args, this.getName(), SHWConfiguration.WAYPOINTS);
                         break;
                     default:
                         help(sender);
@@ -114,13 +114,13 @@ public class CommandWaypoint extends CommandBase {
             throw new CommandException("commands.shw.wp.set.argError");
 
         if (!name.matches(pattern))
-            throw new CommandException("commands.shw.wp.set.nameError", TextComponentCustom.textComponentWaypoint(name), pattern);
+            throw new CommandException("commands.shw.wp.set.nameError", SHWUtilsTextComponent.textComponentWaypoint(name), pattern);
 
         List<String> waypoints = getWaypoints(server, sender);
         boolean update = waypoints.contains(name);
         if (update || waypoints.size() < SHWConfiguration.WAYPOINTS.maxWaypoints) {
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + name, SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
-            sender.sendMessage(TextComponentCustom.textComponentSuccess(update ? "commands.shw.wp.update.success" : "commands.shw.wp.set.success", TextComponentCustom.textComponentWaypoint(name)));
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess(update ? "commands.shw.wp.update.success" : "commands.shw.wp.set.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
         } else {
             throw new CommandException("commands.shw.wp.error.max", SHWConfiguration.WAYPOINTS.maxWaypoints);
         }
@@ -142,10 +142,10 @@ public class CommandWaypoint extends CommandBase {
             SHWUtilsCommand.teleportPlayer(server, (EntityPlayerMP) sender,
                     SHWWorldSavedData.getString((EntityPlayer) sender, server, prefix + name), SHWConfiguration.WAYPOINTS.travelThroughDimension, this.getName());
             SHWWorldSavedData.setLong((EntityPlayer) sender, server, prefixDate, new Date().getTime());
-            sender.sendMessage(new TextComponentTranslation("commands.shw.wp.success", TextComponentCustom.textComponentWaypoint(name)));
+            sender.sendMessage(new TextComponentTranslation("commands.shw.wp.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
         } else {
             throw new CommandException("commands.shw.error.cooldown",
-                    TextComponentCustom.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.WAYPOINTS.cooldown), "/wp use " + name);
+                    SHWUtilsTextComponent.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.WAYPOINTS.cooldown), "/wp use " + name);
         }
     }
 
@@ -156,10 +156,10 @@ public class CommandWaypoint extends CommandBase {
      */
     private void remove(MinecraftServer server, ICommandSender sender, String name) throws CommandException {
         if (name.equals(removeAll)) {
-            sender.sendMessage(TextComponentCustom.textComponentSuccess("commands.shw.wp.clear.success"));
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.clear.success"));
             SHWWorldSavedData.removeAllWaypoints(server, (EntityPlayer) sender);
         } else if (SHWWorldSavedData.remove(server, (EntityPlayer) sender, prefix + name)) {
-            sender.sendMessage(TextComponentCustom.textComponentSuccess("commands.shw.wp.remove.success", TextComponentCustom.textComponentWaypoint(name)));
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.remove.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
         } else {
             throw new CommandException("commands.shw.wp.remove.error", name);
         }
@@ -172,33 +172,27 @@ public class CommandWaypoint extends CommandBase {
     private void list(MinecraftServer server, ICommandSender sender) {
         List<String> waypoints = getWaypoints(server, sender);
         sender.sendMessage(new TextComponentTranslation("commands.shw.wp.list",
-                TextComponentCustom.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.DARK_PURPLE, waypoints.toArray(new String[0]))));
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.DARK_PURPLE, waypoints.toArray(new String[0]))));
     }
 
     private void help(ICommandSender sender) {
-        String limitText = "====";
-        String border = String.format("%s %s %s", limitText, Reference.NAME, limitText);
-        ITextComponent limitTextC = new TextComponentString(border);
-
-        limitTextC.setStyle(new Style().setColor(TextFormatting.GREEN));
+        ITextComponent oneArgs = new TextComponentTranslation("commands.shw.wp.usage1",
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, list, clear, help));
 
         ITextComponent twoArgs = new TextComponentTranslation("commands.shw.wp.usage2",
-                TextComponentCustom.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, set, use, remove))
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, set, use, remove))
                 .setStyle(new Style().setColor(TextFormatting.WHITE));
 
-        ITextComponent oneArgs = new TextComponentTranslation("commands.shw.wp.usage1",
-                TextComponentCustom.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, list, clear, help));
-
         ITextComponent configArgs = new TextComponentTranslation("commands.shw.wp.usage1",
-                TextComponentCustom.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, limit, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension));
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, limit, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension));
 
         sender.sendMessage(
-                limitTextC.appendText("\n")
+                SHWUtilsTextComponent.getBorder(true, "")
                         .appendSibling(twoArgs.appendText("\n")
                                 .appendSibling(oneArgs).appendText("\n")
                                 .appendSibling(configArgs).appendText("\n")
                         )
-                        .appendText(border));
+                        .appendSibling(SHWUtilsTextComponent.getBorder(false, "")));
     }
 
     /**

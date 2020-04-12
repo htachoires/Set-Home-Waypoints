@@ -1,9 +1,10 @@
 package fr.dodge.shw.command;
 
+import fr.dodge.shw.Reference;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.HoverEvent;
 
-public class TextComponentCustom {
+public class SHWUtilsTextComponent {
 
     protected static ITextComponent textComponentWaypoint(String name) {
         return new TextComponentString(String.format("%s", name)).setStyle(new Style()
@@ -39,6 +40,13 @@ public class TextComponentCustom {
         }
         result.appendText(suffix);
         return result;
+    }
+
+    protected static ITextComponent getBorder(boolean returnLine, String name) {
+        String limitText = "====";
+        String border = String.format("%s %s %s", limitText, Reference.NAME + name, limitText);
+        return new TextComponentString(border).appendText(returnLine ? "\n" : "")
+                .setStyle(new Style().setColor(TextFormatting.GREEN));
     }
 
 }

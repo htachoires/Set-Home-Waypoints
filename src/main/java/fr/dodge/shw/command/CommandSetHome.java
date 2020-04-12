@@ -31,7 +31,7 @@ public class CommandSetHome extends CommandBase {
             if (args.length > 0) throw new WrongUsageException("commands.shw.sethome.usage");
 
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + "home", SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
-            sender.sendMessage(TextComponentCustom.textComponentSuccess("commands.shw.sethome.success"));
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.sethome.success"));
         }
     }
 

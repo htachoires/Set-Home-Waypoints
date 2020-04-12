@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CommandHome extends CommandBase {
-    
+
     @Override
     public String getName() {
         return "home";
@@ -35,7 +35,7 @@ public class CommandHome extends CommandBase {
             SHWUtilsCommand.manageConfiguration(server, sender, args, this.getName(), SHWConfiguration.HOME);
         } else if (sender instanceof EntityPlayer) {
             if (args.length >= 1) {
-                SHWUtilsCommand.info(sender, args[0], this.getName(), SHWConfiguration.HOME);
+                SHWUtilsCommand.info(sender, args, this.getName(), SHWConfiguration.HOME);
             } else {
                 String homePosition = SHWWorldSavedData.getString((EntityPlayer) sender, server, CommandSetHome.prefix + "home");
 
@@ -50,7 +50,7 @@ public class CommandHome extends CommandBase {
                         sender.sendMessage(new TextComponentTranslation("commands.shw.home.success"));
                     } else {
                         throw new CommandException("commands.shw.error.cooldown",
-                                TextComponentCustom.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.HOME.cooldown), "/home");
+                                SHWUtilsTextComponent.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.HOME.cooldown), "/home");
                     }
                 } else {
                     throw new CommandException("commands.shw.home.error");

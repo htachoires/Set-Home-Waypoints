@@ -71,19 +71,19 @@ public class SHWUtilsCommand {
                     if (!(configuration instanceof SHWConfiguration.HomeConfiguration))
                         limit(server, args, command, configuration);
                     else
-                        sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.error.limit"));
+                        sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.error.limit"));
                     break;
                 default:
-                    help(sender, command);
+                    help(sender, command, configuration);
                     break;
             }
         } else {
-            help(sender, command);
+            help(sender, command, configuration);
         }
     }
 
-    protected static void info(ICommandSender sender, String arg, String command, ICommandConfiguration configuration) {
-        switch (arg.toLowerCase()) {
+    protected static void info(ICommandSender sender, String[] args, String command, ICommandConfiguration configuration) {
+        switch (args[0].toLowerCase()) {
             case cooldown:
                 cooldownInfo(sender, command, configuration.getCooldown());
                 break;
@@ -94,26 +94,37 @@ public class SHWUtilsCommand {
                 if (!(configuration instanceof SHWConfiguration.HomeConfiguration))
                     limitInfo(sender, command, configuration.getMaxWaypoints());
                 else
-                    sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.error.limit"));
+                    sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.error.limit"));
                 break;
             default:
-                help(sender, command);
+                help(sender, command, configuration);
                 break;
+        }
+        if (sender instanceof EntityPlayer && args.length > 1) {
+            ITextComponent informationTC = new TextComponentTranslation("commands.shw.info.configuration")
+                    .setStyle(new Style()
+                            .setColor(TextFormatting.GRAY)
+                            .setItalic(true));
+            sender.sendMessage(informationTC);
         }
     }
 
     private static void cooldownInfo(ICommandSender sender, String command, int cooldownValue) {
-        sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.info.cooldown",
+        sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.info.cooldown",
                 command, cooldownValue));
     }
 
     private static void limitInfo(ICommandSender sender, String command, int limitValue) {
-        sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.info.limit",
-                command, limitValue));
+        if (sender instanceof MinecraftServer)
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.info.limit",
+                    command, limitValue));
+        else
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.wp.limit",
+                    limitValue));
     }
 
     private static void travelThroughDimensionInfo(ICommandSender sender, String command, boolean travelThroughDimensionValue) {
-        sender.sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.info.travelThroughDimension",
+        sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.info.travelThroughDimension",
                 command, travelThroughDimensionValue));
     }
 
@@ -130,7 +141,7 @@ public class SHWUtilsCommand {
                 int cooldown = Integer.parseInt(number);
                 configuration.setCooldown(cooldown);
                 ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-                server.getPlayerList().sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.success.cooldown", command, cooldown));
+                server.getPlayerList().sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.success.cooldown", command, cooldown));
             } else {
                 throw new WrongUsageException("commands.shw.server.error.type", SHWUtilsCommand.cooldown,
                         new TextComponentTranslation("commands.shw.number"));
@@ -151,7 +162,7 @@ public class SHWUtilsCommand {
                 int limit = Integer.parseInt(number);
                 configuration.setMaxWaypoints(limit);
                 ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-                server.getPlayerList().sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.success.limit", command, limit));
+                server.getPlayerList().sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.success.limit", command, limit));
             } else {
                 throw new WrongUsageException("commands.shw.server.error.type", SHWUtilsCommand.limit,
                         new TextComponentTranslation("commands.shw.number"));
@@ -168,7 +179,7 @@ public class SHWUtilsCommand {
                 boolean tTD = Boolean.parseBoolean(bool);
                 configuration.setTravelThroughDimension(tTD);
                 ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-                server.getPlayerList().sendMessage(TextComponentCustom.textComponentSuccessServer("commands.shw.server.success.travelThroughDimension", command, tTD));
+                server.getPlayerList().sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.server.success.travelThroughDimension", command, tTD));
             } else {
                 throw new WrongUsageException("commands.shw.server.error.type", SHWUtilsCommand.travelThroughDimension,
                         new TextComponentTranslation("commands.shw.boolean"));
@@ -176,31 +187,28 @@ public class SHWUtilsCommand {
         }
     }
 
-    protected static void help(ICommandSender sender, String command) {
+    private static void help(ICommandSender sender, String command, ICommandConfiguration configuration) {
         if (sender instanceof MinecraftServer) {
+            String borderName = String.format(" | Configuration of %s", command.toUpperCase());
             ITextComponent cooldown = new TextComponentTranslation("commands.shw.server.usage",
                     command, SHWUtilsCommand.cooldown, new TextComponentTranslation("commands.shw.number"));
-
-            ITextComponent limit = new TextComponentTranslation("commands.shw.server.usage",
-                    command, SHWUtilsCommand.limit, new TextComponentTranslation("commands.shw.number"));
 
             ITextComponent travelThroughDimension = new TextComponentTranslation("commands.shw.server.usage",
                     command, SHWUtilsCommand.travelThroughDimension, new TextComponentTranslation("commands.shw.boolean"));
 
+            sender.sendMessage(SHWUtilsTextComponent.getBorder(false, borderName));
             sender.sendMessage(cooldown);
-            sender.sendMessage(limit);
+            if (!(configuration instanceof SHWConfiguration.HomeConfiguration)) {
+                ITextComponent limit = new TextComponentTranslation("commands.shw.server.usage",
+                        command, SHWUtilsCommand.limit, new TextComponentTranslation("commands.shw.number"));
+                sender.sendMessage(limit);
+            }
             sender.sendMessage(travelThroughDimension);
+            sender.sendMessage(SHWUtilsTextComponent.getBorder(false, borderName));
         } else if (sender instanceof EntityPlayer) {
             ITextComponent listCommandTC = new TextComponentTranslation("commands.shw.usage",
-                    command, TextComponentCustom.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, commandArgs));
-
-            ITextComponent informationTC = new TextComponentTranslation("commands.shw.info.configuration")
-                    .setStyle(new Style()
-                            .setColor(TextFormatting.GRAY)
-                            .setItalic(true));
-
-            sender.sendMessage(listCommandTC.appendText("\n").appendSibling(informationTC));
+                    command, SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, commandArgs));
+            sender.sendMessage(listCommandTC);
         }
-
     }
 }
