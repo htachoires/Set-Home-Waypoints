@@ -25,26 +25,34 @@ public class CommandWaypoint extends CommandBase {
 
     protected static final String prefix = "wp-";
     protected static final String prefixDate = "date-wp";
+    protected static final String prefixUndoValue = "undo-wp";
+    private static final String prefixUndoName = "undo-name-wp";
+
     private static final String set = "set";
     private static final String list = "list";
     private static final String use = "use";
+    private static final String undo = "undo";
     private static final String remove = "remove";
     private static final String help = "help";
-    private static final String limit = "limit";
     private static final String clear = "clear";
 
-    private static final String[] commandArgs = {set, clear, help, limit, list, use, remove, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension};
+    private static final String[] commandArgs = {set, clear, undo, help, list, use, remove, SHWUtilsCommand.cooldown, SHWUtilsCommand.limit, SHWUtilsCommand.travelThroughDimension};
     private static final String pattern = "^[a-zA-Z0-9]{3,10}$";
     private static final String removeAll = "*";
 
     @Override
     public String getName() {
-        return "wp";
+        return "waypoints";
     }
 
     @Override
     public String getUsage(ICommandSender sender) {
         return "commands.shw.wp.usage1";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Collections.singletonList("wp");
     }
 
     @Override
@@ -61,6 +69,9 @@ public class CommandWaypoint extends CommandBase {
                         break;
                     case clear:
                         remove(server, sender, removeAll);
+                        break;
+                    case undo:
+                        undo(server, sender);
                         break;
                     case set:
                     case use:
@@ -87,6 +98,9 @@ public class CommandWaypoint extends CommandBase {
                     case use:
                         use(server, sender, args[1]);
                         break;
+                    case undo:
+                        undo(server, sender);
+                        break;
                     case remove:
                         remove(server, sender, args[1]);
                         break;
@@ -103,13 +117,14 @@ public class CommandWaypoint extends CommandBase {
         }
     }
 
+
     /**
      * @param server Minecraft server...
      * @param sender Player that execute command
      * @param name   Waypoint name enter by the player
      */
     private void set(MinecraftServer server, ICommandSender sender, String name) throws CommandException {
-        name = name.toLowerCase(); //Avoid conflict
+        name = name.toLowerCase(); // To avoid conflict
         if (Arrays.asList(commandArgs).contains(name))
             throw new CommandException("commands.shw.wp.set.argError");
 
@@ -121,6 +136,11 @@ public class CommandWaypoint extends CommandBase {
         if (update || waypoints.size() < SHWConfiguration.WAYPOINTS.maxWaypoints) {
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + name, SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess(update ? "commands.shw.wp.update.success" : "commands.shw.wp.set.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
+
+            boolean undoValue = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
+            boolean undoName = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
+            if (undoValue || undoName)
+                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.wp.undo.lost"));
         } else {
             throw new CommandException("commands.shw.wp.error.max", SHWConfiguration.WAYPOINTS.maxWaypoints);
         }
@@ -132,7 +152,7 @@ public class CommandWaypoint extends CommandBase {
      * @param name   Waypoint name enter by the player
      */
     private void use(MinecraftServer server, ICommandSender sender, String name) throws CommandException {
-        name = name.toLowerCase();
+        name = name.toLowerCase();// To avoid conflict
         if (!getWaypoints(server, sender).contains(name))
             throw new CommandException("commands.shw.error.position");
 
@@ -155,13 +175,40 @@ public class CommandWaypoint extends CommandBase {
      * @param name   Waypoint name enter by the player
      */
     private void remove(MinecraftServer server, ICommandSender sender, String name) throws CommandException {
+        name = name.toLowerCase(); // To avoid conflict
+        String undoSave = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefix + name);
         if (name.equals(removeAll)) {
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.clear.success"));
             SHWWorldSavedData.removeAllWaypoints(server, (EntityPlayer) sender);
-        } else if (SHWWorldSavedData.remove(server, (EntityPlayer) sender, prefix + name)) {
+        } else if (SHWWorldSavedData.remove((EntityPlayer) sender, server, prefix + name)) {
+            SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoName, name);
+            SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoValue, undoSave);
+
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.remove.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.info", this.getName(), undo));
         } else {
             throw new CommandException("commands.shw.wp.remove.error", name);
+        }
+    }
+
+    /**
+     * @param server Minecraft server...
+     * @param sender Player that execute command
+     */
+    private void undo(MinecraftServer server, ICommandSender sender) throws CommandException {
+        if (getWaypoints(server, sender).size() < SHWConfiguration.WAYPOINTS.maxWaypoints) {
+            String undoName = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoName);
+            String undoSave = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoValue);
+            if (!undoName.isEmpty() && !undoSave.isEmpty()) {
+                SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + undoName, undoSave);
+                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.undo.success", this.getName(), undoName));
+                SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
+                SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
+            } else {
+                throw new CommandException("commands.shw.wp.undo.error");
+            }
+        } else {
+            throw new CommandException("commands.shw.wp.undo.error.limit", SHWConfiguration.WAYPOINTS.maxWaypoints);
         }
     }
 
@@ -172,19 +219,20 @@ public class CommandWaypoint extends CommandBase {
     private void list(MinecraftServer server, ICommandSender sender) {
         List<String> waypoints = getWaypoints(server, sender);
         sender.sendMessage(new TextComponentTranslation("commands.shw.wp.list",
-                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.DARK_PURPLE, waypoints.toArray(new String[0]))));
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.DARK_PURPLE, waypoints.toArray(new String[0])))
+                .appendSibling(SHWUtilsTextComponent.textComponentNumberWaypoint(waypoints.size())));
     }
 
     private void help(ICommandSender sender) {
         ITextComponent oneArgs = new TextComponentTranslation("commands.shw.wp.usage1",
-                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, list, clear, help));
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, clear, help, list, undo));
 
         ITextComponent twoArgs = new TextComponentTranslation("commands.shw.wp.usage2",
                 SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, set, use, remove))
                 .setStyle(new Style().setColor(TextFormatting.WHITE));
 
         ITextComponent configArgs = new TextComponentTranslation("commands.shw.wp.usage1",
-                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, limit, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension));
+                SHWUtilsTextComponent.stringsToTextComponent(", ", "[ ", " ]", TextFormatting.GOLD, SHWUtilsCommand.commandArgs));
 
         sender.sendMessage(
                 SHWUtilsTextComponent.getBorder(true, "")

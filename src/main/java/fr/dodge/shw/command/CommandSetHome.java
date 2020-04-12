@@ -7,6 +7,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 
+import java.util.Collections;
+import java.util.List;
+
 public class CommandSetHome extends CommandBase {
 
     public static final String prefix = "h-";
@@ -20,6 +23,11 @@ public class CommandSetHome extends CommandBase {
     @Override
     public String getUsage(ICommandSender sender) {
         return "commands.shw.sethome.usage";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Collections.singletonList("sh");
     }
 
     @Override

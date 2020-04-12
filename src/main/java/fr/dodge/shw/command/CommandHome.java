@@ -30,6 +30,11 @@ public class CommandHome extends CommandBase {
     }
 
     @Override
+    public List<String> getAliases() {
+        return Collections.singletonList("h");
+    }
+
+    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof MinecraftServer) {
             SHWUtilsCommand.manageConfiguration(server, sender, args, this.getName(), SHWConfiguration.HOME);

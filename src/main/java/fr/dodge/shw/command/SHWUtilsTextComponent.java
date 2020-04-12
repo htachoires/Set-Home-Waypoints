@@ -1,6 +1,7 @@
 package fr.dodge.shw.command;
 
 import fr.dodge.shw.Reference;
+import fr.dodge.shw.config.SHWConfiguration;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.HoverEvent;
 
@@ -49,4 +50,15 @@ public class SHWUtilsTextComponent {
                 .setStyle(new Style().setColor(TextFormatting.GREEN));
     }
 
+    public static ITextComponent textComponentNumberWaypoint(int number) {
+        ITextComponent numberOfWaypoints = new TextComponentString(String.format(" (%d/%d)", number, SHWConfiguration.WAYPOINTS.maxWaypoints));
+        double color = (double) number / SHWConfiguration.WAYPOINTS.maxWaypoints;
+        double ratio = 0.5;
+        numberOfWaypoints.setStyle(new Style().setColor(
+                color < ratio - ratio / 6 ? TextFormatting.DARK_GREEN :
+                        color > ratio + ratio / 2 ? TextFormatting.RED :
+                                TextFormatting.GOLD
+        ));
+        return numberOfWaypoints;
+    }
 }
