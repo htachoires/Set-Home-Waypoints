@@ -12,11 +12,15 @@ commands.shw.server.info.cooldown=Cooldown of %s is set to %ds
 commands.shw.server.info.travelThroughDimension=Travel through dimension of %s is set to %s
 commands.shw.server.info.limit=Limit of %s is set to %d
 
-commands.shw.undo.info=If it was an accident, use /%s %s to undo you action. Set a new waypoint will delete forever this waypoint
+commands.shw.undo.override.info=If you override this waypoint accidentally, use /%s %s to undo you action. Set or use a new waypoint will override this waypoint forever
+commands.shw.undo.remove.info=If you remove this waypoint accidentally, use /%s %s to undo you action. Set a new waypoint will delete this waypoint forever
+
 commands.shw.wp.undo.success=Your waypoint %s has been recovered
 commands.shw.home.undo.success=Your home has been recovered
 commands.shw.wp.undo.error=Sorry, your last removed waypoint can't be recovered
-commands.shw.wp.undo.lost=Your last removed waypoint is now lost forever...
+commands.shw.wp.undo.remove.lost=Your last removed waypoint is now lost forever...
+commands.shw.wp.undo.lost=Your last removed/overridden waypoint is now lost forever...
+commands.shw.wp.undo.override.lost=Your last overridden waypoint is now lost forever...
 commands.shw.wp.undo.error.limit=Cannot undo your action, you've already reach maximum of waypoints (%d)
 
 commands.shw.server.error.length=%s value cannot exceed %d digits

@@ -134,16 +134,24 @@ public class CommandWaypoint extends CommandBase {
         List<String> waypoints = getWaypoints(server, sender);
         boolean update = waypoints.contains(name);
         if (update || waypoints.size() < SHWConfiguration.WAYPOINTS.maxWaypoints) {
+            String undoPosition = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefix + name);
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefix + name, SHWUtilsCommand.getPositionPlayer((EntityPlayer) sender));
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess(update ? "commands.shw.wp.update.success" : "commands.shw.wp.set.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
-
-            boolean undoValue = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
-            boolean undoName = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
-            if (undoValue || undoName)
-                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.wp.undo.lost"));
-        } else {
+            if (update) {
+                SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoName, name);
+                SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoValue, undoPosition);
+                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.override.info", this.getName(), undo));
+            } else
+                removeUndoSave(server, sender, "commands.shw.wp.undo.lost");
+        } else
             throw new CommandException("commands.shw.wp.error.max", SHWConfiguration.WAYPOINTS.maxWaypoints);
-        }
+    }
+
+    private void removeUndoSave(MinecraftServer server, ICommandSender sender, String keyTranslation) {
+        boolean undoValue = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
+        boolean undoName = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
+        if (undoValue || undoName)
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer(keyTranslation));
     }
 
     /**
@@ -153,8 +161,11 @@ public class CommandWaypoint extends CommandBase {
      */
     private void use(MinecraftServer server, ICommandSender sender, String name) throws CommandException {
         name = name.toLowerCase();// To avoid conflict
-        if (!getWaypoints(server, sender).contains(name))
+        List<String> waypoints = getWaypoints(server, sender);
+        if (!waypoints.contains(name))
             throw new CommandException("commands.shw.error.position");
+
+        String undoName = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoName);
 
         long date = SHWWorldSavedData.getLong((EntityPlayer) sender, server, prefixDate);
         long cooldownRemaining = new Date().getTime() - date - TimeUnit.SECONDS.toMillis(SHWConfiguration.WAYPOINTS.cooldown);
@@ -163,10 +174,11 @@ public class CommandWaypoint extends CommandBase {
                     SHWWorldSavedData.getString((EntityPlayer) sender, server, prefix + name), SHWConfiguration.WAYPOINTS.travelThroughDimension, this.getName());
             SHWWorldSavedData.setLong((EntityPlayer) sender, server, prefixDate, new Date().getTime());
             sender.sendMessage(new TextComponentTranslation("commands.shw.wp.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
-        } else {
+            if (waypoints.contains(undoName))
+                removeUndoSave(server, sender,"commands.shw.wp.undo.override.lost");
+        } else
             throw new CommandException("commands.shw.error.cooldown",
                     SHWUtilsTextComponent.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.WAYPOINTS.cooldown), "/wp use " + name);
-        }
     }
 
     /**
@@ -185,10 +197,9 @@ public class CommandWaypoint extends CommandBase {
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoValue, undoSave);
 
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.remove.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
-            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.info", this.getName(), undo));
-        } else {
+            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.remove.info", this.getName(), undo));
+        } else
             throw new CommandException("commands.shw.wp.remove.error", name);
-        }
     }
 
     /**
@@ -204,12 +215,11 @@ public class CommandWaypoint extends CommandBase {
                 sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.undo.success", SHWUtilsTextComponent.textComponentWaypoint(undoName)));
                 SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
                 SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
-            } else {
+            } else
                 throw new CommandException("commands.shw.wp.undo.error");
-            }
-        } else {
+        } else
             throw new CommandException("commands.shw.wp.undo.error.limit", SHWConfiguration.WAYPOINTS.maxWaypoints);
-        }
+
     }
 
     /**
