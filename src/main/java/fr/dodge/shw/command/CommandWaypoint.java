@@ -25,6 +25,7 @@ public class CommandWaypoint extends CommandBase {
 
     protected static final String prefix = "wp-";
     protected static final String prefixDate = "date-wp";
+    protected static final String prefixInfo = "info-wp";
     protected static final String prefixUndoValue = "undo-wp";
     private static final String prefixUndoName = "undo-name-wp";
 
@@ -140,18 +141,31 @@ public class CommandWaypoint extends CommandBase {
             if (update) {
                 SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoName, name);
                 SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoValue, undoPosition);
-                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.override.info", this.getName(), undo));
+                if (!SHWWorldSavedData.getBoolean((EntityPlayer) sender, server, prefixInfo + set)) {
+                    sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.override.info", this.getName(), undo));
+                    SHWWorldSavedData.setBoolean((EntityPlayer) sender, server, prefixInfo + set, true);
+                }
+
             } else
                 removeUndoSave(server, sender, "commands.shw.wp.undo.lost");
         } else
             throw new CommandException("commands.shw.wp.error.max", SHWConfiguration.WAYPOINTS.maxWaypoints);
     }
 
+    /**
+     * Delete the last undo save value
+     *
+     * @param server         Minecraft server...
+     * @param sender         Player that execute command
+     * @param keyTranslation key message that will be send to the player
+     */
     private void removeUndoSave(MinecraftServer server, ICommandSender sender, String keyTranslation) {
         boolean undoValue = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoValue);
         boolean undoName = SHWWorldSavedData.remove((EntityPlayer) sender, server, prefixUndoName);
-        if (undoValue || undoName)
+        if ((undoValue || undoName) && !SHWWorldSavedData.getBoolean((EntityPlayer) sender, server, prefixInfo + "removeInfo")) {
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer(keyTranslation));
+            SHWWorldSavedData.setBoolean((EntityPlayer) sender, server, prefixInfo + "removeInfo", true);
+        }
     }
 
     /**
@@ -174,8 +188,10 @@ public class CommandWaypoint extends CommandBase {
                     SHWWorldSavedData.getString((EntityPlayer) sender, server, prefix + name), SHWConfiguration.WAYPOINTS.travelThroughDimension, this.getName());
             SHWWorldSavedData.setLong((EntityPlayer) sender, server, prefixDate, new Date().getTime());
             sender.sendMessage(new TextComponentTranslation("commands.shw.wp.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
-            if (waypoints.contains(undoName))
-                removeUndoSave(server, sender,"commands.shw.wp.undo.override.lost");
+            if (waypoints.contains(undoName) && !SHWWorldSavedData.getBoolean((EntityPlayer) sender, server, prefixInfo + use)) {
+                removeUndoSave(server, sender, "commands.shw.wp.undo.override.lost");
+                SHWWorldSavedData.setBoolean((EntityPlayer) sender, server, prefixInfo + use, true);
+            }
         } else
             throw new CommandException("commands.shw.error.cooldown",
                     SHWUtilsTextComponent.textComponentCooldown(Math.addExact(1, Math.abs(TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining))), SHWConfiguration.WAYPOINTS.cooldown), "/wp use " + name);
@@ -197,7 +213,10 @@ public class CommandWaypoint extends CommandBase {
             SHWWorldSavedData.setString((EntityPlayer) sender, server, prefixUndoValue, undoSave);
 
             sender.sendMessage(SHWUtilsTextComponent.textComponentSuccess("commands.shw.wp.remove.success", SHWUtilsTextComponent.textComponentWaypoint(name)));
-            sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.remove.info", this.getName(), undo));
+            if (!SHWWorldSavedData.getBoolean((EntityPlayer) sender, server, prefixInfo + remove)) {
+                sender.sendMessage(SHWUtilsTextComponent.textComponentSuccessServer("commands.shw.undo.remove.info", this.getName(), undo));
+                SHWWorldSavedData.setBoolean((EntityPlayer) sender, server, prefixInfo + remove, true);
+            }
         } else
             throw new CommandException("commands.shw.wp.remove.error", name);
     }

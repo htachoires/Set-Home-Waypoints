@@ -30,18 +30,28 @@ public class SHWWorldSavedData extends WorldSavedData {
         ex.markDirty();
     }
 
+    public static String getString(EntityPlayer player, MinecraftServer server, String key) {
+        return SHWWorldSavedData.get(server.getWorld(0)).data.getString(key + player.getUniqueID());
+    }
+
     public static void setLong(EntityPlayer player, MinecraftServer server, String key, long value) {
         SHWWorldSavedData ex = SHWWorldSavedData.get(server.getWorld(0));
         ex.data.setLong(key + player.getUniqueID(), value);
         ex.markDirty();
     }
 
-    public static String getString(EntityPlayer player, MinecraftServer server, String key) {
-        return SHWWorldSavedData.get(server.getWorld(0)).data.getString(key + player.getUniqueID());
-    }
-
     public static Long getLong(EntityPlayer player, MinecraftServer server, String key) {
         return SHWWorldSavedData.get(server.getWorld(0)).data.getLong(key + player.getUniqueID());
+    }
+
+    public static boolean getBoolean(EntityPlayer player, MinecraftServer server, String key) {
+        return SHWWorldSavedData.get(server.getWorld(0)).data.getBoolean(key + player.getUniqueID());
+    }
+
+    public static void setBoolean(EntityPlayer player, MinecraftServer server, String key, boolean value) {
+        SHWWorldSavedData ex = SHWWorldSavedData.get(server.getWorld(0));
+        ex.data.setBoolean(key + player.getUniqueID(), value);
+        ex.markDirty();
     }
 
     public static List<String> getDataOfPlayer(EntityPlayer player, MinecraftServer server) {

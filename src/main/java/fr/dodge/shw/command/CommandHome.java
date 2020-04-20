@@ -29,11 +29,6 @@ public class CommandHome extends CommandBase {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Collections.singletonList("h");
-    }
-
-    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof MinecraftServer) {
             SHWUtilsCommand.manageConfiguration(server, sender, args, this.getName(), SHWConfiguration.HOME);
@@ -75,7 +70,7 @@ public class CommandHome extends CommandBase {
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (sender instanceof EntityPlayer) {
             if (args.length == 1)
-                return getListOfStringsMatchingLastWord(args,  SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension);
+                return getListOfStringsMatchingLastWord(args, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension);
         } else if (sender instanceof MinecraftServer)
             if (args.length == 1)
                 return getListOfStringsMatchingLastWord(args, SHWUtilsCommand.cooldown, SHWUtilsCommand.travelThroughDimension);

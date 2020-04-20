@@ -26,11 +26,6 @@ public class CommandSetHome extends CommandBase {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Collections.singletonList("sh");
-    }
-
-    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof MinecraftServer) {
             throw new CommandException("commands.shw.sethome.errorServer");
