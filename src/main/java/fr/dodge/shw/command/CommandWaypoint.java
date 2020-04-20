@@ -226,7 +226,7 @@ public class CommandWaypoint extends CommandBase {
      * @param sender Player that execute command
      */
     private void undo(MinecraftServer server, ICommandSender sender) throws CommandException {
-        if (getWaypoints(server, sender).size() < SHWConfiguration.WAYPOINTS.maxWaypoints) {
+        if (getWaypoints(server, sender).size() <= SHWConfiguration.WAYPOINTS.maxWaypoints) {
             String undoName = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoName);
             String undoSave = SHWWorldSavedData.getString((EntityPlayer) sender, server, prefixUndoValue);
             if (!undoName.isEmpty() && !undoSave.isEmpty()) {
