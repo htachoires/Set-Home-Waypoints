@@ -1,2 +1,2 @@
-# Simple Home &amp; Waypoints
+# Set Home &amp; Waypoints
 
