@@ -1,3 +1,4 @@
+
 # Set Home &amp; Waypoints
 
 Set Home & waypoint aims **to improve User Experience** and **intuitive CLI** (Command Line Interface) for teleportation commands. This mod is **available in two languages**, French and English. **3 main commands** give you the ability to: create your home (`/sethome`); teleport to your home (`/home` or shortcut); create multiple waypoints to teleport on them (`/wp`). You can also configurate the mod if you want to with, CLI for servers and mod options for solo.
@@ -7,6 +8,8 @@ Set Home & waypoint aims **to improve User Experience** and **intuitive CLI** (C
 ![Picture: Waypoints](https://res.cloudinary.com/dodgeman/image/upload/v1613479367/shw-new/client-wp_xi8tbj.png)
 
 # Installation
+
+First of all, [Download Set Home & Waypoints on CurseForge](https://www.curseforge.com/minecraft/mc-mods/set-home-waypoints)
 
 **Both sides need the mod in mods directory !**
 
@@ -102,10 +105,3 @@ Other commands like `/wp clear` can be execute or show cooldown. I let you try i
 I hope you'll enjoy **Set Home & Waypoints** !
 
 Don't hesitate to leave a comment if you have any issue.
-
-
-
-
-
-
-
