@@ -1,4 +1,8 @@
 {
   "shw.commands.home.success": "Teleporting to your home...",
-  "shw.commands.sethome.success": "Your home has been set"
+  "shw.commands.sethome.success": "Your home has been set",
+  "shw.commands.waypoints.set.success": "Your waypoint has been set",
+  "shw.commands.waypoints.use.success": "Teleporting to your waypoint...",
+  "shw.commands.waypoints.delete.success": "Your waypoint has been deleted",
+  "shw.commands.waypoints.list.success": "Waypoints : %s"
 }

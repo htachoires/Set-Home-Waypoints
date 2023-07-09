@@ -1,8 +1,9 @@
 package com.dodgeman.shw.client.commands;
 
-import com.dodgeman.shw.savedata.HomePositionMapper;
-import com.dodgeman.shw.savedata.HomeSaveData;
-import com.dodgeman.shw.savedata.HomeSaveDataFactory;
+import com.dodgeman.shw.savedata.model.Home;
+import com.dodgeman.shw.savedata.mapper.PositionMapper;
+import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
+import com.dodgeman.shw.savedata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -24,10 +25,10 @@ public class SetHomeCommand {
     private static int setHome(CommandSourceStack context) throws CommandSyntaxException {
         ServerPlayer player = context.getPlayerOrException();
 
-        HomeSaveData homeSaveData = HomeSaveDataFactory.instance();
+        SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
-        homeSaveData.setHomePositionForPlayer(player.getUUID(), HomePositionMapper.fromPlayer(player));
-        homeSaveData.setDirty();
+        savedData.setHomeForPlayer(player.getUUID(), new Home(PositionMapper.fromPlayer(player)));
+        savedData.setDirty();
 
         context.sendSuccess(Component.translatable("shw.commands.sethome.success"), false);
 

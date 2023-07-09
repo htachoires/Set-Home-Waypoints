@@ -2,6 +2,7 @@ package com.dodgeman.shw;
 
 import com.dodgeman.shw.client.commands.HomeCommand;
 import com.dodgeman.shw.client.commands.SetHomeCommand;
+import com.dodgeman.shw.client.commands.WaypointsCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -70,6 +71,7 @@ public class SetHomeWaypoints
 
         HomeCommand.register(dispatcher);
         SetHomeCommand.register(dispatcher);
+        WaypointsCommand.register(dispatcher);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

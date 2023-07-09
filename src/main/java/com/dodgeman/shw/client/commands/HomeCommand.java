@@ -1,8 +1,8 @@
 package com.dodgeman.shw.client.commands;
 
-import com.dodgeman.shw.savedata.HomePosition;
-import com.dodgeman.shw.savedata.HomeSaveData;
-import com.dodgeman.shw.savedata.HomeSaveDataFactory;
+import com.dodgeman.shw.savedata.model.Home;
+import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
+import com.dodgeman.shw.savedata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -28,13 +28,13 @@ public class HomeCommand {
     private static int setHome(CommandSourceStack context) throws CommandSyntaxException {
         ServerPlayer player = context.getPlayerOrException();
 
-        HomeSaveData instance = HomeSaveDataFactory.instance();
+        SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
-        HomePosition homePosition = instance.getHomePositionByUUID(player.getUUID());
+        Home home = savedData.getHomeOfPlayer(player.getUUID());
 
-        ServerLevel dimension = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(homePosition.dimension())));
+        ServerLevel dimension = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(home.position().dimension())));
 
-        player.teleportTo(dimension, homePosition.x(), homePosition.y(), homePosition.z(), homePosition.ry(), homePosition.rx());
+        player.teleportTo(dimension, home.position().x(), home.position().y(), home.position().z(), home.position().ry(), home.position().rx());
 
         context.sendSuccess(Component.translatable("shw.commands.home.success"), false);
 
