@@ -8,7 +8,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 public class HomeCommand {
@@ -28,7 +32,9 @@ public class HomeCommand {
 
         HomePosition homePosition = instance.getHomePositionByUUID(player.getUUID());
 
-        player.teleportTo(player.getLevel(), homePosition.x(), homePosition.y(), homePosition.z(), homePosition.ry(), homePosition.rx());
+        ServerLevel dimension = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(homePosition.dimension())));
+
+        player.teleportTo(dimension, homePosition.x(), homePosition.y(), homePosition.z(), homePosition.ry(), homePosition.rx());
 
         context.sendSuccess(Component.translatable("shw.commands.home.success"), false);
 

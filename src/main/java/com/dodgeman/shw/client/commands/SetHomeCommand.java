@@ -26,7 +26,7 @@ public class SetHomeCommand {
 
         HomeSaveData homeSaveData = HomeSaveDataFactory.instance();
 
-        homeSaveData.setHomePositionForPlayer(player.getUUID(), HomePositionMapper.fromPosition(player.position(), player.getRotationVector()));
+        homeSaveData.setHomePositionForPlayer(player.getUUID(), HomePositionMapper.fromPlayer(player));
         homeSaveData.setDirty();
 
         context.sendSuccess(Component.translatable("shw.commands.sethome.success"), false);

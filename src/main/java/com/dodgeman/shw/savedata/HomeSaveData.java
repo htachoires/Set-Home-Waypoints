@@ -21,7 +21,7 @@ public class HomeSaveData extends SavedData {
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
         CompoundTag playersHomePositionTag = new CompoundTag();
 
-        playersHomePosition.forEach((uuid, homePosition) -> playersHomePositionTag.put(uuid.toString(), homePosition.toCompoundTag()));
+        playersHomePosition.forEach((uuid, homePosition) -> playersHomePositionTag.put(uuid.toString(), HomePositionMapper.toCompoundTag(homePosition)));
 
         tag.put(SetHomeWaypoints.MODID, playersHomePositionTag);
 
