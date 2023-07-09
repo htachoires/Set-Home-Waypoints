@@ -1,8 +1,15 @@
 {
   "shw.commands.home.success": "Teleporting to your home...",
+  "shw.commands.home.error.notAllowedToTravelDimension": "Cannot travel dimension to go back home",
   "shw.commands.sethome.success": "Your home has been set",
   "shw.commands.waypoints.set.success": "Your waypoint has been set",
   "shw.commands.waypoints.use.success": "Teleporting to your waypoint...",
+  "shw.commands.waypoints.use.error.notAllowedToTravelDimension": "Cannot travel dimension with waypoints",
   "shw.commands.waypoints.delete.success": "Your waypoint has been deleted",
-  "shw.commands.waypoints.list.success": "Waypoints : %s"
+  "shw.commands.waypoints.list.success": "/wp use [ %s ] (%d/%d)",
+  "shw.config.home.allowTravelThroughDimension": "Can /home travel dimension",
+  "shw.config.home.cooldown": "/home cooldown in second",
+  "shw.config.waypoints.allowTravelThroughDimension": "Can /wp travel dimension",
+  "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
+  "shw.config.waypoints.cooldown": "/wp cooldown in second"
 }
