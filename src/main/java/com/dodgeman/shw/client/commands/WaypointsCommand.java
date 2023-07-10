@@ -25,8 +25,12 @@ import java.util.concurrent.TimeUnit;
 public class WaypointsCommand {
 
     public static final String COMMAND_NAME = "wp";
+    private static final String COMMAND_HELP_NAME = "help";
     public static final String COMMAND_SET_NAME = "set";
     public static final String SET_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
+
+    private static final String COMMAND_UPDATE_NAME = "update";
+    public static final String UPDATE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
 
     public static final String COMMAND_USE_NAME = "use";
     public static final String USE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
@@ -36,17 +40,32 @@ public class WaypointsCommand {
     public static final String COMMAND_DELETE_NAME = "delete";
     public static final String DELETE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
 
-    public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
-    private static final int COOLDOWN_FAILURE = -2;
+    public static final int SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE = -1;
+    private static final int SET_DUPLICATE_WAYPOINT_NAME_FAILURE = -2;
+    private static final int UPDATE_WAYPOINT_NOT_FOUND_FAILURE = -1;
+    public static final int USE_TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
+    private static final int USE_COOLDOWN_NOT_READY_FAILURE = -2;
+    private static final int DELETE_WAYPOINT_NOT_FOUND_FAILURE = -1;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
                 .then(Commands
+                        .literal(COMMAND_HELP_NAME)
+                        .executes(WaypointsCommand::showWaypointHelp)
+                )
+                .then(Commands
                         .literal(COMMAND_SET_NAME)
                         .then(Commands
                                 .argument(SET_ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .executes(WaypointsCommand::setWaypoint)
+                        )
+                )
+                .then(Commands
+                        .literal(COMMAND_UPDATE_NAME)
+                        .then(Commands
+                                .argument(UPDATE_ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
+                                .executes(WaypointsCommand::updateWaypoint)
                         )
                 )
                 .then(Commands
@@ -70,38 +89,72 @@ public class WaypointsCommand {
         );
     }
 
+    private static int showWaypointHelp(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.help"), false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
     private static int setWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String waypointName = StringArgumentType.getString(context, SET_ARG_NAME_FOR_WAYPOINT_NAME);
-
         ServerPlayer player = context.getSource().getPlayerOrException();
-
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+
+        if (savedData.playerHasWaypointNamed(player.getUUID(), waypointName)) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.duplicateWaypoint"));
+
+            return SET_DUPLICATE_WAYPOINT_NAME_FAILURE;
+        }
+
+        Integer maximumNumberOfWaypoints = SetHomeWaypoints.ShwConfig.maximumNumberOfWaypoints.get();
+        boolean playerHasReachMaximumWaypoints = savedData.getPlayerNumberOfWaypoints(player.getUUID()) >= maximumNumberOfWaypoints;
+
+        if (playerHasReachMaximumWaypoints) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints"));
+
+            return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
+        }
 
         savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
         savedData.setDirty();
-
-        //TODO check maximum waypoints not exceeded
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.set.success"), false);
 
         return Command.SINGLE_SUCCESS;
     }
 
+    private static int updateWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        String waypointName = StringArgumentType.getString(context, UPDATE_ARG_NAME_FOR_WAYPOINT_NAME);
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+
+        if (!savedData.playerHasWaypointNamed(player.getUUID(), waypointName)) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.update.error.waypointNotFound"));
+
+            return UPDATE_WAYPOINT_NOT_FOUND_FAILURE;
+        }
+
+        savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
+        savedData.setDirty();
+
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.success"), false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
     private static int useWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String waypointName = StringArgumentType.getString(context, USE_ARG_NAME_FOR_WAYPOINT_NAME);
-
         ServerPlayer player = context.getSource().getPlayerOrException();
-
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
-        Waypoint waypoint = savedData.getWaypointOfPlayer(player.getUUID(), waypointName);
 
+        Waypoint waypoint = savedData.getWaypointOfPlayer(player.getUUID(), waypointName);
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(waypoint.position().dimension())));
 
         if (!SetHomeWaypoints.ShwConfig.allowWaypointsToTravelThoughDimension.get() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.notAllowedToTravelDimension"));
 
-            return TRAVEL_THROUGH_DIMENSION_FAILURE;
+            return USE_TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
         long lastUseWaypointCommand = savedData.getLastUseWaypointCommandOfPlayer(player.getUUID());
@@ -111,7 +164,7 @@ public class WaypointsCommand {
         if (cooldownRemaining <= 0) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown"));
 
-            return COOLDOWN_FAILURE;
+            return USE_COOLDOWN_NOT_READY_FAILURE;
         }
 
         savedData.playerUsedWaypointCommand(player.getUUID());
@@ -125,9 +178,7 @@ public class WaypointsCommand {
     }
 
     private static int listWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-
         ServerPlayer player = context.getSource().getPlayerOrException();
-
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
         List<String> waypoints = savedData.getWaypointsOfPlayer(player.getUUID()).stream().map(Waypoint::name).toList();
@@ -139,10 +190,14 @@ public class WaypointsCommand {
 
     private static int deleteWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String waypointName = StringArgumentType.getString(context, DELETE_ARG_NAME_FOR_WAYPOINT_NAME);
-
         ServerPlayer player = context.getSource().getPlayerOrException();
-
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+
+        if (!savedData.playerHasWaypointNamed(player.getUUID(), waypointName)) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.delete.error.waypointNotFound"));
+
+            return DELETE_WAYPOINT_NOT_FOUND_FAILURE;
+        }
 
         savedData.removeWaypointOfPlayer(player.getUUID(), waypointName);
         savedData.setDirty();

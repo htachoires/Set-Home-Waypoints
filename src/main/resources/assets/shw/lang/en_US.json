@@ -13,5 +13,11 @@
   "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
   "shw.config.waypoints.cooldown": "/wp cooldown in second",
   "shw.commands.home.error.cooldown": "/home is not ready yet",
-  "shw.commands.waypoints.use.error.cooldown": "/wp use is not ready yet"
+  "shw.commands.waypoints.use.error.cooldown": "/wp use is not ready yet",
+  "shw.commands.waypoints.set.error.maximumNumberOfWaypoints": "You have reach the maximum number of waypoints",
+  "shw.commands.waypoints.update.error.waypointNotFound": "You don't have waypoint with that name",
+  "shw.commands.waypoints.delete.error.waypointNotFound": "Waypoint not found",
+  "shw.commands.waypoints.help": "/wp set, use, update, delete, list",
+  "shw.commands.waypoints.update.success": "Waypoint updated",
+  "shw.commands.waypoints.set.error.duplicateWaypoint": "You already have a waypoint with that name"
 }

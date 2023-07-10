@@ -23,7 +23,7 @@ public class HomeCommand {
 
     public static final String COMMAND_NAME = "home";
     public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
-    public static final int COOLDOWN_FAILURE = -2;
+    public static final int COOLDOWN_NOT_READY_FAILURE = -2;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
@@ -54,7 +54,7 @@ public class HomeCommand {
         if (cooldownRemaining <= 0) {
             context.sendFailure(Component.translatable("shw.commands.home.error.cooldown"));
 
-            return COOLDOWN_FAILURE;
+            return COOLDOWN_NOT_READY_FAILURE;
         }
 
         player.teleportTo(serverLevel, home.position().x(), home.position().y(), home.position().z(), home.position().ry(), home.position().rx());

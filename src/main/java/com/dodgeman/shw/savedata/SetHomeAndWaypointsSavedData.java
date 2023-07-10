@@ -88,4 +88,12 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
     private PlayerHomeAndWaypoints getPlayerHomeAndWaypoints(UUID playerUUID) {
         return playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
     }
+
+    public int getPlayerNumberOfWaypoints(UUID playerUUID) {
+        return getPlayerHomeAndWaypoints(playerUUID).getNumberOfWaypoints();
+    }
+
+    public boolean playerHasWaypointNamed(UUID playerUUID, String waypointName) {
+        return getPlayerHomeAndWaypoints(playerUUID).hasWaypointNamed(waypointName);
+    }
 }

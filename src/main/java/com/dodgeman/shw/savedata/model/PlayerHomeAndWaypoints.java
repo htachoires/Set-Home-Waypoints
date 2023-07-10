@@ -64,4 +64,12 @@ public class PlayerHomeAndWaypoints {
     public void removeWaypoint(String waypointName) {
         waypoints.remove(waypointName);
     }
+
+    public int getNumberOfWaypoints() {
+        return waypoints.values().size();
+    }
+
+    public boolean hasWaypointNamed(String waypointName) {
+        return waypoints.containsKey(waypointName);
+    }
 }
