@@ -6,6 +6,7 @@ import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
 import com.dodgeman.shw.savedata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,19 +21,18 @@ public class SetHomeCommand {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
                 .requires(CommandSourceStack::isPlayer)
-                .executes(context -> setHome(context.getSource()))
+                .executes(SetHomeCommand::setHome)
         );
     }
 
-    private static int setHome(CommandSourceStack context) throws CommandSyntaxException {
-        ServerPlayer player = context.getPlayerOrException();
-
+    private static int setHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
         savedData.setHomeForPlayer(player.getUUID(), new Home(PositionMapper.fromPlayer(player)));
         savedData.setDirty();
 
-        context.sendSuccess(Component.translatable("shw.commands.sethome.success"), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.sethome.success"), false);
 
         return Command.SINGLE_SUCCESS;
     }

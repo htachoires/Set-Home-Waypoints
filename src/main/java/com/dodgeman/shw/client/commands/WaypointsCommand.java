@@ -1,6 +1,6 @@
 package com.dodgeman.shw.client.commands;
 
-import com.dodgeman.shw.SetHomeWaypoints;
+import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.savedata.*;
 import com.dodgeman.shw.savedata.mapper.PositionMapper;
 import com.dodgeman.shw.savedata.model.Waypoint;
@@ -107,8 +107,7 @@ public class WaypointsCommand {
             return SET_DUPLICATE_WAYPOINT_NAME_FAILURE;
         }
 
-        Integer maximumNumberOfWaypoints = SetHomeWaypoints.ShwConfig.maximumNumberOfWaypoints.get();
-        boolean playerHasReachMaximumWaypoints = savedData.getPlayerNumberOfWaypoints(player.getUUID()) >= maximumNumberOfWaypoints;
+        boolean playerHasReachMaximumWaypoints = savedData.getPlayerNumberOfWaypoints(player.getUUID()) >= ShwConfigWrapper.maximumNumberOfWaypoints();
 
         if (playerHasReachMaximumWaypoints) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints"));
@@ -151,7 +150,7 @@ public class WaypointsCommand {
         Waypoint waypoint = savedData.getWaypointOfPlayer(player.getUUID(), waypointName);
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(waypoint.position().dimension())));
 
-        if (!SetHomeWaypoints.ShwConfig.allowWaypointsToTravelThoughDimension.get() &&
+        if (!ShwConfigWrapper.allowWaypointsToTravelThoughDimension() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.notAllowedToTravelDimension"));
 
@@ -160,7 +159,7 @@ public class WaypointsCommand {
 
         long lastUseWaypointCommand = savedData.getLastUseWaypointCommandOfPlayer(player.getUUID());
 
-        long cooldownRemaining = new Date().getTime() - lastUseWaypointCommand - TimeUnit.SECONDS.toMillis(SetHomeWaypoints.ShwConfig.homeCooldown.get());
+        long cooldownRemaining = new Date().getTime() - lastUseWaypointCommand - TimeUnit.SECONDS.toMillis(ShwConfigWrapper.waypointsCooldown());
 
         if (cooldownRemaining <= 0) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown"));
@@ -184,7 +183,7 @@ public class WaypointsCommand {
 
         List<String> waypoints = savedData.getWaypointsOfPlayer(player.getUUID()).stream().map(Waypoint::name).toList();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.list.success", String.join(", ", waypoints), waypoints.size(), SetHomeWaypoints.ShwConfig.maximumNumberOfWaypoints.get()), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.list.success", String.join(", ", waypoints), waypoints.size(), ShwConfigWrapper.maximumNumberOfWaypoints()), false);
 
         return Command.SINGLE_SUCCESS;
     }

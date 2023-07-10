@@ -1,11 +1,12 @@
 package com.dodgeman.shw.client.commands;
 
-import com.dodgeman.shw.SetHomeWaypoints;
+import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.savedata.model.Home;
 import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
 import com.dodgeman.shw.savedata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,32 +30,31 @@ public class HomeCommand {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
                 .requires(CommandSourceStack::isPlayer)
-                .executes(context -> setHome(context.getSource()))
+                .executes(HomeCommand::setHome)
         );
     }
 
-    private static int setHome(CommandSourceStack context) throws CommandSyntaxException {
-        ServerPlayer player = context.getPlayerOrException();
-
+    private static int setHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
         Home home = savedData.getHomeOfPlayer(player.getUUID());
 
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(home.position().dimension())));
 
-        if (!SetHomeWaypoints.ShwConfig.allowHomeToTravelThoughDimension.get() &&
+        if (!ShwConfigWrapper.allowHomeToTravelThoughDimension() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
-            context.sendFailure(Component.translatable("shw.commands.home.error.notAllowedToTravelDimension"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.notAllowedToTravelDimension"));
 
             return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
         long lastUseHomeCommand = savedData.getLastUseHomeCommandOfPlayer(player.getUUID());
 
-        long cooldownRemaining = new Date().getTime() - lastUseHomeCommand - TimeUnit.SECONDS.toMillis(SetHomeWaypoints.ShwConfig.homeCooldown.get());
+        long cooldownRemaining = new Date().getTime() - lastUseHomeCommand - TimeUnit.SECONDS.toMillis(ShwConfigWrapper.homeCooldown());
 
         if (cooldownRemaining <= 0) {
-            context.sendFailure(Component.translatable("shw.commands.home.error.cooldown"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.cooldown"));
 
             return COOLDOWN_NOT_READY_FAILURE;
         }
@@ -64,7 +64,7 @@ public class HomeCommand {
         savedData.playerUsedHomeCommand(player.getUUID());
         savedData.setDirty();
 
-        context.sendSuccess(Component.translatable("shw.commands.home.success"), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.home.success"), false);
 
         return Command.SINGLE_SUCCESS;
     }

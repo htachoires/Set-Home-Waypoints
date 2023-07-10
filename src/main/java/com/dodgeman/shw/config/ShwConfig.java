@@ -6,7 +6,6 @@ public class ShwConfig {
 
     public final ForgeConfigSpec.BooleanValue allowHomeToTravelThoughDimension;
     public final ForgeConfigSpec.IntValue homeCooldown;
-
     public final ForgeConfigSpec.BooleanValue allowWaypointsToTravelThoughDimension;
     public final ForgeConfigSpec.IntValue waypointsCooldown;
     public final ForgeConfigSpec.IntValue maximumNumberOfWaypoints;
