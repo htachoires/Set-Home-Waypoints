@@ -1,4 +1,4 @@
-package com.dodgeman.shw.saveddata.mapper;
+package com.dodgeman.shw.saveddata.mappers;
 
 import net.minecraft.nbt.CompoundTag;
 

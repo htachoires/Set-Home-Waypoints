@@ -1,8 +1,8 @@
-package com.dodgeman.shw.saveddata.mapper;
+package com.dodgeman.shw.saveddata.mappers;
 
 import com.dodgeman.shw.SetHomeWaypoints;
 import com.dodgeman.shw.saveddata.SetHomeAndWaypointsSavedData;
-import com.dodgeman.shw.saveddata.model.PlayerHomeAndWaypoints;
+import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;

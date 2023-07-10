@@ -1,6 +1,6 @@
-package com.dodgeman.shw.saveddata.mapper;
+package com.dodgeman.shw.saveddata.mappers;
 
-import com.dodgeman.shw.saveddata.model.Position;
+import com.dodgeman.shw.saveddata.models.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;

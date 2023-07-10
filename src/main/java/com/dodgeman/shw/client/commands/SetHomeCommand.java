@@ -1,7 +1,7 @@
 package com.dodgeman.shw.client.commands;
 
-import com.dodgeman.shw.saveddata.model.Home;
-import com.dodgeman.shw.saveddata.mapper.PositionMapper;
+import com.dodgeman.shw.saveddata.models.Home;
+import com.dodgeman.shw.saveddata.mappers.PositionMapper;
 import com.dodgeman.shw.saveddata.SetHomeAndWaypointsSavedData;
 import com.dodgeman.shw.saveddata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;

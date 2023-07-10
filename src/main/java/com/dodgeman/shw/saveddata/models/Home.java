@@ -1,4 +1,4 @@
-package com.dodgeman.shw.saveddata.model;
+package com.dodgeman.shw.saveddata.models;
 
 public record Home(Position position) {
 }
