@@ -26,8 +26,10 @@ public class HomeCommand {
     public static final int COOLDOWN_NOT_READY_FAILURE = -2;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-                Commands.literal(COMMAND_NAME).executes(context -> setHome(context.getSource()))
+        dispatcher.register(Commands
+                .literal(COMMAND_NAME)
+                .requires(CommandSourceStack::isPlayer)
+                .executes(context -> setHome(context.getSource()))
         );
     }
 

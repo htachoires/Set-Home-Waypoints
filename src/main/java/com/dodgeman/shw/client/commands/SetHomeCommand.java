@@ -17,8 +17,10 @@ public class SetHomeCommand {
     public static final String COMMAND_NAME = "sethome";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-                Commands.literal(COMMAND_NAME).executes(context -> setHome(context.getSource()))
+        dispatcher.register(Commands
+                .literal(COMMAND_NAME)
+                .requires(CommandSourceStack::isPlayer)
+                .executes(context -> setHome(context.getSource()))
         );
     }
 

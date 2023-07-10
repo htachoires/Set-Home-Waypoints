@@ -50,6 +50,7 @@ public class WaypointsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
+                .requires(CommandSourceStack::isPlayer)
                 .then(Commands
                         .literal(COMMAND_HELP_NAME)
                         .executes(WaypointsCommand::showWaypointHelp)
