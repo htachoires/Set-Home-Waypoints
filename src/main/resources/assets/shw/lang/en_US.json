@@ -11,5 +11,7 @@
   "shw.config.home.cooldown": "/home cooldown in second",
   "shw.config.waypoints.allowTravelThroughDimension": "Can /wp travel dimension",
   "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
-  "shw.config.waypoints.cooldown": "/wp cooldown in second"
+  "shw.config.waypoints.cooldown": "/wp cooldown in second",
+  "shw.commands.home.error.cooldown": "/home is not ready yet",
+  "shw.commands.waypoints.use.error.cooldown": "/wp use is not ready yet"
 }

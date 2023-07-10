@@ -16,9 +16,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 public class HomeCommand {
 
     public static final String COMMAND_NAME = "home";
+    public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
+    public static final int COOLDOWN_FAILURE = -2;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
@@ -39,12 +44,23 @@ public class HomeCommand {
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
             context.sendFailure(Component.translatable("shw.commands.home.error.notAllowedToTravelDimension"));
 
-            return Command.SINGLE_SUCCESS;
+            return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        //TODO add cooldown check
+        long lastUseHomeCommand = savedData.getLastUseHomeCommandOfPlayer(player.getUUID());
+
+        long cooldownRemaining = new Date().getTime() - lastUseHomeCommand - TimeUnit.SECONDS.toMillis(SetHomeWaypoints.ShwConfig.homeCooldown.get());
+
+        if (cooldownRemaining <= 0) {
+            context.sendFailure(Component.translatable("shw.commands.home.error.cooldown"));
+
+            return COOLDOWN_FAILURE;
+        }
 
         player.teleportTo(serverLevel, home.position().x(), home.position().y(), home.position().z(), home.position().ry(), home.position().rx());
+
+        savedData.playerUsedHomeCommand(player.getUUID());
+        savedData.setDirty();
 
         context.sendSuccess(Component.translatable("shw.commands.home.success"), false);
 

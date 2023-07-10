@@ -11,6 +11,8 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
     private static final String HOME_KEY = "home";
     private static final String WAYPOINTS_KEY = "waypoints";
+    public static final String HOME_COMMAND_LAST_USE_KEY = "homeCommandLastUse";
+    public static final String WAYPOINT_COMMAND_LAST_USE_KEY = "waypointCommandLastUse";
 
     private final CompoundMapper<Home> homeMapper;
     private final CompoundMapper<Waypoint> waypointMapper;
@@ -31,7 +33,10 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
                 .map(waypointName -> waypointMapper.fromCompoundTag(waypointsTag.getCompound(waypointName)))
                 .toList();
 
-        return new PlayerHomeAndWaypoints(home, waypoints);
+        long homeCommandLastUse = tag.getLong(HOME_COMMAND_LAST_USE_KEY);
+        long waypointCommandLastUse = tag.getLong(WAYPOINT_COMMAND_LAST_USE_KEY);
+
+        return new PlayerHomeAndWaypoints(home, waypoints, homeCommandLastUse, waypointCommandLastUse);
     }
 
     @Override
@@ -45,6 +50,8 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
         tag.put(HOME_KEY, homeMapper.toCompoundTag(playerHomeAndWaypoints.getHome()));
         tag.put(WAYPOINTS_KEY, waypointsTag);
+        tag.putLong(HOME_COMMAND_LAST_USE_KEY, playerHomeAndWaypoints.getHomeCommandLastUse());
+        tag.putLong(WAYPOINT_COMMAND_LAST_USE_KEY, playerHomeAndWaypoints.getWaypointCommandLastUse());
 
         return tag;
     }

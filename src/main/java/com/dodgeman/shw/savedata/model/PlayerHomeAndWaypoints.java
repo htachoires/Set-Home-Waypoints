@@ -1,22 +1,44 @@
 package com.dodgeman.shw.savedata.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class PlayerHomeAndWaypoints {
 
     private Home home;
+    private long homeCommandLastUse;
 
     private final HashMap<String, Waypoint> waypoints;
+    private long waypointCommandLastUse;
 
     public PlayerHomeAndWaypoints() {
         waypoints = new HashMap<>();
     }
 
-    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints) {
+    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse) {
         this.home = home;
+        this.homeCommandLastUse = homeCommandLastUse;
         this.waypoints = new HashMap<>();
+        this.waypointCommandLastUse = waypointCommandLastUse;
+
         waypoints.forEach(waypoint -> this.waypoints.put(waypoint.name(), waypoint));
+    }
+
+    public void playerUsedHomeCommand() {
+        homeCommandLastUse = new Date().getTime();
+    }
+
+    public long getHomeCommandLastUse() {
+        return homeCommandLastUse;
+    }
+
+    public void playerUsedWaypointCommand() {
+        waypointCommandLastUse = new Date().getTime();
+    }
+
+    public long getWaypointCommandLastUse() {
+        return waypointCommandLastUse;
     }
 
     public Home getHome() {

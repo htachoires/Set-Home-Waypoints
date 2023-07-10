@@ -18,7 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WaypointsCommand {
 
@@ -33,6 +35,9 @@ public class WaypointsCommand {
 
     public static final String COMMAND_DELETE_NAME = "delete";
     public static final String DELETE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
+
+    public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
+    private static final int COOLDOWN_FAILURE = -2;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
@@ -96,10 +101,21 @@ public class WaypointsCommand {
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.notAllowedToTravelDimension"));
 
-            return Command.SINGLE_SUCCESS;
+            return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        //TODO add cooldown check
+        long lastUseWaypointCommand = savedData.getLastUseWaypointCommandOfPlayer(player.getUUID());
+
+        long cooldownRemaining = new Date().getTime() - lastUseWaypointCommand - TimeUnit.SECONDS.toMillis(SetHomeWaypoints.ShwConfig.homeCooldown.get());
+
+        if (cooldownRemaining <= 0) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown"));
+
+            return COOLDOWN_FAILURE;
+        }
+
+        savedData.playerUsedWaypointCommand(player.getUUID());
+        savedData.setDirty();
 
         player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), waypoint.position().ry(), waypoint.position().rx());
 

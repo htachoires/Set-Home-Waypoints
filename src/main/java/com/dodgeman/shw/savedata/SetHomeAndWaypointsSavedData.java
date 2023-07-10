@@ -39,7 +39,7 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
     }
 
     public void setHomeForPlayer(UUID playerUUID, Home home) {
-        PlayerHomeAndWaypoints playerHomeAndWaypoints = playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
+        PlayerHomeAndWaypoints playerHomeAndWaypoints = getPlayerHomeAndWaypoints(playerUUID);
         playerHomeAndWaypoints.setHome(home);
 
         playersHomeAndWaypoints.put(playerUUID, playerHomeAndWaypoints);
@@ -50,25 +50,42 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
     }
 
     public void addWaypointForPlayer(UUID playerUUID, Waypoint waypoint) {
-        PlayerHomeAndWaypoints playerHomeAndWaypoints = playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
+        PlayerHomeAndWaypoints playerHomeAndWaypoints = getPlayerHomeAndWaypoints(playerUUID);
         playerHomeAndWaypoints.addWaypoints(waypoint);
 
         playersHomeAndWaypoints.put(playerUUID, playerHomeAndWaypoints);
     }
 
     public Waypoint getWaypointOfPlayer(UUID playerUUID, String waypointName) {
-        PlayerHomeAndWaypoints playerHomeAndWaypoints = playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
-        return playerHomeAndWaypoints.getWaypoint(waypointName);
+        return getPlayerHomeAndWaypoints(playerUUID).getWaypoint(waypointName);
     }
 
     public void removeWaypointOfPlayer(UUID playerUUID, String waypointName) {
-        PlayerHomeAndWaypoints playerHomeAndWaypoints = playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
-        playerHomeAndWaypoints.removeWaypoint(waypointName);
+        getPlayerHomeAndWaypoints(playerUUID).removeWaypoint(waypointName);
     }
 
     public Collection<Waypoint> getWaypointsOfPlayer(UUID playerUUID) {
-        PlayerHomeAndWaypoints playerHomeAndWaypoints = playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
+        return getPlayerHomeAndWaypoints(playerUUID).getWaypoints().values();
+    }
 
-        return playerHomeAndWaypoints.getWaypoints().values();
+    public long getLastUseHomeCommandOfPlayer(UUID playerUUID) {
+
+        return getPlayerHomeAndWaypoints(playerUUID).getHomeCommandLastUse();
+    }
+
+    public void playerUsedHomeCommand(UUID playerUUID) {
+        getPlayerHomeAndWaypoints(playerUUID).playerUsedHomeCommand();
+    }
+
+    public long getLastUseWaypointCommandOfPlayer(UUID playerUUID) {
+        return getPlayerHomeAndWaypoints(playerUUID).getWaypointCommandLastUse();
+    }
+
+    public void playerUsedWaypointCommand(UUID playerUUID) {
+        getPlayerHomeAndWaypoints(playerUUID).playerUsedWaypointCommand();
+    }
+
+    private PlayerHomeAndWaypoints getPlayerHomeAndWaypoints(UUID playerUUID) {
+        return playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
     }
 }
