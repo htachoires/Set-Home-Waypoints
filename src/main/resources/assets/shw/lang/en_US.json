@@ -19,5 +19,9 @@
   "shw.commands.waypoints.delete.error.waypointNotFound": "Waypoint not found",
   "shw.commands.waypoints.help": "/wp set, use, update, delete, list",
   "shw.commands.waypoints.update.success": "Waypoint updated",
-  "shw.commands.waypoints.set.error.duplicateWaypoint": "You already have a waypoint with that name"
+  "shw.commands.waypoints.set.error.duplicateWaypoint": "You already have a waypoint with that name",
+  "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "You don't have any waypoint to undo",
+  "shw.commands.waypoints.undo.success": "Your waypoint has been recovered",
+  "shw.commands.home.error.noHomeFound": "Are you trying to explore empty void ? Your home is not set yet, use /home to do so",
+  "shw.commands.waypoints.use.error.waypointNotFound": "No waypoint found"
 }

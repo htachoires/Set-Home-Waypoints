@@ -12,13 +12,16 @@ public class PlayerHomeAndWaypoints {
     private final HashMap<String, Waypoint> waypoints;
     private long waypointCommandLastUse;
 
+    private Waypoint lastDeletedWaypoint;
+
     public PlayerHomeAndWaypoints() {
         waypoints = new HashMap<>();
     }
 
-    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse) {
+    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse, Waypoint lastDeletedWaypoint) {
         this.home = home;
         this.homeCommandLastUse = homeCommandLastUse;
+        this.lastDeletedWaypoint = lastDeletedWaypoint;
         this.waypoints = new HashMap<>();
         this.waypointCommandLastUse = waypointCommandLastUse;
 
@@ -35,6 +38,7 @@ public class PlayerHomeAndWaypoints {
 
     public void playerUsedWaypointCommand() {
         waypointCommandLastUse = new Date().getTime();
+        clearLastDeletedWaypoint();
     }
 
     public long getWaypointCommandLastUse() {
@@ -55,6 +59,7 @@ public class PlayerHomeAndWaypoints {
 
     public void addWaypoints(Waypoint waypoint) {
         this.waypoints.put(waypoint.name(), waypoint);
+        clearLastDeletedWaypoint();
     }
 
     public Waypoint getWaypoint(String waypointName) {
@@ -62,7 +67,15 @@ public class PlayerHomeAndWaypoints {
     }
 
     public void removeWaypoint(String waypointName) {
-        waypoints.remove(waypointName);
+        lastDeletedWaypoint = waypoints.remove(waypointName);
+    }
+
+    public void clearLastDeletedWaypoint() {
+        lastDeletedWaypoint = null;
+    }
+
+    public Waypoint getLastDeletedWaypoint() {
+        return lastDeletedWaypoint;
     }
 
     public int getNumberOfWaypoints() {
@@ -71,5 +84,14 @@ public class PlayerHomeAndWaypoints {
 
     public boolean hasWaypointNamed(String waypointName) {
         return waypoints.containsKey(waypointName);
+    }
+
+    public void undoLastDeletedWaypoint() {
+        waypoints.put(lastDeletedWaypoint.name(), lastDeletedWaypoint);
+        clearLastDeletedWaypoint();
+    }
+
+    public boolean hasLastDeletedWaypoint() {
+        return lastDeletedWaypoint != null;
     }
 }

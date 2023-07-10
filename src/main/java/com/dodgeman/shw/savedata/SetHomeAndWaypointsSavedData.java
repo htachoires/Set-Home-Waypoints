@@ -46,7 +46,7 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
     }
 
     public Home getHomeOfPlayer(UUID playerUUID) {
-        return playersHomeAndWaypoints.get(playerUUID).getHome();
+        return getPlayerHomeAndWaypoints(playerUUID).getHome();
     }
 
     public void addWaypointForPlayer(UUID playerUUID, Waypoint waypoint) {
@@ -85,8 +85,12 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
         getPlayerHomeAndWaypoints(playerUUID).playerUsedWaypointCommand();
     }
 
-    private PlayerHomeAndWaypoints getPlayerHomeAndWaypoints(UUID playerUUID) {
-        return playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
+    public void undoLastDeletedWaypointOfPlayer(UUID playerUUID) {
+        getPlayerHomeAndWaypoints(playerUUID).undoLastDeletedWaypoint();
+    }
+
+    public boolean playerHasLastDeletedWaypoint(UUID playerUUID) {
+        return getPlayerHomeAndWaypoints(playerUUID).hasLastDeletedWaypoint();
     }
 
     public int getPlayerNumberOfWaypoints(UUID playerUUID) {
@@ -95,5 +99,9 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
 
     public boolean playerHasWaypointNamed(UUID playerUUID, String waypointName) {
         return getPlayerHomeAndWaypoints(playerUUID).hasWaypointNamed(waypointName);
+    }
+
+    private PlayerHomeAndWaypoints getPlayerHomeAndWaypoints(UUID playerUUID) {
+        return playersHomeAndWaypoints.getOrDefault(playerUUID, new PlayerHomeAndWaypoints());
     }
 }

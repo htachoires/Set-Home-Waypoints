@@ -40,6 +40,7 @@ public class PositionMapper implements CompoundMapper<Position> {
     @Override
     public CompoundTag toCompoundTag(Position position) {
         CompoundTag tag = new CompoundTag();
+        if (position == null) return tag;
 
         tag.putString(DIMENSION_KEY, position.dimension());
         tag.putDouble(X_KEY, position.x());

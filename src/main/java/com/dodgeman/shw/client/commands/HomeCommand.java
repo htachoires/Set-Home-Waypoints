@@ -25,20 +25,27 @@ public class HomeCommand {
     public static final String COMMAND_NAME = "home";
     public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
     public static final int COOLDOWN_NOT_READY_FAILURE = -2;
+    private static final int NO_HOME_FOUND_FAILURE = -3;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
                 .requires(CommandSourceStack::isPlayer)
-                .executes(HomeCommand::setHome)
+                .executes(HomeCommand::goHome)
         );
     }
 
-    private static int setHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int goHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
         Home home = savedData.getHomeOfPlayer(player.getUUID());
+
+        if (home == null) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.noHomeFound"));
+
+            return NO_HOME_FOUND_FAILURE;
+        }
 
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(home.position().dimension())));
 

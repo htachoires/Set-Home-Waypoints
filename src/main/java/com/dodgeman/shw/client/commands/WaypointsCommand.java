@@ -38,6 +38,7 @@ public class WaypointsCommand {
     public static final String COMMAND_LIST_NAME = "list";
 
     public static final String COMMAND_DELETE_NAME = "delete";
+    private static final String COMMAND_UNDO_NAME = "undo";
     public static final String DELETE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
 
     public static final int SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE = -1;
@@ -45,7 +46,9 @@ public class WaypointsCommand {
     private static final int UPDATE_WAYPOINT_NOT_FOUND_FAILURE = -1;
     public static final int USE_TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
     private static final int USE_COOLDOWN_NOT_READY_FAILURE = -2;
+    private static final int USE_WAYPOINT_NOT_FOUND_FAILURE = -3;
     private static final int DELETE_WAYPOINT_NOT_FOUND_FAILURE = -1;
+    private static final int UNDO_LAST_DELETED_WAYPOINT_FAILURE = -1;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
@@ -75,6 +78,11 @@ public class WaypointsCommand {
                                 .argument(USE_ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .executes(WaypointsCommand::useWaypoint)
                         )
+                )
+                .then(Commands
+                        .literal(COMMAND_UNDO_NAME)
+                        .executes(WaypointsCommand::undoDeletedWaypoint)
+
                 )
                 .then(Commands
                         .literal(COMMAND_LIST_NAME)
@@ -115,6 +123,8 @@ public class WaypointsCommand {
             return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
         }
 
+        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
+
         savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
         savedData.setDirty();
 
@@ -134,6 +144,8 @@ public class WaypointsCommand {
             return UPDATE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
+        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
+
         savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
         savedData.setDirty();
 
@@ -148,6 +160,13 @@ public class WaypointsCommand {
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
 
         Waypoint waypoint = savedData.getWaypointOfPlayer(player.getUUID(), waypointName);
+
+        if (waypoint == null) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.waypointNotFound"));
+
+            return USE_WAYPOINT_NOT_FOUND_FAILURE;
+        }
+
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(waypoint.position().dimension())));
 
         if (!ShwConfigWrapper.allowWaypointsToTravelThoughDimension() &&
@@ -166,6 +185,8 @@ public class WaypointsCommand {
 
             return USE_COOLDOWN_NOT_READY_FAILURE;
         }
+
+        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
 
         savedData.playerUsedWaypointCommand(player.getUUID());
         savedData.setDirty();
@@ -202,7 +223,27 @@ public class WaypointsCommand {
         savedData.removeWaypointOfPlayer(player.getUUID(), waypointName);
         savedData.setDirty();
 
+        //TODO inform player that he can undo delete and if he set or replace one it will be lost forever
+
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.delete.success"), false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int undoDeletedWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+
+        if (!savedData.playerHasLastDeletedWaypoint(player.getUUID())) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.undo.error.noLastWaypointDeletedFound"));
+
+            return UNDO_LAST_DELETED_WAYPOINT_FAILURE;
+        }
+
+        savedData.undoLastDeletedWaypointOfPlayer(player.getUUID());
+        savedData.setDirty();
+
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.undo.success"), false);
 
         return Command.SINGLE_SUCCESS;
     }

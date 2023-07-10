@@ -18,6 +18,7 @@ public class WaypointMapper implements CompoundMapper<Waypoint> {
     @Override
     public Waypoint fromCompoundTag(CompoundTag tag) {
         String name = tag.getString(NAME_KEY);
+
         Position position = positionCompoundMapper.fromCompoundTag(tag.getCompound(POSITION_KEY));
 
         return new Waypoint(name, position);
@@ -26,6 +27,7 @@ public class WaypointMapper implements CompoundMapper<Waypoint> {
     @Override
     public CompoundTag toCompoundTag(Waypoint waypoint) {
         CompoundTag tag = new CompoundTag();
+        if (waypoint == null) return tag;
 
         tag.putString(NAME_KEY, waypoint.name());
         tag.put(POSITION_KEY, positionCompoundMapper.toCompoundTag(waypoint.position()));

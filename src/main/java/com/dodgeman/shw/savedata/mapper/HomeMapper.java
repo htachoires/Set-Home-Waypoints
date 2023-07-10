@@ -23,6 +23,8 @@ public class HomeMapper implements CompoundMapper<Home> {
     @Override
     public CompoundTag toCompoundTag(Home home) {
         CompoundTag tag = new CompoundTag();
+        if (home == null) return tag;
+
         tag.put(POSITION_KEY, positionCompoundMapper.toCompoundTag(home.position()));
         return tag;
     }
