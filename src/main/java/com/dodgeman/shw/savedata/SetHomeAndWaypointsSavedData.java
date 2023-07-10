@@ -2,7 +2,7 @@ package com.dodgeman.shw.savedata;
 
 import com.dodgeman.shw.SetHomeWaypoints;
 import com.dodgeman.shw.savedata.mapper.CompoundMapper;
-import com.dodgeman.shw.savedata.mapper.PlayerHomeAndWaypointsMapper;
+import com.dodgeman.shw.savedata.mapper.SetHomeAndWaypointsSavedDataMapper;
 import com.dodgeman.shw.savedata.model.Home;
 import com.dodgeman.shw.savedata.model.PlayerHomeAndWaypoints;
 import com.dodgeman.shw.savedata.model.Waypoint;
@@ -15,27 +15,26 @@ import java.util.*;
 public class SetHomeAndWaypointsSavedData extends SavedData {
 
     private final Map<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints;
-    private final CompoundMapper<PlayerHomeAndWaypoints> playersHomeAndWaypointsMapper;
+    private final CompoundMapper<SetHomeAndWaypointsSavedData> setHomeAndWaypointsSavedDataMapper;
 
     public SetHomeAndWaypointsSavedData() {
         playersHomeAndWaypoints = new HashMap<>();
-        playersHomeAndWaypointsMapper = new PlayerHomeAndWaypointsMapper();
+        setHomeAndWaypointsSavedDataMapper = new SetHomeAndWaypointsSavedDataMapper();
     }
 
     public SetHomeAndWaypointsSavedData(Map<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints) {
         this.playersHomeAndWaypoints = playersHomeAndWaypoints;
-        playersHomeAndWaypointsMapper = new PlayerHomeAndWaypointsMapper();
+        setHomeAndWaypointsSavedDataMapper = new SetHomeAndWaypointsSavedDataMapper();
     }
 
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
-        CompoundTag playersHomeAndWaypointsTag = new CompoundTag();
-
-        playersHomeAndWaypoints.forEach((uuid, playerHomeAndWaypoints) -> playersHomeAndWaypointsTag.put(uuid.toString(), playersHomeAndWaypointsMapper.toCompoundTag(playerHomeAndWaypoints)));
-
-        tag.put(SetHomeWaypoints.MODID, playersHomeAndWaypointsTag);
-
+        tag.put(SetHomeWaypoints.MODID, setHomeAndWaypointsSavedDataMapper.toCompoundTag(this));
         return tag;
+    }
+
+    public Map<UUID, PlayerHomeAndWaypoints> getPlayersHomeAndWaypoints() {
+        return playersHomeAndWaypoints;
     }
 
     public void setHomeForPlayer(UUID playerUUID, Home home) {
