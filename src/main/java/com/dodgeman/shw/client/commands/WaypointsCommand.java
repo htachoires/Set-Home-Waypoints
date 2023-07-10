@@ -127,7 +127,7 @@ public class WaypointsCommand {
             return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
+        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
 
         savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
         savedData.setDirty();
@@ -148,7 +148,7 @@ public class WaypointsCommand {
             return UPDATE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
+        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
 
         savedData.addWaypointForPlayer(player.getUUID(), new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
         savedData.setDirty();
@@ -190,7 +190,7 @@ public class WaypointsCommand {
             return USE_COOLDOWN_NOT_READY_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo is lastDeletedWaypoint is set
+        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
 
         savedData.playerUsedWaypointCommand(player.getUUID());
         savedData.setDirty();
@@ -239,7 +239,7 @@ public class WaypointsCommand {
         savedData.removeWaypointOfPlayer(player.getUUID(), waypointName);
         savedData.setDirty();
 
-        //TODO inform player that he can undo delete and if he set or replace one it will be lost forever
+        //TODO inform player that he can undo delete but executing /wp set or /wp replace will delete the waypoint forever
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.delete.success"), false);
 
