@@ -1,9 +1,9 @@
 package com.dodgeman.shw.client.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
-import com.dodgeman.shw.savedata.model.Home;
-import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
-import com.dodgeman.shw.savedata.SetHomeWaypointsSavedDataFactory;
+import com.dodgeman.shw.saveddata.model.Home;
+import com.dodgeman.shw.saveddata.SetHomeAndWaypointsSavedData;
+import com.dodgeman.shw.saveddata.SetHomeWaypointsSavedDataFactory;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;

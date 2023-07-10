@@ -1,11 +1,11 @@
-package com.dodgeman.shw.savedata;
+package com.dodgeman.shw.saveddata;
 
 import com.dodgeman.shw.SetHomeWaypoints;
-import com.dodgeman.shw.savedata.mapper.CompoundMapper;
-import com.dodgeman.shw.savedata.mapper.SetHomeAndWaypointsSavedDataMapper;
-import com.dodgeman.shw.savedata.model.Home;
-import com.dodgeman.shw.savedata.model.PlayerHomeAndWaypoints;
-import com.dodgeman.shw.savedata.model.Waypoint;
+import com.dodgeman.shw.saveddata.mapper.CompoundMapper;
+import com.dodgeman.shw.saveddata.mapper.SetHomeAndWaypointsSavedDataMapper;
+import com.dodgeman.shw.saveddata.model.Home;
+import com.dodgeman.shw.saveddata.model.PlayerHomeAndWaypoints;
+import com.dodgeman.shw.saveddata.model.Waypoint;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;

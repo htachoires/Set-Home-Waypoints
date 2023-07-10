@@ -1,7 +1,7 @@
-package com.dodgeman.shw.savedata.mapper;
+package com.dodgeman.shw.saveddata.mapper;
 
-import com.dodgeman.shw.savedata.model.Position;
-import com.dodgeman.shw.savedata.model.Waypoint;
+import com.dodgeman.shw.saveddata.model.Position;
+import com.dodgeman.shw.saveddata.model.Waypoint;
 import net.minecraft.nbt.CompoundTag;
 
 public class WaypointMapper implements CompoundMapper<Waypoint> {

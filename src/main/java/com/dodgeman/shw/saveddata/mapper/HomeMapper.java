@@ -1,7 +1,7 @@
-package com.dodgeman.shw.savedata.mapper;
+package com.dodgeman.shw.saveddata.mapper;
 
-import com.dodgeman.shw.savedata.model.Home;
-import com.dodgeman.shw.savedata.model.Position;
+import com.dodgeman.shw.saveddata.model.Home;
+import com.dodgeman.shw.saveddata.model.Position;
 import net.minecraft.nbt.CompoundTag;
 
 public class HomeMapper implements CompoundMapper<Home> {

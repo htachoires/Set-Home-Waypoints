@@ -1,8 +1,8 @@
-package com.dodgeman.shw.savedata.mapper;
+package com.dodgeman.shw.saveddata.mapper;
 
 import com.dodgeman.shw.SetHomeWaypoints;
-import com.dodgeman.shw.savedata.SetHomeAndWaypointsSavedData;
-import com.dodgeman.shw.savedata.model.PlayerHomeAndWaypoints;
+import com.dodgeman.shw.saveddata.SetHomeAndWaypointsSavedData;
+import com.dodgeman.shw.saveddata.model.PlayerHomeAndWaypoints;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;
@@ -33,6 +33,7 @@ public class SetHomeAndWaypointsSavedDataMapper implements CompoundMapper<SetHom
     @Override
     public CompoundTag toCompoundTag(SetHomeAndWaypointsSavedData savedData) {
         CompoundTag tag = new CompoundTag();
+        if (savedData == null) return tag;
 
         savedData.getPlayersHomeAndWaypoints().forEach((uuid, playerHomeAndWaypoints) -> tag.put(uuid.toString(), playerHomeAndWaypointsMapper.toCompoundTag(playerHomeAndWaypoints)));
 

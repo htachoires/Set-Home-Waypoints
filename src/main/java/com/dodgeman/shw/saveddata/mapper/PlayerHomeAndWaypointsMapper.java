@@ -1,8 +1,8 @@
-package com.dodgeman.shw.savedata.mapper;
+package com.dodgeman.shw.saveddata.mapper;
 
-import com.dodgeman.shw.savedata.model.Home;
-import com.dodgeman.shw.savedata.model.PlayerHomeAndWaypoints;
-import com.dodgeman.shw.savedata.model.Waypoint;
+import com.dodgeman.shw.saveddata.model.Home;
+import com.dodgeman.shw.saveddata.model.PlayerHomeAndWaypoints;
+import com.dodgeman.shw.saveddata.model.Waypoint;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.List;

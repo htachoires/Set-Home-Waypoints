@@ -1,4 +1,4 @@
-package com.dodgeman.shw.savedata.model;
+package com.dodgeman.shw.saveddata.model;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -1,9 +1,9 @@
 package com.dodgeman.shw.client.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
-import com.dodgeman.shw.savedata.*;
-import com.dodgeman.shw.savedata.mapper.PositionMapper;
-import com.dodgeman.shw.savedata.model.Waypoint;
+import com.dodgeman.shw.saveddata.*;
+import com.dodgeman.shw.saveddata.mapper.PositionMapper;
+import com.dodgeman.shw.saveddata.model.Waypoint;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
