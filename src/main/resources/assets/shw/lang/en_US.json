@@ -23,5 +23,6 @@
   "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "You don't have any waypoint to undo",
   "shw.commands.waypoints.undo.success": "Your waypoint has been recovered",
   "shw.commands.home.error.noHomeFound": "Are you trying to explore empty void ? Your home is not set yet, use /home to do so",
-  "shw.commands.waypoints.use.error.waypointNotFound": "No waypoint found"
+  "shw.commands.waypoints.use.error.waypointNotFound": "No waypoint found",
+  "shw.commands.waypoints.clear.success": "All your waypoints have been deleted"
 }

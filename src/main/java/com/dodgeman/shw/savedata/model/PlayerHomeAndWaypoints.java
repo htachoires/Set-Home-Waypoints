@@ -70,6 +70,11 @@ public class PlayerHomeAndWaypoints {
         lastDeletedWaypoint = waypoints.remove(waypointName);
     }
 
+    public void clearWaypointOfPlayer() {
+        waypoints.clear();
+        clearLastDeletedWaypoint();
+    }
+
     public void clearLastDeletedWaypoint() {
         lastDeletedWaypoint = null;
     }

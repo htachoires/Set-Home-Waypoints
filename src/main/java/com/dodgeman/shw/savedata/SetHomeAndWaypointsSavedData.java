@@ -64,12 +64,15 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
         getPlayerHomeAndWaypoints(playerUUID).removeWaypoint(waypointName);
     }
 
+    public void clearWaypointOfPlayer(UUID playerUUID) {
+        getPlayerHomeAndWaypoints(playerUUID).clearWaypointOfPlayer();
+    }
+
     public Collection<Waypoint> getWaypointsOfPlayer(UUID playerUUID) {
         return getPlayerHomeAndWaypoints(playerUUID).getWaypoints().values();
     }
 
     public long getLastUseHomeCommandOfPlayer(UUID playerUUID) {
-
         return getPlayerHomeAndWaypoints(playerUUID).getHomeCommandLastUse();
     }
 

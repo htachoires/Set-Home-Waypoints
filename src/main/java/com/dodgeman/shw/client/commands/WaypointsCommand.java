@@ -37,6 +37,7 @@ public class WaypointsCommand {
 
     public static final String COMMAND_LIST_NAME = "list";
 
+    private static final String COMMAND_CLEAR_NAME = "clear";
     public static final String COMMAND_DELETE_NAME = "delete";
     private static final String COMMAND_UNDO_NAME = "undo";
     public static final String DELETE_ARG_NAME_FOR_WAYPOINT_NAME = "waypoint mame";
@@ -89,6 +90,9 @@ public class WaypointsCommand {
                         .executes(WaypointsCommand::listWaypoint)
                 )
                 .then(Commands
+                        .literal(COMMAND_CLEAR_NAME)
+                        .executes(WaypointsCommand::clearWaypoints)
+                ).then(Commands
                         .literal(COMMAND_DELETE_NAME)
                         .then(Commands
                                 .argument(DELETE_ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
@@ -205,6 +209,18 @@ public class WaypointsCommand {
         List<String> waypoints = savedData.getWaypointsOfPlayer(player.getUUID()).stream().map(Waypoint::name).toList();
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.list.success", String.join(", ", waypoints), waypoints.size(), ShwConfigWrapper.maximumNumberOfWaypoints()), false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int clearWaypoints(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.clear.success"), false);
+
+        savedData.clearWaypointOfPlayer(player.getUUID());
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }
