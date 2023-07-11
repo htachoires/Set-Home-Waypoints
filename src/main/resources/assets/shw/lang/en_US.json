@@ -1,28 +1,48 @@
 {
-  "shw.commands.home.success": "Teleporting to your home...",
-  "shw.commands.home.error.notAllowedToTravelDimension": "Cannot travel dimension to go back home",
-  "shw.commands.sethome.success": "Your home has been set",
-  "shw.commands.waypoints.set.success": "Your waypoint has been set",
-  "shw.commands.waypoints.use.success": "Teleporting to your waypoint...",
-  "shw.commands.waypoints.use.error.notAllowedToTravelDimension": "Cannot travel dimension with waypoints",
-  "shw.commands.waypoints.delete.success": "Your waypoint has been deleted",
+  //home command
+  "shw.commands.home.success": "Teleporting to your home…",
+  "shw.commands.home.error.homeNotFound": "An adventurer already tried to explore empty void, it wasn't a pleasant experiment, he vanished… I advise you to /sethome before getting to your home",
+  "shw.commands.home.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
+  "shw.commands.home.error.cooldown": "Get yourself some rest before traveling again. %d seconds remaining…",
+  //sethome command
+  "shw.commands.sethome.success.first_home": "Congrats, your home has been registered! You can now use the power of /home to get you back here",
+  "shw.commands.sethome.success.update": "Your home has been updated",
+  "shw.commands.sethome.success.the_nether": "What an adventurer! Your home has been set in The Nether",
+  "shw.commands.sethome.success.the_end": "You have my personal respect! You now have your home in The End",
+  //wp set command
+  "shw.commands.waypoints.set.success.first_waypoint": "Congrats, your first waypoint has been registered! Execute /wp set %s to get back here",
+  "shw.commands.waypoints.set.success": "%s has been added to your waypoints",
+  "shw.commands.waypoints.set.error.maximumNumberOfWaypoints": "Your memory has reached its limit, remove or update a waypoint before setting a new one",
+  "shw.commands.waypoints.set.error.duplicateWaypoint": "Mhm… You already have %s waypoint. Remove an existing waypoint and try again",
+  "shw.commands.waypoints.set.error.duplicateWaypointRepetitive": "I'm worried about your memory… Do you have memory loss? Because you already have %s waypoint",
+  //wp use command
+  "shw.commands.waypoints.use.success": "Teleporting to your waypoint…",
+  "shw.commands.waypoints.use.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
+  "shw.commands.waypoints.use.error.cooldown": "Get yourself some rest before traveling again. %d seconds remaining…",
+  "shw.commands.waypoints.use.error.waypointNotFound": "A new waypoint? Because you don't have this one yet",
+  "shw.commands.waypoints.use.error.waypointNotFoundButDeleted": "This waypoint is no longer in your collection",
+  //wp delete command
+  "shw.commands.waypoints.remove.undo": "You can undo with /wp undo",
+  "shw.commands.waypoints.remove.success.1": "You've lost your parchment with <%s> coordinates… <%s> waypoint is no longer in your collection",
+  "shw.commands.waypoints.remove.success.2": "You've forgotten <%s> coordinates anyway… You made the right choice by erasing it",
+  "shw.commands.waypoints.remove.success.3": "Job done! <%s> is gone. You now have a new waypoint slot",
+  "shw.commands.waypoints.remove.success.4": "<%s> has been deleted",
+  "shw.commands.waypoints.remove.error.waypointNotFound": "Good news! You're trying to remove a waypoint you don't have",
+  //wp clear command
+  "shw.commands.waypoints.clear.success": "All your waypoints have been deleted",
+  //wp list command
   "shw.commands.waypoints.list.success": "/wp use [ %s ] (%d/%d)",
-  "shw.config.home.allowTravelThroughDimension": "Can /home travel dimension",
-  "shw.config.home.cooldown": "/home cooldown in second",
-  "shw.config.waypoints.allowTravelThroughDimension": "Can /wp travel dimension",
-  "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
-  "shw.config.waypoints.cooldown": "/wp cooldown in second",
-  "shw.commands.home.error.cooldown": "/home is not ready yet",
-  "shw.commands.waypoints.use.error.cooldown": "/wp use is not ready yet",
-  "shw.commands.waypoints.set.error.maximumNumberOfWaypoints": "You have reach the maximum number of waypoints",
-  "shw.commands.waypoints.update.error.waypointNotFound": "You don't have waypoint with that name",
-  "shw.commands.waypoints.delete.error.waypointNotFound": "Waypoint not found",
-  "shw.commands.waypoints.help": "/wp set, use, update, delete, list",
+  //wp update command
   "shw.commands.waypoints.update.success": "Waypoint updated",
-  "shw.commands.waypoints.set.error.duplicateWaypoint": "You already have a waypoint with that name",
+  "shw.commands.waypoints.update.error.waypointNotFound": "You don't have waypoint with that name",
+  //wp undo command
   "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "You don't have any waypoint to undo",
   "shw.commands.waypoints.undo.success": "Your waypoint has been recovered",
-  "shw.commands.home.error.noHomeFound": "Are you trying to explore empty void ? Your home is not set yet, use /home to do so",
-  "shw.commands.waypoints.use.error.waypointNotFound": "No waypoint found",
-  "shw.commands.waypoints.clear.success": "All your waypoints have been deleted"
+  //home configuration
+  "shw.config.home.allowTravelThroughDimension": "Can /home travel dimension",
+  "shw.config.home.cooldown": "/home cooldown in second",
+  //waypoints configuration
+  "shw.config.waypoints.allowTravelThroughDimension": "Can /wp travel dimension",
+  "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
+  "shw.config.waypoints.cooldown": "/wp cooldown in second"
 }

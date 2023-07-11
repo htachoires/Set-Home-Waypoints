@@ -4,6 +4,7 @@ import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.models.Home;
 import com.dodgeman.shw.saveddata.SetHomeAndWaypointsSavedData;
 import com.dodgeman.shw.saveddata.SetHomeWaypointsSavedDataFactory;
+import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -38,16 +39,17 @@ public class HomeCommand {
     private static int goHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
+        PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
-        Home home = savedData.getHomeOfPlayer(player.getUUID());
+        Home currentHome = playerHomeAndWaypoints.getCurrentHome();
 
-        if (home == null) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.noHomeFound"));
+        if (currentHome == null) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound"));
 
             return NO_HOME_FOUND_FAILURE;
         }
 
-        ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(home.position().dimension())));
+        ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(currentHome.position().dimension())));
 
         if (!ShwConfigWrapper.allowHomeToTravelThoughDimension() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
@@ -56,7 +58,7 @@ public class HomeCommand {
             return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        long lastUseHomeCommand = savedData.getLastUseHomeCommandOfPlayer(player.getUUID());
+        long lastUseHomeCommand = playerHomeAndWaypoints.getHomeCommandLastUse();
 
         long cooldownRemaining = new Date().getTime() - lastUseHomeCommand - TimeUnit.SECONDS.toMillis(ShwConfigWrapper.homeCooldown());
 
@@ -66,9 +68,9 @@ public class HomeCommand {
             return COOLDOWN_NOT_READY_FAILURE;
         }
 
-        player.teleportTo(serverLevel, home.position().x(), home.position().y(), home.position().z(), home.position().ry(), home.position().rx());
+        player.teleportTo(serverLevel, currentHome.position().x(), currentHome.position().y(), currentHome.position().z(), currentHome.position().ry(), currentHome.position().rx());
 
-        savedData.playerUsedHomeCommand(player.getUUID());
+        playerHomeAndWaypoints.homeCommandHasBeenExecuted();
         savedData.setDirty();
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.home.success"), false);

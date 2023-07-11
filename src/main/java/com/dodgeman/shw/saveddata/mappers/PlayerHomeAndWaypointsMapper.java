@@ -14,6 +14,8 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
     public static final String HOME_COMMAND_LAST_USE_KEY = "homeCommandLastUse";
     public static final String WAYPOINT_COMMAND_LAST_USE_KEY = "waypointCommandLastUse";
     private static final String LAST_DELETED_WAYPOINT_KEY = "lastDeletedWaypoint";
+    private static final String HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY = "hasAlreadySetAHomeInTheEnd";
+    private static final String HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY = "hasAlreadySetAHomeInTheNether";
 
     private final CompoundMapper<Home> homeMapper;
     private final CompoundMapper<Waypoint> waypointMapper;
@@ -39,7 +41,10 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
         Waypoint lastDeletedWaypoint = waypointMapper.fromCompoundTag(tag.getCompound(LAST_DELETED_WAYPOINT_KEY));
 
-        return new PlayerHomeAndWaypoints(home, waypoints, homeCommandLastUse, waypointCommandLastUse, lastDeletedWaypoint);
+        boolean hasAlreadySetAHomeInTheNether = tag.getBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY);
+        boolean hasAlreadySetAHomeInTheEnd = tag.getBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY);
+
+        return new PlayerHomeAndWaypoints(home, waypoints, homeCommandLastUse, waypointCommandLastUse, lastDeletedWaypoint, hasAlreadySetAHomeInTheNether, hasAlreadySetAHomeInTheEnd);
     }
 
     @Override
@@ -53,11 +58,14 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
                 .getWaypoints()
                 .forEach((name, waypoint) -> waypointsTag.put(name, waypointMapper.toCompoundTag(waypoint)));
 
-        tag.put(HOME_KEY, homeMapper.toCompoundTag(playerHomeAndWaypoints.getHome()));
+        tag.put(HOME_KEY, homeMapper.toCompoundTag(playerHomeAndWaypoints.getCurrentHome()));
         tag.put(WAYPOINTS_KEY, waypointsTag);
 
         tag.putLong(HOME_COMMAND_LAST_USE_KEY, playerHomeAndWaypoints.getHomeCommandLastUse());
         tag.putLong(WAYPOINT_COMMAND_LAST_USE_KEY, playerHomeAndWaypoints.getWaypointCommandLastUse());
+
+        tag.putBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY, playerHomeAndWaypoints.hasAlreadySetAHomeInTheNether());
+        tag.putBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY, playerHomeAndWaypoints.hasAlreadySetAHomeInTheEnd());
 
         tag.put(LAST_DELETED_WAYPOINT_KEY, waypointMapper.toCompoundTag(playerHomeAndWaypoints.getLastDeletedWaypoint()));
 
