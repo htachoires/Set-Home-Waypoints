@@ -16,6 +16,9 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
     private static final String LAST_DELETED_WAYPOINT_KEY = "lastDeletedWaypoint";
     private static final String HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY = "hasAlreadySetAHomeInTheEnd";
     private static final String HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY = "hasAlreadySetAHomeInTheNether";
+    private static final String IS_FIRST_WAYPOINT_KEY = "isFirstWaypoint";
+    private static final String LAST_TIME_DELETED_WAYPOINT_KEY = "lastTimeDeletedWaypoint";
+    private static final String UNDO_INFORMATION_HAS_BEEN_SHOW_AT_KEY = "undoInformationHasBeenShowAt";
 
     private final CompoundMapper<Home> homeMapper;
     private final CompoundMapper<Waypoint> waypointMapper;
@@ -43,8 +46,11 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
         boolean hasAlreadySetAHomeInTheNether = tag.getBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY);
         boolean hasAlreadySetAHomeInTheEnd = tag.getBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY);
+        boolean isFirstWaypoint = tag.getBoolean(IS_FIRST_WAYPOINT_KEY);
+        long lastTimeDeletedWaypoint = tag.getLong(LAST_TIME_DELETED_WAYPOINT_KEY);
+        long undoInformationHasBeenShowAt = tag.getLong(UNDO_INFORMATION_HAS_BEEN_SHOW_AT_KEY);
 
-        return new PlayerHomeAndWaypoints(home, waypoints, homeCommandLastUse, waypointCommandLastUse, lastDeletedWaypoint, hasAlreadySetAHomeInTheNether, hasAlreadySetAHomeInTheEnd);
+        return new PlayerHomeAndWaypoints(home, waypoints, homeCommandLastUse, waypointCommandLastUse, lastDeletedWaypoint, hasAlreadySetAHomeInTheNether, hasAlreadySetAHomeInTheEnd, isFirstWaypoint, lastTimeDeletedWaypoint, undoInformationHasBeenShowAt);
     }
 
     @Override
@@ -66,6 +72,9 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
         tag.putBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_NETHER_KEY, playerHomeAndWaypoints.hasAlreadySetAHomeInTheNether());
         tag.putBoolean(HAS_ALREADY_SET_A_HOME_IN_THE_END_KEY, playerHomeAndWaypoints.hasAlreadySetAHomeInTheEnd());
+        tag.putBoolean(IS_FIRST_WAYPOINT_KEY, playerHomeAndWaypoints.isFirstWaypoint());
+        tag.putLong(LAST_TIME_DELETED_WAYPOINT_KEY, playerHomeAndWaypoints.getLastTimeDeletedWaypoint());
+        tag.putLong(UNDO_INFORMATION_HAS_BEEN_SHOW_AT_KEY, playerHomeAndWaypoints.getUndoInformationHasBeenShowAt());
 
         tag.put(LAST_DELETED_WAYPOINT_KEY, waypointMapper.toCompoundTag(playerHomeAndWaypoints.getLastDeletedWaypoint()));
 

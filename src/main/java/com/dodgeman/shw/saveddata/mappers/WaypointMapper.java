@@ -19,6 +19,8 @@ public class WaypointMapper implements CompoundMapper<Waypoint> {
     public Waypoint fromCompoundTag(CompoundTag tag) {
         String name = tag.getString(NAME_KEY);
 
+        if (name.isBlank()) return null;
+
         Position position = positionCompoundMapper.fromCompoundTag(tag.getCompound(POSITION_KEY));
 
         return new Waypoint(name, position);

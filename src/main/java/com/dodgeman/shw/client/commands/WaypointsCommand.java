@@ -29,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 public class WaypointsCommand {
 
     public static final String COMMAND_NAME = "wp";
+    public static final long TIME_BEFORE_SHOWING_UNDO_REMINDER = 86_400_000;// 86_400_000 == 1 day
+    public static final long TIME_BEFORE_SHOWING_UNDO_INFORMATION = 86_400_000;// 86_400_000 == 1 day
     private static final String COMMAND_HELP_NAME = "help";
     private static final String COMMAND_CONFIG_NAME = "config";
     public static final String COMMAND_SET_NAME = "set";
@@ -160,7 +162,7 @@ public class WaypointsCommand {
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
         if (playerHomeAndWaypoints.hasWaypointNamed(waypointName)) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.duplicateWaypoint"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.duplicateWaypoint", waypointName));
 
             return SET_DUPLICATE_WAYPOINT_NAME_FAILURE;
         }
@@ -173,12 +175,25 @@ public class WaypointsCommand {
             return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
+        String successMessage = "shw.commands.waypoints.set.success";
 
+        if (playerHomeAndWaypoints.isFirstWaypoint()) {
+            successMessage = "shw.commands.waypoints.set.success.first_waypoint";
+        }
+
+        Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
         playerHomeAndWaypoints.addWaypoint(new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
-        savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.set.success"), false);
+        context.getSource().sendSuccess(Component.translatable(successMessage, waypointName).withStyle(ChatFormatting.GREEN), false);
+
+        long lastTimeUndoInformation = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShowAt();
+
+        if (lastDeletedWaypoint != null && lastTimeUndoInformation >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
+            playerHomeAndWaypoints.updateUndoInformationHasBeenShowAt();
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.set.info.undo", waypointName, lastDeletedWaypoint.name()).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+        }
+
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }
@@ -195,12 +210,19 @@ public class WaypointsCommand {
             return UPDATE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
-
+        Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
         playerHomeAndWaypoints.addWaypoint(new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
-        savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.success"), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.success", waypointName).withStyle(ChatFormatting.GREEN), false);
+
+        long lastTimeUndoInformation = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShowAt();
+
+        if (lastDeletedWaypoint != null && lastTimeUndoInformation >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
+            playerHomeAndWaypoints.updateUndoInformationHasBeenShowAt();
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.info.undo", waypointName, lastDeletedWaypoint.name()).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+        }
+
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }
@@ -214,7 +236,7 @@ public class WaypointsCommand {
         Waypoint waypoint = playerHomeAndWaypoints.getWaypoint(waypointName);
 
         if (waypoint == null) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.waypointNotFound"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.waypointNotFound", waypointName));
 
             return USE_WAYPOINT_NOT_FOUND_FAILURE;
         }
@@ -238,14 +260,22 @@ public class WaypointsCommand {
             return USE_COOLDOWN_NOT_READY_FAILURE;
         }
 
-        //TODO inform player that he have lost his undo if lastDeletedWaypoint is set
+        Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
 
         playerHomeAndWaypoints.useWaypointCommandHasBeenExecuted();
-        savedData.setDirty();
 
         player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), waypoint.position().ry(), waypoint.position().rx());
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.success"), false);
+
+        long lastTimeUndoInformation = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShowAt();
+
+        if (lastDeletedWaypoint != null && lastTimeUndoInformation >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
+            playerHomeAndWaypoints.updateUndoInformationHasBeenShowAt();
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.info.undo", waypointName, lastDeletedWaypoint.name()).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+        }
+
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }
@@ -287,12 +317,16 @@ public class WaypointsCommand {
             return DELETE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
+        long lastTimeDeletedWaypoint = playerHomeAndWaypoints.getLastTimeDeletedWaypoint();
+
         playerHomeAndWaypoints.removeWaypoint(waypointName);
         savedData.setDirty();
 
-        //TODO inform player that he can undo delete but executing /wp set or /wp replace will delete the waypoint forever
-
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.success." + new Random().nextInt(1, 5), waypointName, waypointName), false);
+
+        if (new Date().getTime() - lastTimeDeletedWaypoint >= TIME_BEFORE_SHOWING_UNDO_REMINDER || lastTimeDeletedWaypoint == 0) {
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.info.undo", waypointName, waypointName).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+        }
 
         return Command.SINGLE_SUCCESS;
     }
@@ -308,10 +342,12 @@ public class WaypointsCommand {
             return UNDO_LAST_DELETED_WAYPOINT_FAILURE;
         }
 
+        Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
+
         playerHomeAndWaypoints.undoLastDeletedWaypoint();
         savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.undo.success"), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.undo.success", lastDeletedWaypoint.name()).withStyle(ChatFormatting.GREEN), false);
 
         return Command.SINGLE_SUCCESS;
     }

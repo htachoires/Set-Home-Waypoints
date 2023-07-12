@@ -10,34 +10,37 @@
   "shw.commands.sethome.success.the_nether": "What an adventurer! Your home has been set in The Nether",
   "shw.commands.sethome.success.the_end": "You have my personal respect! You now have your home in The End",
   //wp set command
-  "shw.commands.waypoints.set.success.first_waypoint": "Congrats, your first waypoint has been registered! Execute /wp set %s to get back here",
+  "shw.commands.waypoints.set.success.first_waypoint": "Congrats, your first waypoint has been registered! Execute /wp use %s to get back here",
   "shw.commands.waypoints.set.success": "%s has been added to your waypoints",
+  "shw.commands.waypoints.set.info.undo": "Info: Setting %s waypoint has permanently throw last removed waypoint <%s> into void. You can't recover it anymore",
   "shw.commands.waypoints.set.error.maximumNumberOfWaypoints": "Your memory has reached its limit, remove or update a waypoint before setting a new one",
   "shw.commands.waypoints.set.error.duplicateWaypoint": "Mhm… You already have %s waypoint. Remove an existing waypoint and try again",
   "shw.commands.waypoints.set.error.duplicateWaypointRepetitive": "I'm worried about your memory… Do you have memory loss? Because you already have %s waypoint",
   //wp use command
   "shw.commands.waypoints.use.success": "Teleporting to your waypoint…",
+  "shw.commands.waypoints.use.info.undo": "Info: Using %s waypoint has permanently throw last removed waypoint <%s> into void. You can't recover it anymore",
   "shw.commands.waypoints.use.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
   "shw.commands.waypoints.use.error.cooldown": "Get yourself some rest before traveling again. %d seconds remaining…",
-  "shw.commands.waypoints.use.error.waypointNotFound": "A new waypoint? Because you don't have this one yet",
+  "shw.commands.waypoints.use.error.waypointNotFound": "A new waypoint? Because %s waypoint isn't in your collection yet",
   "shw.commands.waypoints.use.error.waypointNotFoundButDeleted": "This waypoint is no longer in your collection",
-  //wp delete command
-  "shw.commands.waypoints.remove.undo": "You can undo with /wp undo",
-  "shw.commands.waypoints.remove.success.1": "You've lost your parchment with <%s> coordinates… <%s> waypoint is no longer in your collection",
-  "shw.commands.waypoints.remove.success.2": "You've forgotten <%s> coordinates anyway… You made the right choice by erasing it",
-  "shw.commands.waypoints.remove.success.3": "Job done! <%s> is gone. You now have a new waypoint slot",
-  "shw.commands.waypoints.remove.success.4": "<%s> has been deleted",
+  //wp remove command
+  "shw.commands.waypoints.remove.success.1": "You've lost your parchment with %s coordinates… %s waypoint is no longer in your collection",
+  "shw.commands.waypoints.remove.success.2": "You've forgotten %s coordinates anyway… Removing it was the right choice",
+  "shw.commands.waypoints.remove.success.3": "Job done! %s is gone. You now have a new waypoint slot",
+  "shw.commands.waypoints.remove.success.4": "%s waypoint has been removed",
+  "shw.commands.waypoints.remove.info.undo": "Reminder: If you removed %s waypoint accidentally, execute /wp undo to backup your waypoint. Setting, updating or using a waypoint will permanently delete %s waypoint",
   "shw.commands.waypoints.remove.error.waypointNotFound": "Good news! You're trying to remove a waypoint you don't have",
   //wp clear command
   "shw.commands.waypoints.clear.success": "All your waypoints have been deleted",
   //wp list command
   "shw.commands.waypoints.list.success": "/wp use [ %s ] (%d/%d)",
   //wp update command
-  "shw.commands.waypoints.update.success": "Waypoint updated",
+  "shw.commands.waypoints.update.success": "%s waypoint has been updated with your current location",
+  "shw.commands.waypoints.update.info.undo": "Info: Updating %s waypoint has permanently throw last removed waypoint <%s> into void. You can't recover it anymore",
   "shw.commands.waypoints.update.error.waypointNotFound": "You don't have waypoint with that name",
   //wp undo command
-  "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "You don't have any waypoint to undo",
-  "shw.commands.waypoints.undo.success": "Your waypoint has been recovered",
+  "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "No undo power for this time…",
+  "shw.commands.waypoints.undo.success": "Thanks to undo power, %s waypoint has been recovered",
   //home configuration
   "shw.config.home.allowTravelThroughDimension": "Can /home travel dimension",
   "shw.config.home.cooldown": "/home cooldown in second",

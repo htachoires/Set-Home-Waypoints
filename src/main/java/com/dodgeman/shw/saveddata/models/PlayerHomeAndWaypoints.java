@@ -14,16 +14,23 @@ public class PlayerHomeAndWaypoints {
 
     private Waypoint lastDeletedWaypoint;
 
+    private boolean isFirstWaypoint = true;
+    private long lastTimeDeletedWaypoint = 0;
+    private long undoInformationHasBeenShowAt = 0;
+
     public PlayerHomeAndWaypoints() {
         waypoints = new HashMap<>();
     }
 
-    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse, Waypoint lastDeletedWaypoint, boolean hasAlreadySetAHomeInTheNether, boolean hasAlreadySetAHomeInTheEnd) {
+    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse, Waypoint lastDeletedWaypoint, boolean hasAlreadySetAHomeInTheNether, boolean hasAlreadySetAHomeInTheEnd, boolean isFirstWaypoint, long lastTimeDeletedWaypoint, long undoInformationHasBeenShowAt) {
         this.home = home;
         this.homeCommandLastUse = homeCommandLastUse;
         this.lastDeletedWaypoint = lastDeletedWaypoint;
         this.hasAlreadySetAHomeInTheNether = hasAlreadySetAHomeInTheNether;
         this.hasAlreadySetAHomeInTheEnd = hasAlreadySetAHomeInTheEnd;
+        this.isFirstWaypoint = isFirstWaypoint;
+        this.lastTimeDeletedWaypoint = lastTimeDeletedWaypoint;
+        this.undoInformationHasBeenShowAt = undoInformationHasBeenShowAt;
         this.waypoints = new HashMap<>();
         this.waypointCommandLastUse = waypointCommandLastUse;
 
@@ -76,7 +83,8 @@ public class PlayerHomeAndWaypoints {
     }
 
     public void addWaypoint(Waypoint waypoint) {
-        this.waypoints.put(waypoint.name(), waypoint);
+        waypoints.put(waypoint.name(), waypoint);
+        isFirstWaypoint = false;
         clearLastDeletedWaypoint();
     }
 
@@ -86,6 +94,7 @@ public class PlayerHomeAndWaypoints {
 
     public void removeWaypoint(String waypointName) {
         lastDeletedWaypoint = waypoints.remove(waypointName);
+        lastTimeDeletedWaypoint = new Date().getTime();
     }
 
     public void clearWaypoints() {
@@ -120,5 +129,21 @@ public class PlayerHomeAndWaypoints {
 
     public Set<String> getWaypointsName() {
         return waypoints.keySet();
+    }
+
+    public boolean isFirstWaypoint() {
+        return isFirstWaypoint;
+    }
+
+    public long getLastTimeDeletedWaypoint() {
+        return lastTimeDeletedWaypoint;
+    }
+
+    public void updateUndoInformationHasBeenShowAt() {
+        undoInformationHasBeenShowAt = new Date().getTime();
+    }
+
+    public long getUndoInformationHasBeenShowAt() {
+        return undoInformationHasBeenShowAt;
     }
 }
