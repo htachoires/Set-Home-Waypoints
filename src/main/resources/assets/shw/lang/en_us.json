@@ -7,43 +7,41 @@
   //sethome command
   "shw.commands.sethome.success.first_home": "Congrats, your home has been registered! You can now use the power of %s to get you back here",
   "shw.commands.sethome.success.update": "Your home has been updated",
-  "shw.commands.sethome.success.the_nether": "What an adventurer! Your home has been set in %s",
-  "shw.commands.sethome.success.the_end": "You have my personal respect! You now have your home in %s",
+  "shw.commands.sethome.success.the_nether": "What an adventurer! Your now have your home set in %s",
+  "shw.commands.sethome.success.the_end": "You have my personal respect! You now have your home set in %s",
   //wp set command
   "shw.commands.waypoints.set.success.first_waypoint": "Congrats, your first waypoint has been registered! Execute %s to get back here",
-  "shw.commands.waypoints.set.success": "%s has been saved in your waypoints collection",
-  "shw.commands.waypoints.set.info.undo": "Info: Setting %s waypoint has permanently removed %s waypoint. You can't recover it anymore",
+  "shw.commands.waypoints.set.success": "%s has been saved in your waypoints collection %s",
   "shw.commands.waypoints.set.error.maximumNumberOfWaypoints": "Your memory has reached its limit, remove or update a waypoint before setting a new one",
-  "shw.commands.waypoints.set.error.duplicateWaypoint": "Mhm… You already have %s waypoint. Remove an existing waypoint and try again",
+  "shw.commands.waypoints.set.error.duplicateWaypoint": "Mhm… You already have %s. Remove an existing waypoint and try again",
+  "shw.commands.waypoints.set.info.undo": "Info: Setting %s waypoint has permanently removed %s waypoint. You can't recover it anymore",
   //wp use command
   "shw.commands.waypoints.use.success": "Teleporting to %s…",
-  "shw.commands.waypoints.use.info.undo": "Info: Using %s has permanently removed %s waypoint. You can't undo it anymore",
+  "shw.commands.waypoints.use.info.undo": "Info: Using %s has permanently removed %s. You can't undo it anymore",
   "shw.commands.waypoints.use.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
   "shw.commands.waypoints.use.error.cooldown": "Get yourself some rest before traveling again. %d seconds remaining…",
   "shw.commands.waypoints.use.error.waypointNotFound": "A new waypoint? Because %s waypoint isn't in your collection yet",
   //wp remove command
-  "shw.commands.waypoints.remove.success.1": "You've lost your parchment with %s coordinates… %s is no longer in your collection",
+  "shw.commands.waypoints.remove.success.1": "You've thrown %s's coordinates on the floor… %s is no longer in your collection",
   "shw.commands.waypoints.remove.success.2": "You've forgotten %s coordinates anyway… Removing it was the right choice",
   "shw.commands.waypoints.remove.success.3": "Job done! %s is gone. You now have a new waypoint slot",
-  "shw.commands.waypoints.remove.success.4": "%s waypoint has been removed",
-  "shw.commands.waypoints.remove.info.undo": "Reminder: If you removed %s waypoint accidentally, execute /wp undo to backup your waypoint. Setting, updating or using a waypoint will permanently delete %s waypoint",
-  "shw.commands.waypoints.remove.error.waypointNotFound": "%s is not in your current collection",
+  "shw.commands.waypoints.remove.success.4": "%s has been removed of your collection",
+  "shw.commands.waypoints.remove.info.undo": "Reminder: When you remove a waypoint (eg. %s) accidentally, executing %s will retrieve it. Setting, updating or using a waypoint will permanently delete it",
+  "shw.commands.waypoints.remove.error.waypointNotFound": "%s is not in your waypoints collection",
   //wp clear command
-  "shw.commands.waypoints.clear.success": "All your waypoints have been deleted",
-  //wp list command
-  "shw.commands.waypoints.list.success": "/wp use [ %s ] (%d/%d)",
+  "shw.commands.waypoints.clear.success": "All your waypoints have been removed",
   //wp update command
   "shw.commands.waypoints.update.success": "%s has been updated with your current location",
-  "shw.commands.waypoints.update.info.undo": "Info: Updating %s has permanently removed %s waypoint. You can't undo it anymore",
-  "shw.commands.waypoints.update.error.waypointNotFound": "%s waypoint is not set",
+  "shw.commands.waypoints.update.info.undo": "Info: Updating %s has permanently removed %s. You can't undo it anymore",
+  "shw.commands.waypoints.update.error.waypointNotFound": "%s is not set",
   //wp undo command
   "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "No undo power for this time…",
   "shw.commands.waypoints.undo.success": "Thanks to undo power, %s has been recovered",
   //home configuration
-  "shw.config.home.allowTravelThroughDimension": "Can /home travel dimension",
-  "shw.config.home.cooldown": "/home cooldown in second",
+  "shw.config.home.allowTravelThroughDimension": "Travel dimension for home",
+  "shw.config.home.cooldown": "Cooldown in seconds for home",
   //waypoints configuration
-  "shw.config.waypoints.allowTravelThroughDimension": "Can /wp travel dimension",
+  "shw.config.waypoints.allowTravelThroughDimension": "Travel dimension for waypoints",
   "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
-  "shw.config.waypoints.cooldown": "/wp cooldown in second"
+  "shw.config.waypoints.cooldown": "Cooldown in seconds for waypoints"
 }

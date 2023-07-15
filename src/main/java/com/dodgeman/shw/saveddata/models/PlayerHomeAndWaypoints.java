@@ -127,8 +127,8 @@ public class PlayerHomeAndWaypoints {
         return lastDeletedWaypoint != null;
     }
 
-    public Set<String> getWaypointsName() {
-        return waypoints.keySet();
+    public List<String> getWaypointsName() {
+        return waypoints.keySet().stream().toList();
     }
 
     public boolean isFirstWaypoint() {
