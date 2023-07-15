@@ -5,125 +5,75 @@ import java.util.*;
 public class PlayerHomeAndWaypoints {
 
     private Home home;
-    private boolean hasAlreadySetAHomeInTheNether;
-    private boolean hasAlreadySetAHomeInTheEnd;
-    private long homeCommandLastUse;
-
-    private final HashMap<String, Waypoint> waypoints;
-    private long waypointCommandLastUse;
-
+    private final HashMap<WaypointName, Waypoint> waypoints;
+    private boolean hasAlreadySetWaypoint = true;
+    private boolean hasAlreadySetHomeInTheNether;
+    private boolean hasAlreadySetHomeInTheEnd;
+    private long lastExecutionOfHomeCommand;
+    private long lastExecutionOfWaypointUseCommand;
     private Waypoint lastDeletedWaypoint;
-
-    private boolean isFirstWaypoint = true;
-    private long lastTimeDeletedWaypoint = 0;
-    private long undoInformationHasBeenShowAt = 0;
+    private long lastDeletedWaypointAt = 0;
+    private long undoInformationHasBeenShownAt = 0;
 
     public PlayerHomeAndWaypoints() {
         waypoints = new HashMap<>();
     }
 
-    public PlayerHomeAndWaypoints(Home home, List<Waypoint> waypoints, long homeCommandLastUse, long waypointCommandLastUse, Waypoint lastDeletedWaypoint, boolean hasAlreadySetAHomeInTheNether, boolean hasAlreadySetAHomeInTheEnd, boolean isFirstWaypoint, long lastTimeDeletedWaypoint, long undoInformationHasBeenShowAt) {
+    public PlayerHomeAndWaypoints(
+            Home home,
+            List<Waypoint> waypoints,
+            boolean hasAlreadySetWaypoint,
+            boolean hasAlreadySetHomeInTheNether,
+            boolean hasAlreadySetHomeInTheEnd,
+            long lastExecutionOfHomeCommand,
+            long lastExecutionOfWaypointUseCommand,
+            Waypoint lastDeletedWaypoint,
+            long lastDeletedWaypointAt,
+            long undoInformationHasBeenShowAt
+    ) {
         this.home = home;
-        this.homeCommandLastUse = homeCommandLastUse;
-        this.lastDeletedWaypoint = lastDeletedWaypoint;
-        this.hasAlreadySetAHomeInTheNether = hasAlreadySetAHomeInTheNether;
-        this.hasAlreadySetAHomeInTheEnd = hasAlreadySetAHomeInTheEnd;
-        this.isFirstWaypoint = isFirstWaypoint;
-        this.lastTimeDeletedWaypoint = lastTimeDeletedWaypoint;
-        this.undoInformationHasBeenShowAt = undoInformationHasBeenShowAt;
         this.waypoints = new HashMap<>();
-        this.waypointCommandLastUse = waypointCommandLastUse;
+        this.hasAlreadySetWaypoint = hasAlreadySetWaypoint;
+        this.hasAlreadySetHomeInTheNether = hasAlreadySetHomeInTheNether;
+        this.hasAlreadySetHomeInTheEnd = hasAlreadySetHomeInTheEnd;
+        this.lastExecutionOfHomeCommand = lastExecutionOfHomeCommand;
+        this.lastExecutionOfWaypointUseCommand = lastExecutionOfWaypointUseCommand;
+        this.lastDeletedWaypoint = lastDeletedWaypoint;
+        this.lastDeletedWaypointAt = lastDeletedWaypointAt;
+        this.undoInformationHasBeenShownAt = undoInformationHasBeenShowAt;
 
         waypoints.forEach(waypoint -> this.waypoints.put(waypoint.name(), waypoint));
-    }
-
-    public void homeCommandHasBeenExecuted() {
-        homeCommandLastUse = new Date().getTime();
-    }
-
-    public long getHomeCommandLastUse() {
-        return homeCommandLastUse;
-    }
-
-    public long elapsedTimeOfLastHomeCommandExecution() {
-        return new Date().getTime() - homeCommandLastUse;
-    }
-
-    public long elapsedTimeOfLastWaypointUseCommandExecution() {
-        return new Date().getTime() - waypointCommandLastUse;
-    }
-
-    public void useWaypointCommandHasBeenExecuted() {
-        waypointCommandLastUse = new Date().getTime();
-        clearLastDeletedWaypoint();
-    }
-
-    public long getWaypointCommandLastUse() {
-        return waypointCommandLastUse;
-    }
-
-    public Home getCurrentHome() {
-        return home;
     }
 
     public void setNewHome(Home newHome) {
         home = newHome;
 
         if (home.position().isInTheNether()) {
-            hasAlreadySetAHomeInTheNether = true;
+            hasAlreadySetHomeInTheNether = true;
         }
 
         if (home.position().isInTheEnd()) {
-            hasAlreadySetAHomeInTheEnd = true;
+            hasAlreadySetHomeInTheEnd = true;
         }
-    }
-
-    public boolean hasAlreadySetAHomeInTheNether() {
-        return hasAlreadySetAHomeInTheNether;
-    }
-
-    public boolean hasAlreadySetAHomeInTheEnd() {
-        return hasAlreadySetAHomeInTheEnd;
-    }
-
-    public HashMap<String, Waypoint> getWaypoints() {
-        return waypoints;
     }
 
     public void addWaypoint(Waypoint waypoint) {
         waypoints.put(waypoint.name(), waypoint);
-        isFirstWaypoint = false;
+        hasAlreadySetWaypoint = true;
         clearLastDeletedWaypoint();
     }
 
-    public Waypoint getWaypoint(String waypointName) {
-        return waypoints.get(waypointName);
+    public boolean hasWaypointNamed(WaypointName name) {
+        return waypoints.containsKey(name);
     }
 
-    public void removeWaypoint(String waypointName) {
-        lastDeletedWaypoint = waypoints.remove(waypointName);
-        lastTimeDeletedWaypoint = new Date().getTime();
+    public Waypoint getWaypointByName(WaypointName name) {
+        return waypoints.get(name);
     }
 
-    public void clearWaypoints() {
-        waypoints.clear();
-        clearLastDeletedWaypoint();
-    }
-
-    public void clearLastDeletedWaypoint() {
-        lastDeletedWaypoint = null;
-    }
-
-    public Waypoint getLastDeletedWaypoint() {
-        return lastDeletedWaypoint;
-    }
-
-    public int getNumberOfWaypoints() {
-        return waypoints.values().size();
-    }
-
-    public boolean hasWaypointNamed(String waypointName) {
-        return waypoints.containsKey(waypointName);
+    public void removeWaypoint(WaypointName name) {
+        lastDeletedWaypoint = waypoints.remove(name);
+        lastDeletedWaypointAt = new Date().getTime();
     }
 
     public void undoLastDeletedWaypoint() {
@@ -131,27 +81,85 @@ public class PlayerHomeAndWaypoints {
         clearLastDeletedWaypoint();
     }
 
+    public void undoInformationHasBeenShown() {
+        undoInformationHasBeenShownAt = new Date().getTime();
+    }
+
+    public void clearWaypoints() {
+        waypoints.clear();
+        clearLastDeletedWaypoint();
+    }
+
+    public void waypointUseCommandHasBeenExecuted() {
+        lastExecutionOfWaypointUseCommand = new Date().getTime();
+        clearLastDeletedWaypoint();
+    }
+
+    public void clearLastDeletedWaypoint() {
+        lastDeletedWaypoint = null;
+    }
+
+    public long elapsedTimeOfWaypointUseCommandExecution() {
+        return new Date().getTime() - lastExecutionOfWaypointUseCommand;
+    }
+
+    public void homeCommandHasBeenExecuted() {
+        lastExecutionOfHomeCommand = new Date().getTime();
+    }
+
+    public long elapsedTimeOfLastHomeCommandExecution() {
+        return new Date().getTime() - lastExecutionOfHomeCommand;
+    }
+
+    public Home getHome() {
+        return home;
+    }
+
+    public HashMap<WaypointName, Waypoint> getWaypoints() {
+        return waypoints;
+    }
+
+    public int getNbOfWaypoints() {
+        return waypoints.values().size();
+    }
+
+    public boolean hasAlreadySetWaypoint() {
+        return hasAlreadySetWaypoint;
+    }
+
+    public boolean hasAlreadySetHomeInTheNether() {
+        return hasAlreadySetHomeInTheNether;
+    }
+
+    public boolean hasAlreadySetHomeInTheEnd() {
+        return hasAlreadySetHomeInTheEnd;
+    }
+
+    public long getLastExecutionOfHomeCommand() {
+        return lastExecutionOfHomeCommand;
+    }
+
+    public long getLastExecutionOfWaypointUseCommand() {
+        return lastExecutionOfWaypointUseCommand;
+    }
+
+    public Waypoint getLastDeletedWaypoint() {
+        return lastDeletedWaypoint;
+    }
+
     public boolean hasLastDeletedWaypoint() {
         return lastDeletedWaypoint != null;
     }
 
-    public List<String> getWaypointsName() {
+    public List<WaypointName> getWaypointsName() {
         return waypoints.keySet().stream().toList();
     }
 
-    public boolean isFirstWaypoint() {
-        return isFirstWaypoint;
+    public long getLastDeletedWaypointAt() {
+        return lastDeletedWaypointAt;
     }
 
-    public long getLastTimeDeletedWaypoint() {
-        return lastTimeDeletedWaypoint;
-    }
-
-    public void updateUndoInformationHasBeenShowAt() {
-        undoInformationHasBeenShowAt = new Date().getTime();
-    }
-
-    public long getUndoInformationHasBeenShowAt() {
-        return undoInformationHasBeenShowAt;
+    public long getUndoInformationHasBeenShownAt() {
+        return undoInformationHasBeenShownAt;
     }
 }

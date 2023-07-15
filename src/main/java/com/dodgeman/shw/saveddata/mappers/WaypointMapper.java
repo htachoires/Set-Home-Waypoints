@@ -2,6 +2,7 @@ package com.dodgeman.shw.saveddata.mappers;
 
 import com.dodgeman.shw.saveddata.models.Position;
 import com.dodgeman.shw.saveddata.models.Waypoint;
+import com.dodgeman.shw.saveddata.models.WaypointName;
 import net.minecraft.nbt.CompoundTag;
 
 public class WaypointMapper implements CompoundMapper<Waypoint> {
@@ -23,7 +24,7 @@ public class WaypointMapper implements CompoundMapper<Waypoint> {
 
         Position position = positionCompoundMapper.fromCompoundTag(tag.getCompound(POSITION_KEY));
 
-        return new Waypoint(name, position);
+        return new Waypoint(new WaypointName(name), position);
     }
 
     @Override
@@ -31,7 +32,7 @@ public class WaypointMapper implements CompoundMapper<Waypoint> {
         CompoundTag tag = new CompoundTag();
         if (waypoint == null) return tag;
 
-        tag.putString(NAME_KEY, waypoint.name());
+        tag.putString(NAME_KEY, waypoint.name().value());
         tag.put(POSITION_KEY, positionCompoundMapper.toCompoundTag(waypoint.position()));
 
         return tag;

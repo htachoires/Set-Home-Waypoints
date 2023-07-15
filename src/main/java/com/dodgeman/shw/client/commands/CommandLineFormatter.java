@@ -1,5 +1,6 @@
 package com.dodgeman.shw.client.commands;
 
+import com.dodgeman.shw.saveddata.models.WaypointName;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -9,13 +10,13 @@ public class CommandLineFormatter {
     public static final ChatFormatting WAYPOINT_COLOR = ChatFormatting.LIGHT_PURPLE;
     public static final ChatFormatting COMMAND_COLOR = ChatFormatting.GRAY;
 
-    public static MutableComponent formatWaypoint(String waypointName) {
-        return Component.literal(waypointName)
+    public static MutableComponent formatWaypoint(WaypointName waypointName) {
+        return Component.literal(waypointName.value())
                 .withStyle(WAYPOINT_COLOR);
     }
 
-    public static MutableComponent formatWaypointItalic(String waypointName) {
-        return Component.literal(waypointName)
+    public static MutableComponent formatWaypointItalic(WaypointName waypointName) {
+        return Component.literal(waypointName.value())
                 .withStyle(WAYPOINT_COLOR)
                 .withStyle(ChatFormatting.ITALIC);
     }

@@ -4,7 +4,6 @@ import com.dodgeman.shw.SetHomeWaypoints;
 import com.dodgeman.shw.saveddata.mappers.CompoundMapper;
 import com.dodgeman.shw.saveddata.mappers.SetHomeAndWaypointsSavedDataMapper;
 import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
-import com.dodgeman.shw.saveddata.models.Waypoint;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;

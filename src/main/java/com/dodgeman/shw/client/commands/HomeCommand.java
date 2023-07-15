@@ -42,7 +42,7 @@ public class HomeCommand {
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
-        Home currentHome = playerHomeAndWaypoints.getCurrentHome();
+        Home currentHome = playerHomeAndWaypoints.getHome();
 
         if (currentHome == null) {
             context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound", formatCommand(SetHomeCommand.COMMAND_NAME)));

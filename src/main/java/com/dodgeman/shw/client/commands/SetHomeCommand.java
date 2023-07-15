@@ -34,7 +34,7 @@ public class SetHomeCommand {
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
-        Home currentHome = playerHomeAndWaypoints.getCurrentHome();
+        Home currentHome = playerHomeAndWaypoints.getHome();
         Home newHome = new Home(PositionMapper.fromPlayer(player));
 
         Component successMessage = null;
@@ -43,11 +43,11 @@ public class SetHomeCommand {
             successMessage = Component.translatable("shw.commands.sethome.success.first_home", formatCommand(HomeCommand.COMMAND_NAME)).withStyle(ChatFormatting.GREEN);
         }
 
-        if (newHome.position().isInTheNether() && !playerHomeAndWaypoints.hasAlreadySetAHomeInTheNether()) {
+        if (newHome.position().isInTheNether() && !playerHomeAndWaypoints.hasAlreadySetHomeInTheNether()) {
             successMessage = Component.translatable("shw.commands.sethome.success.the_nether", Component.literal("The Nether").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
         }
 
-        if (newHome.position().isInTheEnd() && !playerHomeAndWaypoints.hasAlreadySetAHomeInTheEnd()) {
+        if (newHome.position().isInTheEnd() && !playerHomeAndWaypoints.hasAlreadySetHomeInTheEnd()) {
             successMessage = Component.translatable("shw.commands.sethome.success.the_end", Component.literal("The End").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
         }
 
