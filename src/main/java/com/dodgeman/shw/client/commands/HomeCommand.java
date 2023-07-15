@@ -21,6 +21,8 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
+
 public class HomeCommand {
 
     public static final String COMMAND_NAME = "home";
@@ -44,7 +46,7 @@ public class HomeCommand {
         Home currentHome = playerHomeAndWaypoints.getCurrentHome();
 
         if (currentHome == null) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound", formatCommand(SetHomeCommand.COMMAND_NAME)));
 
             return NO_HOME_FOUND_FAILURE;
         }

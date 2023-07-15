@@ -15,6 +15,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
+
 public class SetHomeCommand {
 
     public static final String COMMAND_NAME = "sethome";
@@ -35,24 +37,28 @@ public class SetHomeCommand {
         Home currentHome = playerHomeAndWaypoints.getCurrentHome();
         Home newHome = new Home(PositionMapper.fromPlayer(player));
 
-        String successMessage = "shw.commands.sethome.success.update";
+        Component successMessage = null;
 
         if (currentHome == null) {
-            successMessage = "shw.commands.sethome.success.first_home";
+            successMessage = Component.translatable("shw.commands.sethome.success.first_home", formatCommand(HomeCommand.COMMAND_NAME)).withStyle(ChatFormatting.GREEN);
         }
 
         if (newHome.position().isInTheNether() && !playerHomeAndWaypoints.hasAlreadySetAHomeInTheNether()) {
-            successMessage = "shw.commands.sethome.success.the_nether";
+            successMessage = Component.translatable("shw.commands.sethome.success.the_nether", Component.literal("The Nether").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
         }
 
         if (newHome.position().isInTheEnd() && !playerHomeAndWaypoints.hasAlreadySetAHomeInTheEnd()) {
-            successMessage = "shw.commands.sethome.success.the_end";
+            successMessage = Component.translatable("shw.commands.sethome.success.the_end", Component.literal("The End").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
+        }
+
+        if (successMessage == null) {
+            successMessage = Component.translatable("shw.commands.sethome.success.update").withStyle(ChatFormatting.GREEN);
         }
 
         playerHomeAndWaypoints.setNewHome(newHome);
         savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable(successMessage).withStyle(ChatFormatting.GREEN), false);
+        context.getSource().sendSuccess(successMessage, false);
 
         return Command.SINGLE_SUCCESS;
     }
