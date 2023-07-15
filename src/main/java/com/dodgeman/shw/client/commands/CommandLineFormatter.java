@@ -6,19 +6,27 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class CommandLineFormatter {
 
+    public static final ChatFormatting WAYPOINT_COLOR = ChatFormatting.LIGHT_PURPLE;
+    public static final ChatFormatting COMMAND_COLOR = ChatFormatting.GRAY;
+
     public static MutableComponent formatWaypoint(String waypointName) {
         return Component.literal(waypointName)
-                .withStyle(ChatFormatting.LIGHT_PURPLE)
+                .withStyle(WAYPOINT_COLOR);
+    }
+
+    public static MutableComponent formatWaypointItalic(String waypointName) {
+        return Component.literal(waypointName)
+                .withStyle(WAYPOINT_COLOR)
                 .withStyle(ChatFormatting.ITALIC);
     }
 
     public static MutableComponent formatCommand(String... command) {
         return Component.literal("/" + String.join(" ", command))
-                .withStyle(ChatFormatting.GRAY)
+                .withStyle(COMMAND_COLOR)
                 .withStyle(ChatFormatting.ITALIC);
     }
 
-    public static Component formatNbOfWaypoints(int numberOfWaypoints, int maximumNumberOfWaypoints) {
+    public static MutableComponent formatNbOfWaypoints(int numberOfWaypoints, int maximumNumberOfWaypoints) {
         return Component.literal(String.format("(%d/%d)", numberOfWaypoints, maximumNumberOfWaypoints))
                 .withStyle(getInfoSizeColorByNbOfWaypoints(numberOfWaypoints, maximumNumberOfWaypoints));
     }
