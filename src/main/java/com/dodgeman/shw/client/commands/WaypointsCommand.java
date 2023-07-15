@@ -324,7 +324,11 @@ public class WaypointsCommand {
 
         long elapsedTimeOfLastUndo = new Date().getTime() - lastTimeDeletedWaypoint;
         if (elapsedTimeOfLastUndo >= TIME_BEFORE_SHOWING_UNDO_REMINDER || lastTimeDeletedWaypoint == 0) {
-            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.info.undo", formatWaypointItalic(waypointName), formatCommand(COMMAND_NAME, COMMAND_UNDO_NAME)).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+            context.getSource().sendSuccess(
+                    Component.translatable("shw.commands.waypoints.remove.info.undo",
+                            formatWaypointItalic(waypointName),
+                            formatCommand(COMMAND_NAME, COMMAND_UNDO_NAME)).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC),
+                    false);
         }
 
         return Command.SINGLE_SUCCESS;
@@ -359,18 +363,29 @@ public class WaypointsCommand {
         playerHomeAndWaypoints.undoLastDeletedWaypoint();
         savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.undo.success", formatWaypoint(lastDeletedWaypoint.name())).withStyle(ChatFormatting.GREEN), false);
+        context.getSource().sendSuccess(
+                Component.translatable("shw.commands.waypoints.undo.success",
+                        formatWaypoint(lastDeletedWaypoint.name())).withStyle(ChatFormatting.GREEN),
+                false);
 
         return Command.SINGLE_SUCCESS;
     }
 
     private static int showConfiguration(CommandContext<CommandSourceStack> context) {
-        MutableComponent cooldown = Component.literal(String.format("Cooldown: %d seconds\n", ShwConfigWrapper.waypointsCooldown()));
-        MutableComponent travelThroughDimension = Component.literal(String.format("Travel through dimension: %s\n", ShwConfigWrapper.allowWaypointsToTravelThoughDimension() ? "true" : "false"));
-        MutableComponent limit = Component.literal(String.format("Maximum waypoints: %d", ShwConfigWrapper.maximumNumberOfWaypoints()));
-
-        context.getSource().sendSuccess(cooldown.append(travelThroughDimension).append(limit), false);
+        context.getSource().sendSuccess(
+                Component.translatable(
+                        "shw.commands.waypoints.config.success",
+                        Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
+                        Component.literal(String.valueOf(ShwConfigWrapper.waypointsCooldown())).withStyle(ChatFormatting.BLUE),
+                        permitted()),
+                false);
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static MutableComponent permitted() {
+        return ShwConfigWrapper.allowWaypointsToTravelThoughDimension()
+                ? Component.literal("is").withStyle(ChatFormatting.BLUE)
+                : Component.literal("is not").withStyle(ChatFormatting.RED);
     }
 }
