@@ -18,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
@@ -60,12 +59,10 @@ public class HomeCommand {
             return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        long lastUseHomeCommand = playerHomeAndWaypoints.getHomeCommandLastUse();
+        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.homeCooldown()) - playerHomeAndWaypoints.elapsedTimeOfLastHomeCommandExecution();
 
-        long cooldownRemaining = new Date().getTime() - lastUseHomeCommand - TimeUnit.SECONDS.toMillis(ShwConfigWrapper.homeCooldown());
-
-        if (cooldownRemaining <= 0) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.cooldown"));
+        if (cooldownRemaining > 0) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1));
 
             return COOLDOWN_NOT_READY_FAILURE;
         }

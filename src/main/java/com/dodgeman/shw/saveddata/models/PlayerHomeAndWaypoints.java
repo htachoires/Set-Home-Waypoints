@@ -45,6 +45,14 @@ public class PlayerHomeAndWaypoints {
         return homeCommandLastUse;
     }
 
+    public long elapsedTimeOfLastHomeCommandExecution() {
+        return new Date().getTime() - homeCommandLastUse;
+    }
+
+    public long elapsedTimeOfLastWaypointUseCommandExecution() {
+        return new Date().getTime() - waypointCommandLastUse;
+    }
+
     public void useWaypointCommandHasBeenExecuted() {
         waypointCommandLastUse = new Date().getTime();
         clearLastDeletedWaypoint();

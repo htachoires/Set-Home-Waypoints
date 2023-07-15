@@ -163,7 +163,7 @@ public class WaypointsCommand {
         boolean playerHasReachMaximumWaypoints = playerHomeAndWaypoints.getNumberOfWaypoints() >= ShwConfigWrapper.maximumNumberOfWaypoints();
 
         if (playerHasReachMaximumWaypoints) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints", ShwConfigWrapper.maximumNumberOfWaypoints()));
 
             return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
         }
@@ -218,12 +218,9 @@ public class WaypointsCommand {
             return USE_TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        long lastUseWaypointCommand = playerHomeAndWaypoints.getWaypointCommandLastUse();
-
-        long cooldownRemaining = new Date().getTime() - lastUseWaypointCommand - TimeUnit.SECONDS.toMillis(ShwConfigWrapper.waypointsCooldown());
-
-        if (cooldownRemaining <= 0) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown"));
+        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.waypointsCooldown()) - playerHomeAndWaypoints.elapsedTimeOfLastWaypointUseCommandExecution();
+        if (cooldownRemaining > 0) {
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1, formatWaypoint(waypointName)));
 
             return USE_COOLDOWN_NOT_READY_FAILURE;
         }
@@ -234,7 +231,7 @@ public class WaypointsCommand {
 
         player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), waypoint.position().ry(), waypoint.position().rx());
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.success", formatWaypoint(waypointName)), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.success", waypointName), false);
 
         long elapsedTimeOfLastUndoInfo = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShowAt();
 
