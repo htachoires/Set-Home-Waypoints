@@ -9,6 +9,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
@@ -21,10 +22,12 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.concurrent.TimeUnit;
 
 import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
+import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatPermitted;
 
 public class HomeCommand {
 
     public static final String COMMAND_NAME = "home";
+    public static final String COMMAND_CONFIG_NAME = "config";
     public static final int TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
     public static final int COOLDOWN_NOT_READY_FAILURE = -2;
     private static final int NO_HOME_FOUND_FAILURE = -3;
@@ -34,6 +37,10 @@ public class HomeCommand {
                 .literal(COMMAND_NAME)
                 .requires(CommandSourceStack::isPlayer)
                 .executes(HomeCommand::goHome)
+                .then(Commands
+                        .literal(COMMAND_CONFIG_NAME)
+                        .executes(HomeCommand::showConfiguration)
+                )
         );
     }
 
@@ -73,6 +80,17 @@ public class HomeCommand {
         savedData.setDirty();
 
         context.getSource().sendSuccess(Component.translatable("shw.commands.home.success"), false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int showConfiguration(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                Component.translatable("shw.commands.home.config.success",
+                        Component.literal(String.valueOf(ShwConfigWrapper.homeCooldown())).withStyle(ChatFormatting.BLUE),
+                        formatPermitted(ShwConfigWrapper.allowHomeToTravelThoughDimension())
+                ),
+                false);
 
         return Command.SINGLE_SUCCESS;
     }

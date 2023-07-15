@@ -2,6 +2,7 @@
   //---[COMMANDS]---
   //home command
   "shw.commands.home.success": "Teleporting to your home…",
+  "shw.commands.home.config.success": "Cooldown is set to %d seconds. Travel through dimension %s",
   "shw.commands.home.error.homeNotFound": "An adventurer already tried to explore empty void, it wasn't a pleasant experiment, he vanished… I advise you to %s before getting to your home",
   "shw.commands.home.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
   "shw.commands.home.error.cooldown": "Get yourself %d seconds rest before getting home",
@@ -39,7 +40,10 @@
   "shw.commands.waypoints.undo.success": "Thanks to undo power, %s has been recovered",
   "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "No undo power for this time…",
   //wp config command
-  "shw.commands.waypoints.config.success": "Maximum waypoints is %d with %d seconds of cooldown. Travel through dimension %s permitted",
+  "shw.commands.waypoints.config.success": "Cooldown is set to %d seconds with a maximum of %d waypoints. Travel through dimension %s",
+  //utils
+  "shw.commands.config.permitted": "is permitted",
+  "shw.commands.config.not_permitted": "is not permitted",
   //---[CONFIGURATION]---
   //home configuration
   "shw.config.home.allowTravelThroughDimension": "Travel dimension for home",

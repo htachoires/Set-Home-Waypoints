@@ -376,17 +376,11 @@ public class WaypointsCommand {
         context.getSource().sendSuccess(
                 Component.translatable(
                         "shw.commands.waypoints.config.success",
-                        Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
                         Component.literal(String.valueOf(ShwConfigWrapper.waypointsCooldown())).withStyle(ChatFormatting.BLUE),
-                        permitted()),
+                        Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
+                        formatPermitted(ShwConfigWrapper.allowWaypointsToTravelThoughDimension())),
                 false);
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    private static MutableComponent permitted() {
-        return ShwConfigWrapper.allowWaypointsToTravelThoughDimension()
-                ? Component.literal("is").withStyle(ChatFormatting.BLUE)
-                : Component.literal("is not").withStyle(ChatFormatting.RED);
     }
 }

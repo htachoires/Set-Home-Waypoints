@@ -39,4 +39,10 @@ public class CommandLineFormatter {
 
         return ChatFormatting.GREEN;
     }
+
+    public static MutableComponent formatPermitted(boolean isPermitted) {
+        return isPermitted
+                ? Component.translatable("shw.commands.config.permitted").withStyle(ChatFormatting.DARK_GREEN)
+                : Component.translatable("shw.commands.config.not_permitted").withStyle(ChatFormatting.RED);
+    }
 }
