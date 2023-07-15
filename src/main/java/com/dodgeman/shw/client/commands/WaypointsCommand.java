@@ -24,7 +24,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.dodgeman.shw.client.commands.CommandLineFormatter.*;
@@ -34,6 +33,7 @@ public class WaypointsCommand {
     public static final String COMMAND_NAME = "wp";
     public static final long TIME_BEFORE_SHOWING_UNDO_REMINDER = 86_400_000;// 86_400_000 == 1 day
     public static final long TIME_BEFORE_SHOWING_UNDO_INFORMATION = 86_400_000;// 86_400_000 == 1 day
+    public static final int NB_REMOVE_WAYPOINT_SUCCESS_MESSAGE = 4;
     private static final String COMMAND_HELP_NAME = "help";
     public static final String COMMAND_SET_NAME = "set";
     public static final String COMMAND_USE_NAME = "use";
@@ -232,7 +232,7 @@ public class WaypointsCommand {
 
         player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), waypoint.position().ry(), waypoint.position().rx());
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.success", waypointName), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.success", waypointName.value()), false);
 
         long elapsedTimeOfLastUndoInfo = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShownAt();
 
@@ -319,9 +319,12 @@ public class WaypointsCommand {
         long lastTimeDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypointAt();
 
         playerHomeAndWaypoints.removeWaypoint(waypointName);
-        savedData.setDirty();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.success." + new Random().nextInt(1, 5), formatWaypoint(waypointName), formatWaypoint(waypointName)), false);
+        int successMessageIndex = playerHomeAndWaypoints.getRemoveWaypointSuccessMessageIndex();
+
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.success." + successMessageIndex, formatWaypoint(waypointName), formatWaypoint(waypointName)), false);
+
+        playerHomeAndWaypoints.updateRemoveWaypointSuccessMessageIndex(NB_REMOVE_WAYPOINT_SUCCESS_MESSAGE);
 
         long elapsedTimeOfLastUndo = new Date().getTime() - lastTimeDeletedWaypoint;
         if (elapsedTimeOfLastUndo >= TIME_BEFORE_SHOWING_UNDO_REMINDER || lastTimeDeletedWaypoint == 0) {
@@ -331,6 +334,8 @@ public class WaypointsCommand {
                             formatCommand(COMMAND_NAME, COMMAND_UNDO_NAME)).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC),
                     false);
         }
+
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }
@@ -343,6 +348,7 @@ public class WaypointsCommand {
         context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.clear.success"), false);
 
         playerHomeAndWaypoints.clearWaypoints();
+
         savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
@@ -362,12 +368,13 @@ public class WaypointsCommand {
         Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
 
         playerHomeAndWaypoints.undoLastDeletedWaypoint();
-        savedData.setDirty();
 
         context.getSource().sendSuccess(
                 Component.translatable("shw.commands.waypoints.undo.success",
                         formatWaypoint(lastDeletedWaypoint.name())).withStyle(ChatFormatting.GREEN),
                 false);
+
+        savedData.setDirty();
 
         return Command.SINGLE_SUCCESS;
     }

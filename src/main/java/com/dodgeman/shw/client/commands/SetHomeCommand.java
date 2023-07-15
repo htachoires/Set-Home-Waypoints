@@ -39,16 +39,16 @@ public class SetHomeCommand {
 
         Component successMessage = null;
 
-        if (currentHome == null) {
-            successMessage = Component.translatable("shw.commands.sethome.success.first_home", formatCommand(HomeCommand.COMMAND_NAME)).withStyle(ChatFormatting.GREEN);
-        }
-
         if (newHome.position().isInTheNether() && !playerHomeAndWaypoints.hasAlreadySetHomeInTheNether()) {
             successMessage = Component.translatable("shw.commands.sethome.success.the_nether", Component.literal("The Nether").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
         }
 
         if (newHome.position().isInTheEnd() && !playerHomeAndWaypoints.hasAlreadySetHomeInTheEnd()) {
             successMessage = Component.translatable("shw.commands.sethome.success.the_end", Component.literal("The End").withStyle(ChatFormatting.DARK_PURPLE)).withStyle(ChatFormatting.GREEN);
+        }
+
+        if (currentHome == null) {
+            successMessage = Component.translatable("shw.commands.sethome.success.first_home", formatCommand(HomeCommand.COMMAND_NAME)).withStyle(ChatFormatting.GREEN);
         }
 
         if (successMessage == null) {

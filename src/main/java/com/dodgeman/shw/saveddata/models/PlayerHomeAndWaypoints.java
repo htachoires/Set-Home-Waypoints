@@ -6,7 +6,7 @@ public class PlayerHomeAndWaypoints {
 
     private Home home;
     private final HashMap<WaypointName, Waypoint> waypoints;
-    private boolean hasAlreadySetWaypoint = true;
+    private boolean hasAlreadySetWaypoint = false;
     private boolean hasAlreadySetHomeInTheNether;
     private boolean hasAlreadySetHomeInTheEnd;
     private long lastExecutionOfHomeCommand;
@@ -14,6 +14,7 @@ public class PlayerHomeAndWaypoints {
     private Waypoint lastDeletedWaypoint;
     private long lastDeletedWaypointAt = 0;
     private long undoInformationHasBeenShownAt = 0;
+    private int removeWaypointSuccessMessageIndex = 1;
 
     public PlayerHomeAndWaypoints() {
         waypoints = new HashMap<>();
@@ -29,7 +30,8 @@ public class PlayerHomeAndWaypoints {
             long lastExecutionOfWaypointUseCommand,
             Waypoint lastDeletedWaypoint,
             long lastDeletedWaypointAt,
-            long undoInformationHasBeenShowAt
+            long undoInformationHasBeenShowAt,
+            int removeWaypointSuccessMessageIndex
     ) {
         this.home = home;
         this.waypoints = new HashMap<>();
@@ -41,6 +43,7 @@ public class PlayerHomeAndWaypoints {
         this.lastDeletedWaypoint = lastDeletedWaypoint;
         this.lastDeletedWaypointAt = lastDeletedWaypointAt;
         this.undoInformationHasBeenShownAt = undoInformationHasBeenShowAt;
+        this.removeWaypointSuccessMessageIndex = removeWaypointSuccessMessageIndex;
 
         waypoints.forEach(waypoint -> this.waypoints.put(waypoint.name(), waypoint));
     }
@@ -111,6 +114,15 @@ public class PlayerHomeAndWaypoints {
         return new Date().getTime() - lastExecutionOfHomeCommand;
     }
 
+    public void updateRemoveWaypointSuccessMessageIndex(int nbRemoveWaypointSuccessMessage) {
+        if (removeWaypointSuccessMessageIndex < nbRemoveWaypointSuccessMessage) {
+            removeWaypointSuccessMessageIndex++;
+            return;
+        }
+
+        removeWaypointSuccessMessageIndex = 1;
+    }
+
     public Home getHome() {
         return home;
     }
@@ -161,5 +173,9 @@ public class PlayerHomeAndWaypoints {
 
     public long getUndoInformationHasBeenShownAt() {
         return undoInformationHasBeenShownAt;
+    }
+
+    public int getRemoveWaypointSuccessMessageIndex() {
+        return removeWaypointSuccessMessageIndex;
     }
 }
