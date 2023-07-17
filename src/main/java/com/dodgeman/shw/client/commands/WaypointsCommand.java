@@ -8,6 +8,8 @@ import com.dodgeman.shw.saveddata.models.Waypoint;
 import com.dodgeman.shw.saveddata.models.WaypointName;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -52,6 +54,13 @@ public class WaypointsCommand {
     private static final int UPDATE_WAYPOINT_NOT_FOUND_FAILURE = -1;
     private static final int DELETE_WAYPOINT_NOT_FOUND_FAILURE = -1;
     private static final int UNDO_LAST_DELETED_WAYPOINT_FAILURE = -1;
+    public static final String COMMAND_COOLDOWN_NAME = "cooldown";
+    public static final String ARG_NAME_FOR_COOLDOWN = "cooldownValue";
+    private static final String COMMAND_TRAVEL_THROUGH_DIMENSION_NAME = "travelThroughDimension";
+    public static final String ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION = "travelThroughDimensionValue";
+    private static final String ARG_NAME_FOR_MAX_WAYPOINTS = "max number of waypoints";
+    private static final String COMMAND_MAX_WAYPOINTS_NAME = "maximumWaypointsNumber";
+
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
@@ -100,11 +109,34 @@ public class WaypointsCommand {
                 .then(Commands
                         .literal(COMMAND_UNDO_NAME)
                         .executes(WaypointsCommand::undoDeletedWaypoint)
-
                 )
                 .then(Commands
                         .literal(COMMAND_CONFIG_NAME)
                         .executes(WaypointsCommand::showConfiguration)
+                        .then(Commands
+                                .literal(COMMAND_COOLDOWN_NAME)
+                                .requires(stack -> stack.hasPermission(3))
+                                .then(Commands
+                                        .argument(ARG_NAME_FOR_COOLDOWN, IntegerArgumentType.integer(0))
+                                        .executes(WaypointsCommand::configureCooldown)
+                                )
+                        )
+                        .then(Commands
+                                .literal(COMMAND_TRAVEL_THROUGH_DIMENSION_NAME)
+                                .requires(stack -> stack.hasPermission(3))
+                                .then(Commands
+                                        .argument(ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION, BoolArgumentType.bool())
+                                        .executes(WaypointsCommand::configureTravelThroughDimension)
+                                )
+                        )
+                        .then(Commands
+                                .literal(COMMAND_MAX_WAYPOINTS_NAME)
+                                .requires(stack -> stack.hasPermission(3))
+                                .then(Commands
+                                        .argument(ARG_NAME_FOR_MAX_WAYPOINTS, IntegerArgumentType.integer(1, 10))
+                                        .executes(WaypointsCommand::configureMaxNbOfWaypoints)
+                                )
+                        )
                 )
         );
     }
@@ -387,6 +419,42 @@ public class WaypointsCommand {
                         Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
                         formatPermitted(ShwConfigWrapper.allowWaypointsToTravelThoughDimension())),
                 false);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int configureCooldown(CommandContext<CommandSourceStack> context) {
+        int cooldownValue = IntegerArgumentType.getInteger(context, ARG_NAME_FOR_COOLDOWN);
+
+        ShwConfigWrapper.setWaypointsCooldown(cooldownValue);
+
+        for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.cooldown.success", formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(cooldownValue)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int configureTravelThroughDimension(CommandContext<CommandSourceStack> context) {
+        boolean travelThroughDimension = BoolArgumentType.getBool(context, ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION);
+
+        ShwConfigWrapper.setAllowWaypointsToTravelThroughDimensionCooldown(travelThroughDimension);
+
+        for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.travelThroughDimension.success", formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(travelThroughDimension)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int configureMaxNbOfWaypoints(CommandContext<CommandSourceStack> context) {
+        int maxNbOfWaypoints = IntegerArgumentType.getInteger(context, ARG_NAME_FOR_MAX_WAYPOINTS);
+
+        ShwConfigWrapper.setMaximumNumberOfWaypoints(maxNbOfWaypoints);
+
+        for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.maximumNumberOfWaypoints.success", Component.literal(String.valueOf(maxNbOfWaypoints)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+        }
 
         return Command.SINGLE_SUCCESS;
     }

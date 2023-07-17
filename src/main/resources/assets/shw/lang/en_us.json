@@ -6,6 +6,10 @@
   "shw.commands.home.error.homeNotFound": "An adventurer already tried to explore empty void, it wasn't a pleasant experiment, he vanished… I advise you to %s before getting to your home",
   "shw.commands.home.error.notAllowedToTravelDimension": "Dimensional travel is an ancient power, you've forgotten how to deal with it",
   "shw.commands.home.error.cooldown": "Get yourself %d seconds rest before getting home",
+  //home config cooldown command
+  "shw.commands.home.config.cooldown.success": "Cooldown for %s is now set to: %s seconds",
+  //home config travelThroughDimension command
+  "shw.commands.home.config.travelThroughDimension.success": "Dimensional travel for %s is now set to: %s",
   //sethome command
   "shw.commands.sethome.success.first_home": "Congrats, your home has been registered! You can now use the power of %s to get you back here",
   "shw.commands.sethome.success.update": "Your home has been updated",
@@ -41,6 +45,12 @@
   "shw.commands.waypoints.undo.error.noLastWaypointDeletedFound": "No undo power for this time…",
   //wp config command
   "shw.commands.waypoints.config.success": "Cooldown is set to %d seconds with a maximum of %d waypoints. Travel through dimension %s",
+  //wp config cooldown command
+  "shw.commands.waypoints.config.cooldown.success": "Cooldown for %s is now set to: %s seconds",
+  //wp config travelThroughDimension command
+  "shw.commands.waypoints.config.travelThroughDimension.success": "Dimensional travel for %s is now set to: %s",
+  //wp config maximumNumberOfWaypoints command
+  "shw.commands.waypoints.config.maximumNumberOfWaypoints.success": "Maximum Waypoints is now set to: %s",
   //utils
   "shw.commands.config.permitted": "is permitted",
   "shw.commands.config.not_permitted": "is not permitted",

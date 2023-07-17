@@ -33,7 +33,7 @@ public class CommandLineFormatter {
     }
 
     private static ChatFormatting getInfoSizeColorByNbOfWaypoints(int nbOfWaypoints, int maxNbOfWaypoints) {
-        if (nbOfWaypoints == maxNbOfWaypoints) return ChatFormatting.RED;
+        if (nbOfWaypoints >= maxNbOfWaypoints) return ChatFormatting.RED;
 
         if (nbOfWaypoints > maxNbOfWaypoints / 2) return ChatFormatting.YELLOW;
 

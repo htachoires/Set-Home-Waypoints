@@ -11,6 +11,26 @@ public class ShwConfigWrapper {
         return SetHomeWaypoints.ShwConfig.homeCooldown.get();
     }
 
+    public static void setHomeCooldown(int cooldown) {
+        SetHomeWaypoints.ShwConfig.homeCooldown.set(cooldown);
+    }
+
+    public static void setWaypointsCooldown(int cooldown) {
+        SetHomeWaypoints.ShwConfig.waypointsCooldown.set(cooldown);
+    }
+
+    public static void setMaximumNumberOfWaypoints(int maxNbOfWaypoints) {
+        SetHomeWaypoints.ShwConfig.maximumNumberOfWaypoints.set(maxNbOfWaypoints);
+    }
+
+    public static void setAllowWaypointsToTravelThroughDimensionCooldown(boolean travelThroughDimension) {
+        SetHomeWaypoints.ShwConfig.allowWaypointsToTravelThoughDimension.set(travelThroughDimension);
+    }
+
+    public static void setAllowHomeToTravelThoughDimension(boolean travelThroughDimension) {
+        SetHomeWaypoints.ShwConfig.allowHomeToTravelThoughDimension.set(travelThroughDimension);
+    }
+
     public static int waypointsCooldown() {
         return SetHomeWaypoints.ShwConfig.waypointsCooldown.get();
     }
