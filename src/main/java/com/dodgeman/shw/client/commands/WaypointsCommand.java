@@ -4,6 +4,7 @@ import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.*;
 import com.dodgeman.shw.saveddata.mappers.PositionMapper;
 import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
+import com.dodgeman.shw.saveddata.models.ValueObject;
 import com.dodgeman.shw.saveddata.models.Waypoint;
 import com.dodgeman.shw.saveddata.models.WaypointName;
 import com.mojang.brigadier.Command;
@@ -13,9 +14,11 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -81,6 +84,7 @@ public class WaypointsCommand {
                         .literal(COMMAND_USE_NAME)
                         .then(Commands
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
+                                .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::useWaypoint)
                         )
                 )
@@ -88,6 +92,7 @@ public class WaypointsCommand {
                         .literal(COMMAND_UPDATE_NAME)
                         .then(Commands
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
+                                .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::updateWaypoint)
                         )
                 )
@@ -99,6 +104,7 @@ public class WaypointsCommand {
                         .literal(COMMAND_REMOVE_NAME)
                         .then(Commands
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
+                                .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::removeWaypoint)
                         )
                 )
@@ -139,6 +145,18 @@ public class WaypointsCommand {
                         )
                 )
         );
+    }
+
+    private static SuggestionProvider<CommandSourceStack> getWaypointsNameSuggestion() {
+        return (context, builder) -> SharedSuggestionProvider
+                .suggest(new SetHomeWaypointsSavedDataFactory()
+                                .createAndLoad()
+                                .getPlayerHomeAndWaypoints(context.getSource().getPlayerOrException().getUUID())
+                                .getWaypointsName()
+                                .stream()
+                                .map(ValueObject::value),
+                        builder
+                );
     }
 
     private static int showHelp(CommandContext<CommandSourceStack> context) {
