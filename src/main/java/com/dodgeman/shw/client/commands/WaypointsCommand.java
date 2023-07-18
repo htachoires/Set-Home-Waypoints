@@ -39,40 +39,35 @@ public class WaypointsCommand {
     public static final long TIME_BEFORE_SHOWING_UNDO_REMINDER = 86_400_000;// 86_400_000 == 1 day
     public static final long TIME_BEFORE_SHOWING_UNDO_INFORMATION = 86_400_000;// 86_400_000 == 1 day
     public static final int NB_REMOVE_WAYPOINT_SUCCESS_MESSAGE = 4;
-    private static final String COMMAND_HELP_NAME = "help";
     public static final String COMMAND_SET_NAME = "set";
     public static final String COMMAND_USE_NAME = "use";
-    private static final String COMMAND_UPDATE_NAME = "update";
+    public static final String COMMAND_UPDATE_NAME = "update";
     public static final String COMMAND_LIST_NAME = "list";
     public static final String COMMAND_REMOVE_NAME = "remove";
-    private static final String COMMAND_CLEAR_NAME = "clear";
-    private static final String COMMAND_UNDO_NAME = "undo";
-    private static final String COMMAND_CONFIG_NAME = "config";
+    public static final String COMMAND_CLEAR_NAME = "clear";
+    public static final String COMMAND_UNDO_NAME = "undo";
+    public static final String COMMAND_CONFIG_NAME = "config";
     public static final String ARG_NAME_FOR_WAYPOINT_NAME = "waypoint name";
     public static final int SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE = -1;
-    private static final int SET_DUPLICATE_WAYPOINT_NAME_FAILURE = -2;
+    public static final int SET_DUPLICATE_WAYPOINT_NAME_FAILURE = -2;
     public static final int USE_TRAVEL_THROUGH_DIMENSION_FAILURE = -1;
-    private static final int USE_COOLDOWN_NOT_READY_FAILURE = -2;
-    private static final int USE_WAYPOINT_NOT_FOUND_FAILURE = -3;
-    private static final int UPDATE_WAYPOINT_NOT_FOUND_FAILURE = -1;
-    private static final int DELETE_WAYPOINT_NOT_FOUND_FAILURE = -1;
-    private static final int UNDO_LAST_DELETED_WAYPOINT_FAILURE = -1;
+    public static final int USE_COOLDOWN_NOT_READY_FAILURE = -2;
+    public static final int USE_WAYPOINT_NOT_FOUND_FAILURE = -3;
+    public static final int UPDATE_WAYPOINT_NOT_FOUND_FAILURE = -1;
+    public static final int DELETE_WAYPOINT_NOT_FOUND_FAILURE = -1;
+    public static final int UNDO_LAST_DELETED_WAYPOINT_FAILURE = -1;
     public static final String COMMAND_COOLDOWN_NAME = "cooldown";
     public static final String ARG_NAME_FOR_COOLDOWN = "cooldownValue";
-    private static final String COMMAND_TRAVEL_THROUGH_DIMENSION_NAME = "travelThroughDimension";
+    public static final String COMMAND_TRAVEL_THROUGH_DIMENSION_NAME = "travelThroughDimension";
     public static final String ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION = "travelThroughDimensionValue";
-    private static final String ARG_NAME_FOR_MAX_WAYPOINTS = "max number of waypoints";
-    private static final String COMMAND_MAX_WAYPOINTS_NAME = "maximumWaypointsNumber";
+    public static final String ARG_NAME_FOR_MAX_WAYPOINTS = "max number of waypoints";
+    public static final String COMMAND_MAX_WAYPOINTS_NAME = "maximumWaypointsNumber";
 
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
                 .requires(CommandSourceStack::isPlayer)
-                .then(Commands
-                        .literal(COMMAND_HELP_NAME)
-                        .executes(WaypointsCommand::showHelp)
-                )
                 .then(Commands
                         .literal(COMMAND_SET_NAME)
                         .then(Commands
@@ -147,7 +142,7 @@ public class WaypointsCommand {
         );
     }
 
-    private static SuggestionProvider<CommandSourceStack> getWaypointsNameSuggestion() {
+    public static SuggestionProvider<CommandSourceStack> getWaypointsNameSuggestion() {
         return (context, builder) -> SharedSuggestionProvider
                 .suggest(new SetHomeWaypointsSavedDataFactory()
                                 .createAndLoad()
@@ -159,47 +154,7 @@ public class WaypointsCommand {
                 );
     }
 
-    private static int showHelp(CommandContext<CommandSourceStack> context) {
-        String border = "==== Set Home & Waypoints ====";
-        ChatFormatting borderColor = ChatFormatting.GREEN;
-        ChatFormatting commandColor = ChatFormatting.GOLD;
-
-        MutableComponent header = Component.literal(border + "\n").withStyle(borderColor);
-
-        MutableComponent commandSeparator = Component.literal(", ").withStyle(ChatFormatting.WHITE);
-
-        MutableComponent first = Component.literal("/" + COMMAND_NAME + " [ ")
-                .append(Component.literal(COMMAND_SET_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_USE_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_UPDATE_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_REMOVE_NAME).withStyle(commandColor))
-                .append(Component.literal(" ] <" + ARG_NAME_FOR_WAYPOINT_NAME + ">\n").withStyle(ChatFormatting.WHITE));
-
-        MutableComponent second = Component.literal("/" + COMMAND_NAME + " [ ")
-                .append(Component.literal(COMMAND_CONFIG_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_HELP_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_CLEAR_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_LIST_NAME).withStyle(commandColor))
-                .append(commandSeparator.copy())
-                .append(Component.literal(COMMAND_UNDO_NAME).withStyle(commandColor))
-                .append(Component.literal(" ]\n").withStyle(ChatFormatting.WHITE));
-
-        MutableComponent body = first.append(second).withStyle(ChatFormatting.WHITE);
-
-        MutableComponent footer = Component.literal(border).withStyle(borderColor);
-
-        context.getSource().sendSuccess(header.append(body).append(footer), false);
-
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static int setWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int setWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         WaypointName waypointName = new WaypointName(StringArgumentType.getString(context, ARG_NAME_FOR_WAYPOINT_NAME));
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
@@ -246,7 +201,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int useWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int useWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         WaypointName waypointName = new WaypointName(StringArgumentType.getString(context, ARG_NAME_FOR_WAYPOINT_NAME));
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
@@ -296,7 +251,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int updateWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int updateWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         WaypointName waypointName = new WaypointName(StringArgumentType.getString(context, ARG_NAME_FOR_WAYPOINT_NAME));
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
@@ -325,7 +280,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int listWaypoints(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int listWaypoints(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
@@ -354,7 +309,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int removeWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         WaypointName waypointName = new WaypointName(StringArgumentType.getString(context, ARG_NAME_FOR_WAYPOINT_NAME));
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
@@ -390,7 +345,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int clearWaypoints(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int clearWaypoints(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
@@ -404,7 +359,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int undoDeletedWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int undoDeletedWaypoint(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         SetHomeAndWaypointsSavedData savedData = new SetHomeWaypointsSavedDataFactory().createAndLoad();
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
@@ -429,7 +384,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int showConfiguration(CommandContext<CommandSourceStack> context) {
+    public static int showConfiguration(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(
                 Component.translatable(
                         "shw.commands.waypoints.config.success",
@@ -441,7 +396,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int configureCooldown(CommandContext<CommandSourceStack> context) {
+    public static int configureCooldown(CommandContext<CommandSourceStack> context) {
         int cooldownValue = IntegerArgumentType.getInteger(context, ARG_NAME_FOR_COOLDOWN);
 
         ShwConfigWrapper.setWaypointsCooldown(cooldownValue);
@@ -453,7 +408,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int configureTravelThroughDimension(CommandContext<CommandSourceStack> context) {
+    public static int configureTravelThroughDimension(CommandContext<CommandSourceStack> context) {
         boolean travelThroughDimension = BoolArgumentType.getBool(context, ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION);
 
         ShwConfigWrapper.setAllowWaypointsToTravelThroughDimensionCooldown(travelThroughDimension);
@@ -465,7 +420,7 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int configureMaxNbOfWaypoints(CommandContext<CommandSourceStack> context) {
+    public static int configureMaxNbOfWaypoints(CommandContext<CommandSourceStack> context) {
         int maxNbOfWaypoints = IntegerArgumentType.getInteger(context, ARG_NAME_FOR_MAX_WAYPOINTS);
 
         ShwConfigWrapper.setMaximumNumberOfWaypoints(maxNbOfWaypoints);
