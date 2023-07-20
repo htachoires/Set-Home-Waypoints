@@ -1,4 +1,4 @@
-package com.dodgeman.shw.client.commands;
+package com.dodgeman.shw.commons.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.*;
@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.dodgeman.shw.client.commands.CommandLineFormatter.*;
+import static com.dodgeman.shw.commons.commands.CommandLineFormatter.*;
 
 public class WaypointsCommand {
 

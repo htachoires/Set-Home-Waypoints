@@ -1,4 +1,4 @@
-package com.dodgeman.shw.client.commands;
+package com.dodgeman.shw.commons.commands;
 
 import com.dodgeman.shw.saveddata.models.WaypointName;
 import net.minecraft.ChatFormatting;

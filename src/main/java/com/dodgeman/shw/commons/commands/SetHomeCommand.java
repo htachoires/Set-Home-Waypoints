@@ -1,4 +1,4 @@
-package com.dodgeman.shw.client.commands;
+package com.dodgeman.shw.commons.commands;
 
 import com.dodgeman.shw.saveddata.models.Home;
 import com.dodgeman.shw.saveddata.mappers.PositionMapper;
@@ -15,7 +15,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
+import static com.dodgeman.shw.commons.commands.CommandLineFormatter.formatCommand;
 
 public class SetHomeCommand {
 

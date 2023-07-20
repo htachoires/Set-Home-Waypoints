@@ -1,4 +1,4 @@
-package com.dodgeman.shw.client.commands;
+package com.dodgeman.shw.commons.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.models.Home;
@@ -23,8 +23,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatCommand;
-import static com.dodgeman.shw.client.commands.CommandLineFormatter.formatPermitted;
+import static com.dodgeman.shw.commons.commands.CommandLineFormatter.formatCommand;
+import static com.dodgeman.shw.commons.commands.CommandLineFormatter.formatPermitted;
 
 public class HomeCommand {
 

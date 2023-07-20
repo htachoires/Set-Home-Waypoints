@@ -1,4 +1,4 @@
-package com.dodgeman.shw.client.commands;
+package com.dodgeman.shw.commons.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -28,7 +28,13 @@ public class ShwCommand {
 
         MutableComponent commandSeparator = Component.literal(", ").withStyle(ChatFormatting.WHITE);
 
-        MutableComponent first = Component.literal("/" + COMMAND_NAME + " [ ")
+        MutableComponent home = Component.literal("/" + HomeCommand.COMMAND_NAME + " [ ")
+                .append(Component.literal(HomeCommand.COMMAND_CONFIG_NAME).withStyle(commandColor))
+                .append(" ]\n");
+
+        MutableComponent setHome = Component.literal("/" + SetHomeCommand.COMMAND_NAME).append("\n");
+
+        MutableComponent wpFirst = Component.literal("/" + WaypointsCommand.COMMAND_NAME + " [ ")
                 .append(Component.literal(WaypointsCommand.COMMAND_SET_NAME).withStyle(commandColor))
                 .append(commandSeparator.copy())
                 .append(Component.literal(WaypointsCommand.COMMAND_USE_NAME).withStyle(commandColor))
@@ -38,7 +44,7 @@ public class ShwCommand {
                 .append(Component.literal(WaypointsCommand.COMMAND_REMOVE_NAME).withStyle(commandColor))
                 .append(Component.literal(" ] <" + WaypointsCommand.ARG_NAME_FOR_WAYPOINT_NAME + ">\n").withStyle(ChatFormatting.WHITE));
 
-        MutableComponent second = Component.literal("/" + COMMAND_NAME + " [ ")
+        MutableComponent wpSecond = Component.literal("/" + WaypointsCommand.COMMAND_NAME + " [ ")
                 .append(Component.literal(WaypointsCommand.COMMAND_CONFIG_NAME).withStyle(commandColor))
                 .append(commandSeparator.copy())
                 .append(Component.literal(WaypointsCommand.COMMAND_CLEAR_NAME).withStyle(commandColor))
@@ -48,7 +54,7 @@ public class ShwCommand {
                 .append(Component.literal(WaypointsCommand.COMMAND_UNDO_NAME).withStyle(commandColor))
                 .append(Component.literal(" ]\n").withStyle(ChatFormatting.WHITE));
 
-        MutableComponent body = first.append(second).withStyle(ChatFormatting.WHITE);
+        MutableComponent body = setHome.append(home).append(wpFirst).append(wpSecond).withStyle(ChatFormatting.WHITE);
 
         MutableComponent footer = Component.literal(border).withStyle(borderColor);
 

@@ -1,9 +1,9 @@
 package com.dodgeman.shw;
 
-import com.dodgeman.shw.client.commands.HomeCommand;
-import com.dodgeman.shw.client.commands.SetHomeCommand;
-import com.dodgeman.shw.client.commands.ShwCommand;
-import com.dodgeman.shw.client.commands.WaypointsCommand;
+import com.dodgeman.shw.commons.commands.HomeCommand;
+import com.dodgeman.shw.commons.commands.SetHomeCommand;
+import com.dodgeman.shw.commons.commands.ShwCommand;
+import com.dodgeman.shw.commons.commands.WaypointsCommand;
 import com.dodgeman.shw.config.ShwConfig;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
