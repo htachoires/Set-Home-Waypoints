@@ -61,5 +61,9 @@
   //waypoints configuration
   "shw.config.waypoints.allowTravelThroughDimension": "Travel dimension for waypoints",
   "shw.config.waypoints.maximumNumberOfWaypoints": "Maximum number of waypoints",
-  "shw.config.waypoints.cooldown": "Cooldown in seconds for waypoints"
+  "shw.config.waypoints.cooldown": "Cooldown in seconds for waypoints",
+
+  //key bind
+  "key.category.shw": "Set Home & Waypoints",
+  "key.shw.go_home": "Go Home"
 }
