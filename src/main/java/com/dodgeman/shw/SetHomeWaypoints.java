@@ -46,7 +46,7 @@ public class SetHomeWaypoints {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
