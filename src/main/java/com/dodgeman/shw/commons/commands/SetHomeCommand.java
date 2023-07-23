@@ -24,8 +24,8 @@ public class SetHomeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
-                .requires(CommandSourceStack::isPlayer)
                 .executes(SetHomeCommand::setHome)
+                .requires(CommandSourceStack::isPlayer)
         );
     }
 

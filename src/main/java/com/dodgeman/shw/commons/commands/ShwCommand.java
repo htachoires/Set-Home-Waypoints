@@ -24,7 +24,7 @@ public class ShwCommand {
         ChatFormatting borderColor = ChatFormatting.GREEN;
         ChatFormatting commandColor = ChatFormatting.GOLD;
 
-        MutableComponent header = Component.literal(border + "\n").withStyle(borderColor);
+        MutableComponent header = Component.literal("\n" + border + "\n").withStyle(borderColor);
 
         MutableComponent commandSeparator = Component.literal(", ").withStyle(ChatFormatting.WHITE);
 
@@ -56,7 +56,7 @@ public class ShwCommand {
 
         MutableComponent body = setHome.append(home).append(wpFirst).append(wpSecond).withStyle(ChatFormatting.WHITE);
 
-        MutableComponent footer = Component.literal(border).withStyle(borderColor);
+        MutableComponent footer = Component.literal(border + "\n").withStyle(borderColor);
 
         context.getSource().sendSuccess(header.append(body).append(footer), false);
 

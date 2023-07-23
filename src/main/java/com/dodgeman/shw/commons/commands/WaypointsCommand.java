@@ -63,16 +63,15 @@ public class WaypointsCommand {
     public static final String ARG_NAME_FOR_MAX_WAYPOINTS = "max number of waypoints";
     public static final String COMMAND_MAX_WAYPOINTS_NAME = "maximumWaypointsNumber";
 
-
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
-                .requires(CommandSourceStack::isPlayer)
                 .then(Commands
                         .literal(COMMAND_SET_NAME)
                         .then(Commands
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .executes(WaypointsCommand::setWaypoint)
+                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -81,6 +80,7 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::useWaypoint)
+                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -89,6 +89,7 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::updateWaypoint)
+                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -101,15 +102,18 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::removeWaypoint)
+                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
                         .literal(COMMAND_CLEAR_NAME)
                         .executes(WaypointsCommand::clearWaypoints)
+                        .requires(CommandSourceStack::isPlayer)
                 )
                 .then(Commands
                         .literal(COMMAND_UNDO_NAME)
                         .executes(WaypointsCommand::undoDeletedWaypoint)
+                        .requires(CommandSourceStack::isPlayer)
                 )
                 .then(Commands
                         .literal(COMMAND_CONFIG_NAME)
