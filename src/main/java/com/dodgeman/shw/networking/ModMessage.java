@@ -19,7 +19,7 @@ public class ModMessage {
 
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(SetHomeWaypoints.MODID, "messages"))
+                .named(new ResourceLocation(SetHomeWaypoints.MOD_ID, "messages"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)

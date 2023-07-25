@@ -27,7 +27,7 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
 
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
-        tag.put(SetHomeWaypoints.MODID, setHomeAndWaypointsSavedDataMapper.toCompoundTag(this));
+        tag.put(SetHomeWaypoints.MOD_ID, setHomeAndWaypointsSavedDataMapper.toCompoundTag(this));
         return tag;
     }
 

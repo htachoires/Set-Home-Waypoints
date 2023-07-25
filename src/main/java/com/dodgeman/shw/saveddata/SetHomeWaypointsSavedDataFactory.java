@@ -18,7 +18,7 @@ public class SetHomeWaypointsSavedDataFactory {
     public SetHomeAndWaypointsSavedData createAndLoad() {
         DimensionDataStorage dataStorage = ServerLifecycleHooks.getCurrentServer().overworld().getDataStorage();
 
-        return dataStorage.computeIfAbsent(this::load, SetHomeAndWaypointsSavedData::new, SetHomeWaypoints.MODID);
+        return dataStorage.computeIfAbsent(this::load, SetHomeAndWaypointsSavedData::new, SetHomeWaypoints.MOD_ID);
     }
 
     public SetHomeAndWaypointsSavedData load(CompoundTag tag) {

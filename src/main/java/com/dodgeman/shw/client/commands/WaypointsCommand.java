@@ -1,4 +1,4 @@
-package com.dodgeman.shw.commons.commands;
+package com.dodgeman.shw.client.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.*;
@@ -30,8 +30,6 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.dodgeman.shw.commons.commands.CommandLineFormatter.*;
 
 public class WaypointsCommand {
 
@@ -66,12 +64,12 @@ public class WaypointsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
+                .requires(CommandSourceStack::isPlayer)
                 .then(Commands
                         .literal(COMMAND_SET_NAME)
                         .then(Commands
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .executes(WaypointsCommand::setWaypoint)
-                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -80,7 +78,6 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::useWaypoint)
-                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -89,7 +86,6 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::updateWaypoint)
-                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -102,7 +98,6 @@ public class WaypointsCommand {
                                 .argument(ARG_NAME_FOR_WAYPOINT_NAME, StringArgumentType.word())
                                 .suggests(getWaypointsNameSuggestion())
                                 .executes(WaypointsCommand::removeWaypoint)
-                                .requires(CommandSourceStack::isPlayer)
                         )
                 )
                 .then(Commands
@@ -165,7 +160,7 @@ public class WaypointsCommand {
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
         if (playerHomeAndWaypoints.hasWaypointNamed(waypointName)) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.duplicateWaypoint", formatWaypoint(waypointName)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.duplicateWaypoint", CommandLineFormatter.formatWaypoint(waypointName)));
 
             return SET_DUPLICATE_WAYPOINT_NAME_FAILURE;
         }
@@ -181,14 +176,14 @@ public class WaypointsCommand {
         Component successMessage = null;
 
         if (!playerHomeAndWaypoints.hasAlreadySetWaypoint()) {
-            successMessage = Component.translatable("shw.commands.waypoints.set.success.first_waypoint", formatCommand(COMMAND_NAME, COMMAND_USE_NAME, waypointName.value())).withStyle(ChatFormatting.GREEN);
+            successMessage = Component.translatable("shw.commands.waypoints.set.success.first_waypoint", CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_USE_NAME, waypointName.value())).withStyle(ChatFormatting.GREEN);
         }
 
         Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
         playerHomeAndWaypoints.addWaypoint(new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
 
         if (successMessage == null) {
-            successMessage = Component.translatable("shw.commands.waypoints.set.success", formatWaypoint(waypointName), formatNbOfWaypoints(playerHomeAndWaypoints.getNbOfWaypoints(), ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.GREEN);
+            successMessage = Component.translatable("shw.commands.waypoints.set.success", CommandLineFormatter.formatWaypoint(waypointName), CommandLineFormatter.formatNbOfWaypoints(playerHomeAndWaypoints.getNbOfWaypoints(), ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.GREEN);
         }
 
         context.getSource().sendSuccess(successMessage, false);
@@ -197,7 +192,7 @@ public class WaypointsCommand {
 
         if (lastDeletedWaypoint != null && lastTimeUndoInformation >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
             playerHomeAndWaypoints.undoInformationHasBeenShown();
-            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.set.info.undo", formatWaypointItalic(waypointName), formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.set.info.undo", CommandLineFormatter.formatWaypointItalic(waypointName), CommandLineFormatter.formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
         }
 
         savedData.setDirty();
@@ -214,7 +209,7 @@ public class WaypointsCommand {
         Waypoint waypoint = playerHomeAndWaypoints.getWaypointByName(waypointName);
 
         if (waypoint == null) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.waypointNotFound", formatWaypoint(waypointName)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.waypointNotFound", CommandLineFormatter.formatWaypoint(waypointName)));
 
             return USE_WAYPOINT_NOT_FOUND_FAILURE;
         }
@@ -230,7 +225,7 @@ public class WaypointsCommand {
 
         long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.waypointsCooldown()) - playerHomeAndWaypoints.elapsedTimeOfWaypointUseCommandExecution();
         if (cooldownRemaining > 0) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1, formatWaypoint(waypointName)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1, CommandLineFormatter.formatWaypoint(waypointName)));
 
             return USE_COOLDOWN_NOT_READY_FAILURE;
         }
@@ -247,7 +242,7 @@ public class WaypointsCommand {
 
         if (lastDeletedWaypoint != null && elapsedTimeOfLastUndoInfo >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
             playerHomeAndWaypoints.undoInformationHasBeenShown();
-            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.info.undo", formatWaypointItalic(waypointName), formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.use.info.undo", CommandLineFormatter.formatWaypointItalic(waypointName), CommandLineFormatter.formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
         }
 
         savedData.setDirty();
@@ -262,7 +257,7 @@ public class WaypointsCommand {
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
         if (!playerHomeAndWaypoints.hasWaypointNamed(waypointName)) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.update.error.waypointNotFound", formatWaypoint(waypointName)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.update.error.waypointNotFound", CommandLineFormatter.formatWaypoint(waypointName)));
 
             return UPDATE_WAYPOINT_NOT_FOUND_FAILURE;
         }
@@ -270,13 +265,13 @@ public class WaypointsCommand {
         Waypoint lastDeletedWaypoint = playerHomeAndWaypoints.getLastDeletedWaypoint();
         playerHomeAndWaypoints.addWaypoint(new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.success", formatWaypoint(waypointName)).withStyle(ChatFormatting.GREEN), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.success", CommandLineFormatter.formatWaypoint(waypointName)).withStyle(ChatFormatting.GREEN), false);
 
         long elapsedTimeOfLastUndoInfo = new Date().getTime() - playerHomeAndWaypoints.getUndoInformationHasBeenShownAt();
 
         if (lastDeletedWaypoint != null && elapsedTimeOfLastUndoInfo >= TIME_BEFORE_SHOWING_UNDO_INFORMATION) {
             playerHomeAndWaypoints.undoInformationHasBeenShown();
-            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.info.undo", formatWaypointItalic(waypointName), formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
+            context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.update.info.undo", CommandLineFormatter.formatWaypointItalic(waypointName), CommandLineFormatter.formatWaypointItalic(lastDeletedWaypoint.name())).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC), false);
         }
 
         savedData.setDirty();
@@ -297,7 +292,7 @@ public class WaypointsCommand {
         int nbOfWaypoints = waypointsName.size();
 
         for (int i = 0; i < nbOfWaypoints; i++) {
-            successMessage.append(formatWaypoint(waypointsName.get(i)));
+            successMessage.append(CommandLineFormatter.formatWaypoint(waypointsName.get(i)));
 
             if (i < (nbOfWaypoints - 1)) {
                 successMessage.append(", ");
@@ -306,7 +301,7 @@ public class WaypointsCommand {
 
         successMessage
                 .append(" ] ")
-                .append(formatNbOfWaypoints(waypointsName.size(), ShwConfigWrapper.maximumNumberOfWaypoints()));
+                .append(CommandLineFormatter.formatNbOfWaypoints(waypointsName.size(), ShwConfigWrapper.maximumNumberOfWaypoints()));
 
         context.getSource().sendSuccess(successMessage, false);
 
@@ -320,7 +315,7 @@ public class WaypointsCommand {
         PlayerHomeAndWaypoints playerHomeAndWaypoints = savedData.getPlayerHomeAndWaypoints(player.getUUID());
 
         if (!playerHomeAndWaypoints.hasWaypointNamed(waypointName)) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.remove.error.waypointNotFound", formatWaypoint(waypointName)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.remove.error.waypointNotFound", CommandLineFormatter.formatWaypoint(waypointName)));
 
             return DELETE_WAYPOINT_NOT_FOUND_FAILURE;
         }
@@ -331,7 +326,7 @@ public class WaypointsCommand {
 
         int successMessageIndex = playerHomeAndWaypoints.getRemoveWaypointSuccessMessageIndex();
 
-        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.success." + successMessageIndex, formatWaypoint(waypointName), formatWaypoint(waypointName)), false);
+        context.getSource().sendSuccess(Component.translatable("shw.commands.waypoints.remove.success." + successMessageIndex, CommandLineFormatter.formatWaypoint(waypointName), CommandLineFormatter.formatWaypoint(waypointName)), false);
 
         playerHomeAndWaypoints.updateRemoveWaypointSuccessMessageIndex(NB_REMOVE_WAYPOINT_SUCCESS_MESSAGE);
 
@@ -339,8 +334,8 @@ public class WaypointsCommand {
         if (elapsedTimeOfLastUndo >= TIME_BEFORE_SHOWING_UNDO_REMINDER || lastTimeDeletedWaypoint == 0) {
             context.getSource().sendSuccess(
                     Component.translatable("shw.commands.waypoints.remove.info.undo",
-                            formatWaypointItalic(waypointName),
-                            formatCommand(COMMAND_NAME, COMMAND_UNDO_NAME)).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC),
+                            CommandLineFormatter.formatWaypointItalic(waypointName),
+                            CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_UNDO_NAME)).withStyle(ChatFormatting.YELLOW).withStyle(ChatFormatting.ITALIC),
                     false);
         }
 
@@ -380,7 +375,7 @@ public class WaypointsCommand {
 
         context.getSource().sendSuccess(
                 Component.translatable("shw.commands.waypoints.undo.success",
-                        formatWaypoint(lastDeletedWaypoint.name())).withStyle(ChatFormatting.GREEN),
+                        CommandLineFormatter.formatWaypoint(lastDeletedWaypoint.name())).withStyle(ChatFormatting.GREEN),
                 false);
 
         savedData.setDirty();
@@ -394,7 +389,7 @@ public class WaypointsCommand {
                         "shw.commands.waypoints.config.success",
                         Component.literal(String.valueOf(ShwConfigWrapper.waypointsCooldown())).withStyle(ChatFormatting.BLUE),
                         Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
-                        formatPermitted(ShwConfigWrapper.allowWaypointsToTravelThoughDimension())),
+                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.allowWaypointsToTravelThoughDimension())),
                 false);
 
         return Command.SINGLE_SUCCESS;
@@ -406,7 +401,7 @@ public class WaypointsCommand {
         ShwConfigWrapper.setWaypointsCooldown(cooldownValue);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.cooldown.success", formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(cooldownValue)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.cooldown.success", CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(cooldownValue))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -418,7 +413,7 @@ public class WaypointsCommand {
         ShwConfigWrapper.setAllowWaypointsToTravelThroughDimensionCooldown(travelThroughDimension);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.travelThroughDimension.success", formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(travelThroughDimension)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.travelThroughDimension.success", CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(travelThroughDimension))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -430,7 +425,7 @@ public class WaypointsCommand {
         ShwConfigWrapper.setMaximumNumberOfWaypoints(maxNbOfWaypoints);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.maximumNumberOfWaypoints.success", Component.literal(String.valueOf(maxNbOfWaypoints)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.maximumNumberOfWaypoints.success", Component.literal(String.valueOf(maxNbOfWaypoints))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;

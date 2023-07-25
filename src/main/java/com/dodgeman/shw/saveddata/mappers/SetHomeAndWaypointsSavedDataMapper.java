@@ -17,7 +17,7 @@ public class SetHomeAndWaypointsSavedDataMapper implements CompoundMapper<SetHom
 
     @Override
     public SetHomeAndWaypointsSavedData fromCompoundTag(CompoundTag tag) {
-        CompoundTag rawPlayerHomeAndWaypoints = tag.getCompound(SetHomeWaypoints.MODID);
+        CompoundTag rawPlayerHomeAndWaypoints = tag.getCompound(SetHomeWaypoints.MOD_ID);
 
         HashMap<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints = new HashMap<>();
 

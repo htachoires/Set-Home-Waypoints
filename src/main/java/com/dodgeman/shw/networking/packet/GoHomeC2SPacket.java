@@ -1,6 +1,6 @@
 package com.dodgeman.shw.networking.packet;
 
-import com.dodgeman.shw.commons.commands.HomeCommand;
+import com.dodgeman.shw.client.commands.HomeCommand;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

@@ -1,4 +1,4 @@
-package com.dodgeman.shw.commons.commands;
+package com.dodgeman.shw.client.commands;
 
 import com.dodgeman.shw.config.ShwConfigWrapper;
 import com.dodgeman.shw.saveddata.models.Home;
@@ -23,9 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.dodgeman.shw.commons.commands.CommandLineFormatter.formatCommand;
-import static com.dodgeman.shw.commons.commands.CommandLineFormatter.formatPermitted;
-
 public class HomeCommand {
 
     public static final String COMMAND_NAME = "home";
@@ -41,6 +38,7 @@ public class HomeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal(COMMAND_NAME)
+                .requires(CommandSourceStack::isPlayer)
                 .executes(HomeCommand::goHome)
                 .then(Commands
                         .literal(COMMAND_CONFIG_NAME)
@@ -73,7 +71,7 @@ public class HomeCommand {
         Home currentHome = playerHomeAndWaypoints.getHome();
 
         if (currentHome == null) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound", formatCommand(SetHomeCommand.COMMAND_NAME)));
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.homeNotFound", CommandLineFormatter.formatCommand(SetHomeCommand.COMMAND_NAME)));
 
             return NO_HOME_FOUND_FAILURE;
         }
@@ -109,7 +107,7 @@ public class HomeCommand {
         context.getSource().sendSuccess(
                 Component.translatable("shw.commands.home.config.success",
                         Component.literal(String.valueOf(ShwConfigWrapper.homeCooldown())).withStyle(ChatFormatting.BLUE),
-                        formatPermitted(ShwConfigWrapper.allowHomeToTravelThoughDimension())
+                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.allowHomeToTravelThoughDimension())
                 ),
                 false);
 
@@ -122,7 +120,7 @@ public class HomeCommand {
         ShwConfigWrapper.setHomeCooldown(cooldownValue);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.home.config.cooldown.success", formatCommand(COMMAND_NAME), Component.literal(String.valueOf(cooldownValue)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.home.config.cooldown.success", CommandLineFormatter.formatCommand(COMMAND_NAME), Component.literal(String.valueOf(cooldownValue))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -134,7 +132,7 @@ public class HomeCommand {
         ShwConfigWrapper.setAllowHomeToTravelThoughDimension(travelThroughDimension);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.home.config.travelThroughDimension.success", formatCommand(COMMAND_NAME), Component.literal(String.valueOf(travelThroughDimension)).withStyle(ChatFormatting.BOLD)).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.home.config.travelThroughDimension.success", CommandLineFormatter.formatCommand(COMMAND_NAME), Component.literal(String.valueOf(travelThroughDimension))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;

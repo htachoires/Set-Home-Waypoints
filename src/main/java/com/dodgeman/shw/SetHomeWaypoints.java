@@ -1,54 +1,45 @@
 package com.dodgeman.shw;
 
-import com.dodgeman.shw.commons.commands.HomeCommand;
-import com.dodgeman.shw.commons.commands.SetHomeCommand;
-import com.dodgeman.shw.commons.commands.ShwCommand;
-import com.dodgeman.shw.commons.commands.WaypointsCommand;
+import com.dodgeman.shw.client.commands.HomeCommand;
+import com.dodgeman.shw.client.commands.SetHomeCommand;
+import com.dodgeman.shw.client.commands.ShwCommand;
+import com.dodgeman.shw.client.commands.WaypointsCommand;
 import com.dodgeman.shw.config.ShwConfig;
 import com.dodgeman.shw.networking.ModMessage;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
 
-@Mod(SetHomeWaypoints.MODID)
+@Mod(SetHomeWaypoints.MOD_ID)
 public class SetHomeWaypoints {
 
-    public static final String MODID = "shw";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final String MOD_ID = "shw";
     public static final ShwConfig ShwConfig;
-    private static final ForgeConfigSpec spec;
+    private static final ForgeConfigSpec SHW_CONFIG_SPEC;
 
     static {
         final Pair<ShwConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ShwConfig::new);
         ShwConfig = specPair.getLeft();
-        spec = specPair.getRight();
+        SHW_CONFIG_SPEC = specPair.getRight();
     }
 
     public SetHomeWaypoints() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SHW_CONFIG_SPEC);
 
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -64,23 +55,5 @@ public class SetHomeWaypoints {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         ModMessage.register();
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
-
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-        }
     }
 }
