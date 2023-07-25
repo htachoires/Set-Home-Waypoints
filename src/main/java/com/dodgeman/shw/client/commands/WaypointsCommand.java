@@ -56,8 +56,8 @@ public class WaypointsCommand {
     public static final int UNDO_LAST_DELETED_WAYPOINT_FAILURE = -1;
     public static final String COMMAND_COOLDOWN_NAME = "cooldown";
     public static final String ARG_NAME_FOR_COOLDOWN = "cooldownValue";
-    public static final String COMMAND_TRAVEL_THROUGH_DIMENSION_NAME = "travelThroughDimension";
-    public static final String ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION = "travelThroughDimensionValue";
+    public static final String COMMAND_DIMENSIONAL_TRAVEL_NAME = "dimensionalTravel";
+    public static final String ARG_NAME_FOR_DIMENSIONAL_TRAVEL = "dimensionalTravelValue";
     public static final String ARG_NAME_FOR_MAX_WAYPOINTS = "max number of waypoints";
     public static final String COMMAND_MAX_WAYPOINTS_NAME = "maximumWaypointsNumber";
 
@@ -122,11 +122,11 @@ public class WaypointsCommand {
                                 )
                         )
                         .then(Commands
-                                .literal(COMMAND_TRAVEL_THROUGH_DIMENSION_NAME)
+                                .literal(COMMAND_DIMENSIONAL_TRAVEL_NAME)
                                 .requires(stack -> stack.hasPermission(3))
                                 .then(Commands
-                                        .argument(ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION, BoolArgumentType.bool())
-                                        .executes(WaypointsCommand::configureTravelThroughDimension)
+                                        .argument(ARG_NAME_FOR_DIMENSIONAL_TRAVEL, BoolArgumentType.bool())
+                                        .executes(WaypointsCommand::configureDimensionalTravel)
                                 )
                         )
                         .then(Commands
@@ -165,10 +165,10 @@ public class WaypointsCommand {
             return SET_DUPLICATE_WAYPOINT_NAME_FAILURE;
         }
 
-        boolean playerHasReachMaximumWaypoints = playerHomeAndWaypoints.getNbOfWaypoints() >= ShwConfigWrapper.maximumNumberOfWaypoints();
+        boolean playerHasReachMaximumWaypoints = playerHomeAndWaypoints.getNbOfWaypoints() >= ShwConfigWrapper.getMaxNbOfWaypoints();
 
         if (playerHasReachMaximumWaypoints) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints", ShwConfigWrapper.maximumNumberOfWaypoints()));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.set.error.maximumNumberOfWaypoints", ShwConfigWrapper.getMaxNbOfWaypoints()));
 
             return SET_MAXIMUM_WAYPOINTS_REACHED_FAILURE;
         }
@@ -183,7 +183,7 @@ public class WaypointsCommand {
         playerHomeAndWaypoints.addWaypoint(new Waypoint(waypointName, PositionMapper.fromPlayer(player)));
 
         if (successMessage == null) {
-            successMessage = Component.translatable("shw.commands.waypoints.set.success", CommandLineFormatter.formatWaypoint(waypointName), CommandLineFormatter.formatNbOfWaypoints(playerHomeAndWaypoints.getNbOfWaypoints(), ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.GREEN);
+            successMessage = Component.translatable("shw.commands.waypoints.set.success", CommandLineFormatter.formatWaypoint(waypointName), CommandLineFormatter.formatNbOfWaypoints(playerHomeAndWaypoints.getNbOfWaypoints(), ShwConfigWrapper.getMaxNbOfWaypoints())).withStyle(ChatFormatting.GREEN);
         }
 
         context.getSource().sendSuccess(successMessage, false);
@@ -216,14 +216,14 @@ public class WaypointsCommand {
 
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(waypoint.position().dimension())));
 
-        if (!ShwConfigWrapper.allowWaypointsToTravelThoughDimension() &&
+        if (!ShwConfigWrapper.isDimensionalTravelAllowedForWaypoints() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.notAllowedToTravelDimension"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.dimensionalTravelNotAllowed"));
 
             return USE_TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.waypointsCooldown()) - playerHomeAndWaypoints.elapsedTimeOfWaypointUseCommandExecution();
+        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.getWaypointsCooldown()) - playerHomeAndWaypoints.elapsedTimeOfWaypointUseCommandExecution();
         if (cooldownRemaining > 0) {
             context.getSource().sendFailure(Component.translatable("shw.commands.waypoints.use.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1, CommandLineFormatter.formatWaypoint(waypointName)));
 
@@ -301,7 +301,7 @@ public class WaypointsCommand {
 
         successMessage
                 .append(" ] ")
-                .append(CommandLineFormatter.formatNbOfWaypoints(waypointsName.size(), ShwConfigWrapper.maximumNumberOfWaypoints()));
+                .append(CommandLineFormatter.formatNbOfWaypoints(waypointsName.size(), ShwConfigWrapper.getMaxNbOfWaypoints()));
 
         context.getSource().sendSuccess(successMessage, false);
 
@@ -387,9 +387,9 @@ public class WaypointsCommand {
         context.getSource().sendSuccess(
                 Component.translatable(
                         "shw.commands.waypoints.config.success",
-                        Component.literal(String.valueOf(ShwConfigWrapper.waypointsCooldown())).withStyle(ChatFormatting.BLUE),
-                        Component.literal(String.valueOf(ShwConfigWrapper.maximumNumberOfWaypoints())).withStyle(ChatFormatting.BLUE),
-                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.allowWaypointsToTravelThoughDimension())),
+                        Component.literal(String.valueOf(ShwConfigWrapper.getWaypointsCooldown())).withStyle(ChatFormatting.BLUE),
+                        Component.literal(String.valueOf(ShwConfigWrapper.getMaxNbOfWaypoints())).withStyle(ChatFormatting.BLUE),
+                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.isDimensionalTravelAllowedForWaypoints())),
                 false);
 
         return Command.SINGLE_SUCCESS;
@@ -407,13 +407,13 @@ public class WaypointsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int configureTravelThroughDimension(CommandContext<CommandSourceStack> context) {
-        boolean travelThroughDimension = BoolArgumentType.getBool(context, ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION);
+    public static int configureDimensionalTravel(CommandContext<CommandSourceStack> context) {
+        boolean dimensionalTravel = BoolArgumentType.getBool(context, ARG_NAME_FOR_DIMENSIONAL_TRAVEL);
 
-        ShwConfigWrapper.setAllowWaypointsToTravelThroughDimensionCooldown(travelThroughDimension);
+        ShwConfigWrapper.setAllowDimensionalTravelForWaypoints(dimensionalTravel);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.travelThroughDimension.success", CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(travelThroughDimension))).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.dimensionalTravel.success", CommandLineFormatter.formatCommand(COMMAND_NAME, COMMAND_USE_NAME), Component.literal(String.valueOf(dimensionalTravel))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -422,7 +422,7 @@ public class WaypointsCommand {
     public static int configureMaxNbOfWaypoints(CommandContext<CommandSourceStack> context) {
         int maxNbOfWaypoints = IntegerArgumentType.getInteger(context, ARG_NAME_FOR_MAX_WAYPOINTS);
 
-        ShwConfigWrapper.setMaximumNumberOfWaypoints(maxNbOfWaypoints);
+        ShwConfigWrapper.setMaxNbOfWaypoints(maxNbOfWaypoints);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             player.sendSystemMessage(Component.translatable("shw.commands.waypoints.config.maximumNumberOfWaypoints.success", Component.literal(String.valueOf(maxNbOfWaypoints))).withStyle(ChatFormatting.GRAY));

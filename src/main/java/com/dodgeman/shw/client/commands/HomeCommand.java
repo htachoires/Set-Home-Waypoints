@@ -32,8 +32,8 @@ public class HomeCommand {
     private static final int NO_HOME_FOUND_FAILURE = -3;
     public static final String COMMAND_COOLDOWN_NAME = "cooldown";
     public static final String ARG_NAME_FOR_COOLDOWN = "cooldownValue";
-    public static final String COMMAND_TRAVEL_THROUGH_DIMENSION_NAME = "travelThroughDimension";
-    public static final String ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION = "travelThroughDimensionValue";
+    public static final String COMMAND_DIMENSIONAL_TRAVEL_NAME = "dimensionalTravel";
+    public static final String ARG_NAME_FOR_DIMENSIONAL_TRAVEL = "dimensionalTravelValue";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
@@ -52,11 +52,11 @@ public class HomeCommand {
                                 )
                         )
                         .then(Commands
-                                .literal(COMMAND_TRAVEL_THROUGH_DIMENSION_NAME)
+                                .literal(COMMAND_DIMENSIONAL_TRAVEL_NAME)
                                 .requires(stack -> stack.hasPermission(3))
                                 .then(Commands
-                                        .argument(ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION, BoolArgumentType.bool())
-                                        .executes(HomeCommand::configureTravelThroughDimension)
+                                        .argument(ARG_NAME_FOR_DIMENSIONAL_TRAVEL, BoolArgumentType.bool())
+                                        .executes(HomeCommand::configureDimensionalTravel)
                                 )
                         )
                 )
@@ -78,14 +78,14 @@ public class HomeCommand {
 
         ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(currentHome.position().dimension())));
 
-        if (!ShwConfigWrapper.allowHomeToTravelThoughDimension() &&
+        if (!ShwConfigWrapper.isDimensionalTravelAllowedForHome() &&
                 !player.getLevel().dimension().equals(serverLevel.dimension())) {
-            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.notAllowedToTravelDimension"));
+            context.getSource().sendFailure(Component.translatable("shw.commands.home.error.dimensionalTravelNotAllowed"));
 
             return TRAVEL_THROUGH_DIMENSION_FAILURE;
         }
 
-        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.homeCooldown()) - playerHomeAndWaypoints.elapsedTimeOfLastHomeCommandExecution();
+        long cooldownRemaining = TimeUnit.SECONDS.toMillis(ShwConfigWrapper.getHomeCooldown()) - playerHomeAndWaypoints.elapsedTimeOfLastHomeCommandExecution();
 
         if (cooldownRemaining > 0) {
             context.getSource().sendFailure(Component.translatable("shw.commands.home.error.cooldown", TimeUnit.MILLISECONDS.toSeconds(cooldownRemaining) + 1));
@@ -106,8 +106,8 @@ public class HomeCommand {
     private static int showConfiguration(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(
                 Component.translatable("shw.commands.home.config.success",
-                        Component.literal(String.valueOf(ShwConfigWrapper.homeCooldown())).withStyle(ChatFormatting.BLUE),
-                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.allowHomeToTravelThoughDimension())
+                        Component.literal(String.valueOf(ShwConfigWrapper.getHomeCooldown())).withStyle(ChatFormatting.BLUE),
+                        CommandLineFormatter.formatPermitted(ShwConfigWrapper.isDimensionalTravelAllowedForHome())
                 ),
                 false);
 
@@ -126,13 +126,13 @@ public class HomeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int configureTravelThroughDimension(CommandContext<CommandSourceStack> context) {
-        boolean travelThroughDimension = BoolArgumentType.getBool(context, ARG_NAME_FOR_TRAVEL_THROUGH_DIMENSION);
+    private static int configureDimensionalTravel(CommandContext<CommandSourceStack> context) {
+        boolean dimensionalTravel = BoolArgumentType.getBool(context, ARG_NAME_FOR_DIMENSIONAL_TRAVEL);
 
-        ShwConfigWrapper.setAllowHomeToTravelThoughDimension(travelThroughDimension);
+        ShwConfigWrapper.setAllowDimensionalTravelForHome(dimensionalTravel);
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
-            player.sendSystemMessage(Component.translatable("shw.commands.home.config.travelThroughDimension.success", CommandLineFormatter.formatCommand(COMMAND_NAME), Component.literal(String.valueOf(travelThroughDimension))).withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(Component.translatable("shw.commands.home.config.dimensionalTravel.success", CommandLineFormatter.formatCommand(COMMAND_NAME), Component.literal(String.valueOf(dimensionalTravel))).withStyle(ChatFormatting.GRAY));
         }
 
         return Command.SINGLE_SUCCESS;
