@@ -6,7 +6,7 @@ plugins {
 
 version = '1.0'
 group = 'com.dodgeman.shw' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-base.archivesName = 'shw'
+base.archivesName = 'shw-forge'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
