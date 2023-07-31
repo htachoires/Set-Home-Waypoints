@@ -3,6 +3,9 @@
 **Set Home & Waypoints** allows players to set a home and waypoints. The development was focused on user experience
 (autocomplete, key bind, command feedback, colors…). This mod is configurable on both client and server side.
 
+**Note:** Forge for 1.12.2 Minecraft version is not maintained anymore, I will tend to not update this version has the
+development environment become deprecated with errors.
+
 ### 4 commands to master the mod
 
 ![commands-shw.png](images/commands-shw.png)
