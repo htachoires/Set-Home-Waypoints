@@ -1,53 +1,148 @@
--------------------------------------------
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+# [Set Home & Waypoints](https://www.curseforge.com/minecraft/mc-mods/set-home-waypoints)
 
-Note also that the patches are built against "unrenamed" MCP source code (aka
-srgnames) - this means that you will not be able to read them directly against
-normal code.
+**Set Home & Waypoints** allows players to set a home and waypoints. The development was focused on user experience
+(autocomplete, key bind, command feedback, colors…). This mod is configurable on both client and server side.
 
-Source pack installation information:
+### 4 commands to master the mod
 
-Standalone source installation
-==============================
+![commands-shw.png](images/commands-shw.png)
 
-See the Forge Documentation online for more detailed instructions:
-http://mcforge.readthedocs.io/en/latest/gettingstarted/
+* `/shw` List all available commands,
+* `/sethome` Create or update your home,
+* `/home` Teleport to your home,
+* `/wp` Set, use, update, remove your waypoints.
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
+### Supported languages
 
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: "gradlew genEclipseRuns" (./gradlew genEclipseRuns if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run "gradlew eclipse" to generate the project.
-(Current Issue)
-4. Open Project > Run/Debug Settings > Edit runClient and runServer > Environment
-5. Edit MOD_CLASSES to show [modid]%%[Path]; 2 times rather then the generated 4.
+* 🇬🇧 English
+* 🇫🇷 French
 
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: "gradlew genIntellijRuns" (./gradlew genIntellijRuns if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
+If your language is missing, you can contribute to this mod on
+[GitHub](https://github.com/htachoires/Set-Home-Waypoints) by submitting a pull request.
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can run "gradlew --refresh-dependencies" to refresh the local cache. "gradlew clean" to reset everything {this does not affect your code} and then start the processs again.
+### Follow project development
 
-Should it still not work, 
-Refer to #ForgeGradle on EsperNet for more information about the gradle environment.
-or the Forge Project Discord discord.gg/UvedJ9m
+You can follow working issues/features on [Trello](https://trello.com/b/BRAy1ouk/set-home-waypoints).
 
-Forge source installation
-=========================
-MinecraftForge ships with this code and installs it as part of the forge
-installation process, no further action is required on your part.
+## Installation
 
-LexManos' Install Video
-=======================
-https://www.youtube.com/watch?v=8VEdtQLuLO0&feature=youtu.be
+First of
+all, [Download Set Home & Waypoints on CurseForge](https://www.curseforge.com/minecraft/mc-mods/set-home-waypoints)
 
-For more details update more often refer to the Forge Forums:
-http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+Then add downloaded .jar in `mods/` folder on both client and server side.
+
+That's it!
+
+## Configuration
+
+Set Home & Waypoints allows you to configure **cooldown**, **dimensional travel** and **number of waypoints** using
+commands (solo + multiplayer) or GUI (only solo) for client and config file and commands for server.
+
+All players can display current home and waypoints configuration by executing `/home config` for home configuration
+and `/wp config` for waypoints configuration.
+
+![commands-home-config](images/commands-home-config.png)
+
+A player with [admin permission](https://minecraft.fandom.com/wiki/Permission_level) (3) can configure the server
+in game using `/home config <…>` and `/wp config <…>` commands without restarting the server ✅ Suggestions will guide
+players with sufficient permissions.
+
+### Client side using GUI
+
+![configuration-client-side-using-gui](images/configuration-client-side-using-gui.png)
+
+This configuration affect solo worlds only.
+
+### Client side using commands
+
+Example of updating **dimensionalTravel** for /home command using command:
+
+![configuration-client-side-using-command.png](images/configuration-client-side-using-command.png)
+
+### Server side using config file
+
+```text
+# Configuration file
+
+general {
+   # Cooldown in second before home command can be reused
+   # Min: 0
+   # Max: 2147483647
+   I:"/home: Cooldown in seconds"=10
+   
+   # Is dimensional travel allowed for home command
+   B:"/home: Dimensional travel"=false
+   
+   # Cooldown in second before waypoint command can be reused
+   # Min: 0
+   # Max: 2147483647
+   I:"/wp: Cooldown in seconds"=10
+   
+   # Is dimensional travel allowed for waypoints command
+   B:"/wp: Dimensional travel"=true
+   
+   # Number of waypoints per player
+   # Min: 0
+   # Max: 100
+   I:"/wp: Maximum number of waypoints"=10
+}
+```
+
+This configuration file is generated at server initialization in `config/shw.cfg`.
+
+Setting a new value needs restarting the server.
+
+Updating configuration while the server is running will not notify players.
+
+### Server side using commands
+
+![configuration-server-side-using-commands](images/configuration-server-side-using-commands.png)
+
+Same as client side using commands, server can update mod configuration.
+
+This method is preferable as it notifies players and does not imply server restart.
+
+## Commands usage
+
+All commands have suggestions to guide players in game. `/shw` command will list all available commands.
+
+### `/sethome` and `/home` commands
+
+Home is unique, set your home in any dimension by executing `/sethome`. Then, executing `/home` or pressing `H` key will
+teleport you on your home.
+
+Yes, this mod come with a configurable shortcut (`H` key by default) to fast tp to your home. This will certainly save
+life.
+
+Note that, re-executing `/sethome` will update home position with player location.
+
+![commands-sethome](images/commands-sethome.png)
+
+### `/wp` command
+
+Waypoints are used to save additional locations. By default, 10 waypoints are allowed.
+
+Admins can configure this setting using `/wp config maximumWaypointsNumber <count>`.
+
+#### Set, Use, List waypoints
+
+Create waypoints with `/wp set <waypoint name>` and then teleport to them using `/wp use <waypoint name>`.
+
+![commands-wp-use](images/commands-wp-use.png)
+
+Executing `/wp list` will show all player waypoints and available space.
+
+#### Update, Remove, Undo waypoints
+
+Waypoints can be updated by executing `/wp update <waypoint name>` or removed by
+executing `/wp remove <waypoint name>`.
+
+![commands-wp-remove](images/commands-wp-remove.png)
+
+Last removed waypoint can be rollback by executing `/wp undo`. Note that this action will not be permitted after
+setting, updating or using another waypoint.
+
+![commands-wp-undo](images/commands-wp-undo.png)
+
+Waypoints can be cleared by executing `/wp clear`. Be careful, this action will remove all player waypoints and cannot
+be rollback.
