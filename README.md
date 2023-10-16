@@ -129,5 +129,4 @@ setting, updating or using another waypoint.
 
 ![commands-wp-undo](images/commands-wp-undo.png)
 
-Waypoints can be cleared by executing `/wp clear`. Be careful, this action will remove all player waypoints and cannot
-be rollback.
+Waypoints can be cleared by executing `/wp clear`. Be careful, this action will remove all player waypoints and cannot be rollback.
