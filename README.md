@@ -17,6 +17,7 @@
 * 🇬🇧 English
 * 🇫🇷 French
 * 🇩🇪 German
+* 🇹🇼 Republic of China (Taiwan)
 
 If your language is missing, you can contribute to this mod on
 [GitHub](https://github.com/htachoires/Set-Home-Waypoints) by submitting a pull request.
