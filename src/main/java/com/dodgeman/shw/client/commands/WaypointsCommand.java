@@ -133,7 +133,7 @@ public class WaypointsCommand {
                                 .literal(COMMAND_MAX_WAYPOINTS_NAME)
                                 .requires(stack -> stack.hasPermission(3))
                                 .then(Commands
-                                        .argument(ARG_NAME_FOR_MAX_WAYPOINTS, IntegerArgumentType.integer(1, 10))
+                                        .argument(ARG_NAME_FOR_MAX_WAYPOINTS, IntegerArgumentType.integer(1, 100))
                                         .executes(WaypointsCommand::configureMaxNbOfWaypoints)
                                 )
                         )
