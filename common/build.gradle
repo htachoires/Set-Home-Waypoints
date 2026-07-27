@@ -1,0 +1,13 @@
+architectury {
+    common rootProject.enabled_platforms.split(",")
+}
+
+dependencies {
+    // Loader-agnostic Architectury API (events, networking, keymappings, registries)
+    modImplementation "dev.architectury:architectury:${rootProject.architectury_api_version}"
+
+    // TOML config backend. compileOnly here: Fabric bundles it (jar-in-jar),
+    // NeoForge already ships it (used by ModConfigSpec).
+    compileOnly "com.electronwill.night-config:core:${rootProject.nightconfig_version}"
+    compileOnly "com.electronwill.night-config:toml:${rootProject.nightconfig_version}"
+}
