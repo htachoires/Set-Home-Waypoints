@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "shw-*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Fabric + NeoForge jars
+        run: ./gradlew build --no-daemon
+
+      - name: Read mod metadata
+        id: metadata
+        run: |
+          mod_version=$(grep -m1 '^mod_version=' gradle.properties | cut -d'=' -f2)
+          minecraft_version=$(grep -m1 '^minecraft_version=' gradle.properties | cut -d'=' -f2)
+          echo "mod_version=${mod_version}" >> "$GITHUB_OUTPUT"
+          echo "minecraft_version=${minecraft_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Locate release jars
+        id: artifacts
+        run: |
+          fabric_jar=$(find fabric/build/libs -maxdepth 1 -name "*.jar" ! -name "*-sources.jar" ! -name "*-dev-shadow.jar")
+          neoforge_jar=$(find neoforge/build/libs -maxdepth 1 -name "*.jar" ! -name "*-sources.jar" ! -name "*-dev-shadow.jar")
+          if [ -z "$fabric_jar" ] || [ -z "$neoforge_jar" ]; then
+            echo "Could not locate built jars" >&2
+            exit 1
+          fi
+          echo "fabric_jar=${fabric_jar}" >> "$GITHUB_OUTPUT"
+          echo "neoforge_jar=${neoforge_jar}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "SH&W ${{ steps.metadata.outputs.mod_version }} [FABRIC+NEOFORGE] ${{ steps.metadata.outputs.minecraft_version }}"
+          generate_release_notes: true
+          files: |
+            ${{ steps.artifacts.outputs.fabric_jar }}
+            ${{ steps.artifacts.outputs.neoforge_jar }}
