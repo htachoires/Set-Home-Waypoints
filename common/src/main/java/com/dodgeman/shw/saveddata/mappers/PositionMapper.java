@@ -22,7 +22,7 @@ public class PositionMapper implements CompoundMapper<Position> {
         Vec2 rotation = player.getRotationVector();
         ResourceKey<Level> dimension = player.level().dimension();
 
-        return new Position(dimension.location().toString(), position.x, position.y, position.z, rotation.y, rotation.x);
+        return new Position(dimension.identifier().toString(), position.x, position.y, position.z, rotation.y, rotation.x);
     }
 
     @Override

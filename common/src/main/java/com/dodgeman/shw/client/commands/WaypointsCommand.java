@@ -22,8 +22,8 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -115,7 +115,7 @@ public class WaypointsCommand {
                         .executes(WaypointsCommand::showConfiguration)
                         .then(Commands
                                 .literal(COMMAND_COOLDOWN_NAME)
-                                .requires(stack -> stack.hasPermission(3))
+                                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                                 .then(Commands
                                         .argument(ARG_NAME_FOR_COOLDOWN, IntegerArgumentType.integer(0))
                                         .executes(WaypointsCommand::configureCooldown)
@@ -123,7 +123,7 @@ public class WaypointsCommand {
                         )
                         .then(Commands
                                 .literal(COMMAND_DIMENSIONAL_TRAVEL_NAME)
-                                .requires(stack -> stack.hasPermission(3))
+                                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                                 .then(Commands
                                         .argument(ARG_NAME_FOR_DIMENSIONAL_TRAVEL, BoolArgumentType.bool())
                                         .executes(WaypointsCommand::configureDimensionalTravel)
@@ -131,7 +131,7 @@ public class WaypointsCommand {
                         )
                         .then(Commands
                                 .literal(COMMAND_MAX_WAYPOINTS_NAME)
-                                .requires(stack -> stack.hasPermission(3))
+                                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                                 .then(Commands
                                         .argument(ARG_NAME_FOR_MAX_WAYPOINTS, IntegerArgumentType.integer(1, 10))
                                         .executes(WaypointsCommand::configureMaxNbOfWaypoints)
@@ -215,7 +215,7 @@ public class WaypointsCommand {
             return USE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
-        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(waypoint.position().dimension())));
+        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(waypoint.position().dimension())));
 
         if (!ShwConfigWrapper.isDimensionalTravelAllowedForWaypoints() &&
                 !player.level().dimension().equals(serverLevel.dimension())) {

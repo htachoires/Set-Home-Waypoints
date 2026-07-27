@@ -16,10 +16,12 @@ configurations {
 }
 
 dependencies {
+    // loom-no-remap does not remap, so the "mod" configuration prefixes are gone.
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
-    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
+    api "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    // The "namedElements" configuration no longer exists under loom-no-remap.
+    common(project(path: ":common")) { transitive false }
     shadowBundle project(path: ":common", configuration: "transformProductionNeoForge")
 
     // NeoForge already bundles NightConfig (used by ModConfigSpec) -> compileOnly, do NOT include.
@@ -50,13 +52,19 @@ processResources {
     }
 }
 
+// loom-no-remap has no remapJar. shadowJar is used only as an intermediate step to gather the
+// transformed common classes; the real `jar` task then unpacks that on top of the NeoForge
+// sources (mirroring the old remapJar(shadowJar) flow). NeoForge uses access transformers rather
+// than access wideners; this mod ships neither, so no AW->AT conversion is needed.
 shadowJar {
+    mainSpec.sourcePaths.clear()
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = "dev-shadow"
 }
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    archiveClassifier = null
+jar {
     dependsOn shadowJar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(zipTree(shadowJar.archiveFile))
+    from rootProject.file("LICENSE.txt")
 }

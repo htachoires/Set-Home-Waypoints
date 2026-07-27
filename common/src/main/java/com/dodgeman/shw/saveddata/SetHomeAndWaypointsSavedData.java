@@ -5,6 +5,7 @@ import com.dodgeman.shw.saveddata.mappers.SetHomeAndWaypointsSavedDataMapper;
 import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
 import com.mojang.serialization.Codec;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
@@ -23,8 +24,9 @@ public class SetHomeAndWaypointsSavedData extends SavedData {
                 return tag;
             });
 
+    // SavedDataType now takes an Identifier (was a String id in 1.21.5-1.21.8).
     public static final SavedDataType<SetHomeAndWaypointsSavedData> TYPE =
-            new SavedDataType<SetHomeAndWaypointsSavedData>(SetHomeWaypoints.MOD_ID, () -> new SetHomeAndWaypointsSavedData(), CODEC, null);
+            new SavedDataType<SetHomeAndWaypointsSavedData>(Identifier.fromNamespaceAndPath(SetHomeWaypoints.MOD_ID, SetHomeWaypoints.MOD_ID), () -> new SetHomeAndWaypointsSavedData(), CODEC, null);
 
     private final Map<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints;
 

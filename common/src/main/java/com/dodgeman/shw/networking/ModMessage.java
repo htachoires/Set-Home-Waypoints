@@ -26,7 +26,7 @@ public class ModMessage {
     private static void handleGoHome(GoHomeC2SPacket packet, NetworkManager.PacketContext context) {
         context.queue(() -> {
             ServerPlayer player = (ServerPlayer) context.getPlayer();
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server == null) return;
 
             try {

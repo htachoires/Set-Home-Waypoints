@@ -43,6 +43,6 @@
   "shw.config.waypoints.dimensionalTravel": "/wp: Dimensionale Reise",
   "shw.config.waypoints.cooldown": "/wp: Abkühlzeit in Sekunden",
   "shw.config.waypoints.maximumNumberOfWaypoints": "/wp: Maximale Anzahl von Wegpunkten",
-  "key.category.shw": "Zuhause setzen & Wegpunkte",
+  "key.category.shw.main": "Zuhause setzen & Wegpunkte",
   "key.shw.go_home": "Nach Hause gehen"
 }

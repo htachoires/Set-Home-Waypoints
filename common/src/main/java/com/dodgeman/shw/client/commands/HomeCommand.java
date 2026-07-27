@@ -16,8 +16,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.*;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -45,7 +45,7 @@ public class HomeCommand {
                         .executes(HomeCommand::showConfiguration)
                         .then(Commands
                                 .literal(COMMAND_COOLDOWN_NAME)
-                                .requires(stack -> stack.hasPermission(3))
+                                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                                 .then(Commands
                                         .argument(ARG_NAME_FOR_COOLDOWN, IntegerArgumentType.integer(0))
                                         .executes(HomeCommand::configureCooldown)
@@ -53,7 +53,7 @@ public class HomeCommand {
                         )
                         .then(Commands
                                 .literal(COMMAND_DIMENSIONAL_TRAVEL_NAME)
-                                .requires(stack -> stack.hasPermission(3))
+                                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                                 .then(Commands
                                         .argument(ARG_NAME_FOR_DIMENSIONAL_TRAVEL, BoolArgumentType.bool())
                                         .executes(HomeCommand::configureDimensionalTravel)
@@ -76,7 +76,7 @@ public class HomeCommand {
             return NO_HOME_FOUND_FAILURE;
         }
 
-        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(currentHome.position().dimension())));
+        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(currentHome.position().dimension())));
 
         if (!ShwConfigWrapper.isDimensionalTravelAllowedForHome() &&
                 !player.level().dimension().equals(serverLevel.dimension())) {

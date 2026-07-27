@@ -16,14 +16,16 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
+    // loom-no-remap does not remap, so the "mod" configuration prefixes are gone.
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    api "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    api "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    // The "namedElements" configuration no longer exists under loom-no-remap.
+    common(project(path: ":common")) { transitive false }
     shadowBundle project(path: ":common", configuration: "transformProductionFabric")
 
-    // Fabric does not ship NightConfig -> bundle it (jar-in-jar).
+    // Fabric does not ship NightConfig -> bundle it (jar-in-jar via Loom's include()).
     include(implementation("com.electronwill.night-config:core:${rootProject.nightconfig_version}"))
     include(implementation("com.electronwill.night-config:toml:${rootProject.nightconfig_version}"))
 }
@@ -35,14 +37,20 @@ processResources {
     }
 }
 
+// loom-no-remap has no remapJar. shadowJar is used only as an intermediate step to gather the
+// transformed common classes (it must NOT be the final artifact: ShadowJar unpacks any nested
+// jar it sees, which would flatten Loom's Jar-in-Jar META-INF/jars/*.jar bundles). The real
+// `jar` task then unpacks that intermediate on top of the Fabric sources, and Loom decorates
+// `jar` with the Jar-in-Jar NightConfig bundles. This mirrors the old remapJar(shadowJar) flow.
 shadowJar {
+    mainSpec.sourcePaths.clear()
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = "dev-shadow"
 }
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    injectAccessWidener = true
-    archiveClassifier = null
+jar {
     dependsOn shadowJar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(zipTree(shadowJar.archiveFile))
+    from rootProject.file("LICENSE.txt")
 }

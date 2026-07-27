@@ -43,6 +43,6 @@
   "shw.config.waypoints.dimensionalTravel": "/wp : Voyage dimensionnel",
   "shw.config.waypoints.cooldown": "/wp : Temps de recharge en secondes",
   "shw.config.waypoints.maximumNumberOfWaypoints": "/wp : Nombre maximal de points de passage",
-  "key.category.shw": "Set Home & Waypoints",
+  "key.category.shw.main": "Set Home & Waypoints",
   "key.shw.go_home": "Rentrer à la maison"
 }

@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "${architectury_plugin_version}"
-    id "dev.architectury.loom" version "${architectury_loom_version}" apply false
-    id "com.gradleup.shadow" version "8.3.5" apply false
+    id "dev.architectury.loom-no-remap" version "${architectury_loom_version}" apply false
+    id "com.gradleup.shadow" version "8.3.11" apply false
 }
 
 architectury {
@@ -14,7 +14,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: "dev.architectury.loom-no-remap"
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
@@ -31,19 +31,21 @@ subprojects {
     }
 
     dependencies {
+        // MC 26.1+ ships de-obfuscated (with parameter names). We use the
+        // dev.architectury.loom-no-remap plugin, which performs no remapping, so there is
+        // no mappings dependency at all (officialMojangMappings() is gone).
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings loom.officialMojangMappings()
     }
 
     java {
         withSourcesJar()
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-        toolchain.languageVersion = JavaLanguageVersion.of(21)
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
+        toolchain.languageVersion = JavaLanguageVersion.of(25)
     }
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 25
     }
 }

@@ -43,6 +43,6 @@
   "shw.config.waypoints.DimensionalTravel": "/wp: 維度旅行",
   "shw.config.waypoints.cooldown": "/wp: 冷卻時間（秒）",
   "shw.config.waypoints.maximumNumberOfWaypoints": "/wp：最大waypoint數",
-  "key.category.shw": "設定家和Waypoitns",
+  "key.category.shw.main": "設定家和Waypoitns",
   "key.shw.go_home": "回家"
 }
