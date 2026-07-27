@@ -1,35 +1,39 @@
 package com.dodgeman.shw.saveddata;
 
 import com.dodgeman.shw.SetHomeWaypoints;
-import com.dodgeman.shw.saveddata.mappers.CompoundMapper;
 import com.dodgeman.shw.saveddata.mappers.SetHomeAndWaypointsSavedDataMapper;
 import com.dodgeman.shw.saveddata.models.PlayerHomeAndWaypoints;
-import net.minecraft.core.HolderLookup;
+import com.mojang.serialization.Codec;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.*;
 
 public class SetHomeAndWaypointsSavedData extends SavedData {
 
+    // Since 1.21.5 SavedData persistence is Codec-based (the save(CompoundTag, ...) override
+    // and SavedData.Factory were removed). We adapt the existing CompoundTag mappers over
+    // CompoundTag.CODEC so the on-disk structure (a MOD_ID-keyed compound) stays identical.
+    public static final Codec<SetHomeAndWaypointsSavedData> CODEC = CompoundTag.CODEC.xmap(
+            tag -> new SetHomeAndWaypointsSavedDataMapper().fromCompoundTag(tag),
+            data -> {
+                CompoundTag tag = new CompoundTag();
+                tag.put(SetHomeWaypoints.MOD_ID, new SetHomeAndWaypointsSavedDataMapper().toCompoundTag(data));
+                return tag;
+            });
+
+    public static final SavedDataType<SetHomeAndWaypointsSavedData> TYPE =
+            new SavedDataType<SetHomeAndWaypointsSavedData>(SetHomeWaypoints.MOD_ID, () -> new SetHomeAndWaypointsSavedData(), CODEC, null);
+
     private final Map<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints;
-    private final CompoundMapper<SetHomeAndWaypointsSavedData> setHomeAndWaypointsSavedDataMapper;
 
     public SetHomeAndWaypointsSavedData() {
         playersHomeAndWaypoints = new HashMap<>();
-        setHomeAndWaypointsSavedDataMapper = new SetHomeAndWaypointsSavedDataMapper();
     }
 
     public SetHomeAndWaypointsSavedData(Map<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints) {
         this.playersHomeAndWaypoints = playersHomeAndWaypoints;
-        setHomeAndWaypointsSavedDataMapper = new SetHomeAndWaypointsSavedDataMapper();
-    }
-
-    @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        tag.put(SetHomeWaypoints.MOD_ID, setHomeAndWaypointsSavedDataMapper.toCompoundTag(this));
-        return tag;
     }
 
     public PlayerHomeAndWaypoints getPlayerHomeAndWaypoints(UUID playerUUID) {

@@ -27,12 +27,12 @@ public class PositionMapper implements CompoundMapper<Position> {
 
     @Override
     public Position fromCompoundTag(CompoundTag tag) {
-        String dimension = tag.getString(DIMENSION_KEY);
-        double x = tag.getDouble(X_KEY);
-        double y = tag.getDouble(Y_KEY);
-        double z = tag.getDouble(Z_KEY);
-        float ry = tag.getFloat(RY_KEY);
-        float rx = tag.getFloat(RX_KEY);
+        String dimension = tag.getStringOr(DIMENSION_KEY, "");
+        double x = tag.getDoubleOr(X_KEY, 0);
+        double y = tag.getDoubleOr(Y_KEY, 0);
+        double z = tag.getDoubleOr(Z_KEY, 0);
+        float ry = tag.getFloatOr(RY_KEY, 0);
+        float rx = tag.getFloatOr(RX_KEY, 0);
 
         return new Position(dimension, x, y, z, ry, rx);
     }

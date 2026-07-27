@@ -215,7 +215,7 @@ public class WaypointsCommand {
             return USE_WAYPOINT_NOT_FOUND_FAILURE;
         }
 
-        ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(waypoint.position().dimension())));
+        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(waypoint.position().dimension())));
 
         if (!ShwConfigWrapper.isDimensionalTravelAllowedForWaypoints() &&
                 !player.level().dimension().equals(serverLevel.dimension())) {
@@ -235,7 +235,7 @@ public class WaypointsCommand {
 
         playerHomeAndWaypoints.waypointUseCommandHasBeenExecuted();
 
-        player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), waypoint.position().ry(), waypoint.position().rx());
+        player.teleportTo(serverLevel, waypoint.position().x(), waypoint.position().y(), waypoint.position().z(), java.util.Set.<net.minecraft.world.entity.Relative>of(), waypoint.position().ry(), waypoint.position().rx(), false);
 
         context.getSource().sendSuccess(() -> Component.translatable("shw.commands.waypoints.use.success", waypointName.value()), false);
 

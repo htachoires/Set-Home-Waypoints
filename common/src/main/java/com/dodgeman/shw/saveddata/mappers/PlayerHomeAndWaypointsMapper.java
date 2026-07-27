@@ -31,27 +31,27 @@ public class PlayerHomeAndWaypointsMapper implements CompoundMapper<PlayerHomeAn
 
     @Override
     public PlayerHomeAndWaypoints fromCompoundTag(CompoundTag tag) {
-        Home home = homeMapper.fromCompoundTag(tag.getCompound(HOME_KEY));
+        Home home = homeMapper.fromCompoundTag(tag.getCompoundOrEmpty(HOME_KEY));
 
-        CompoundTag waypointsTag = tag.getCompound(WAYPOINTS_KEY);
+        CompoundTag waypointsTag = tag.getCompoundOrEmpty(WAYPOINTS_KEY);
         List<Waypoint> waypoints = waypointsTag
-                .getAllKeys()
+                .keySet()
                 .stream()
-                .map(waypointName -> waypointMapper.fromCompoundTag(waypointsTag.getCompound(waypointName)))
+                .map(waypointName -> waypointMapper.fromCompoundTag(waypointsTag.getCompoundOrEmpty(waypointName)))
                 .toList();
 
-        boolean hasAlreadySetWaypoint = tag.getBoolean(HAS_ALREADY_SET_WAYPOINT_KEY);
-        boolean hasAlreadySetHomeInTheNether = tag.getBoolean(HAS_ALREADY_SET_HOME_IN_THE_NETHER_KEY);
-        boolean hasAlreadySetHomeInTheEnd = tag.getBoolean(HAS_ALREADY_SET_HOME_IN_THE_END_KEY);
+        boolean hasAlreadySetWaypoint = tag.getBooleanOr(HAS_ALREADY_SET_WAYPOINT_KEY, false);
+        boolean hasAlreadySetHomeInTheNether = tag.getBooleanOr(HAS_ALREADY_SET_HOME_IN_THE_NETHER_KEY, false);
+        boolean hasAlreadySetHomeInTheEnd = tag.getBooleanOr(HAS_ALREADY_SET_HOME_IN_THE_END_KEY, false);
 
-        long lastExecutionOfHomeCommand = tag.getLong(LAST_EXECUTION_OF_HOME_COMMAND_KEY);
-        long lastExecutionOfWaypointUseCommand = tag.getLong(LAST_EXECUTION_OF_WAYPOINT_USE_COMMAND_KEY);
+        long lastExecutionOfHomeCommand = tag.getLongOr(LAST_EXECUTION_OF_HOME_COMMAND_KEY, 0);
+        long lastExecutionOfWaypointUseCommand = tag.getLongOr(LAST_EXECUTION_OF_WAYPOINT_USE_COMMAND_KEY, 0);
 
-        Waypoint lastDeletedWaypoint = waypointMapper.fromCompoundTag(tag.getCompound(LAST_DELETED_WAYPOINT_KEY));
-        long lastDeletedWaypointAt = tag.getLong(LAST_DELETED_WAYPOINT_AT_KEY);
+        Waypoint lastDeletedWaypoint = waypointMapper.fromCompoundTag(tag.getCompoundOrEmpty(LAST_DELETED_WAYPOINT_KEY));
+        long lastDeletedWaypointAt = tag.getLongOr(LAST_DELETED_WAYPOINT_AT_KEY, 0);
 
-        long undoInformationHasBeenShownAt = tag.getLong(UNDO_INFORMATION_HAS_BEEN_SHOWN_AT_KEY);
-        int removeWaypointSuccessMessageIndex = tag.getInt(REMOVE_WAYPOINT_SUCCESS_MESSAGE_INDEX_KEY);
+        long undoInformationHasBeenShownAt = tag.getLongOr(UNDO_INFORMATION_HAS_BEEN_SHOWN_AT_KEY, 0);
+        int removeWaypointSuccessMessageIndex = tag.getIntOr(REMOVE_WAYPOINT_SUCCESS_MESSAGE_INDEX_KEY, 0);
 
         return new PlayerHomeAndWaypoints(
                 home,

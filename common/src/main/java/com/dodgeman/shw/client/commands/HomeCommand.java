@@ -76,7 +76,7 @@ public class HomeCommand {
             return NO_HOME_FOUND_FAILURE;
         }
 
-        ServerLevel serverLevel = player.server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(currentHome.position().dimension())));
+        ServerLevel serverLevel = context.getSource().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(currentHome.position().dimension())));
 
         if (!ShwConfigWrapper.isDimensionalTravelAllowedForHome() &&
                 !player.level().dimension().equals(serverLevel.dimension())) {
@@ -93,7 +93,7 @@ public class HomeCommand {
             return COOLDOWN_NOT_READY_FAILURE;
         }
 
-        player.teleportTo(serverLevel, currentHome.position().x(), currentHome.position().y(), currentHome.position().z(), currentHome.position().ry(), currentHome.position().rx());
+        player.teleportTo(serverLevel, currentHome.position().x(), currentHome.position().y(), currentHome.position().z(), java.util.Set.<net.minecraft.world.entity.Relative>of(), currentHome.position().ry(), currentHome.position().rx(), false);
 
         playerHomeAndWaypoints.homeCommandHasBeenExecuted();
         savedData.setDirty();

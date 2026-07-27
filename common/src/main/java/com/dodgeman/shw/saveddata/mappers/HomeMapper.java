@@ -16,7 +16,7 @@ public class HomeMapper implements CompoundMapper<Home> {
 
     @Override
     public Home fromCompoundTag(CompoundTag tag) {
-        Position position = positionCompoundMapper.fromCompoundTag(tag.getCompound(POSITION_KEY));
+        Position position = positionCompoundMapper.fromCompoundTag(tag.getCompoundOrEmpty(POSITION_KEY));
         return new Home(position);
     }
 

@@ -17,15 +17,15 @@ public class SetHomeAndWaypointsSavedDataMapper implements CompoundMapper<SetHom
 
     @Override
     public SetHomeAndWaypointsSavedData fromCompoundTag(CompoundTag tag) {
-        CompoundTag rawPlayerHomeAndWaypoints = tag.getCompound(SetHomeWaypoints.MOD_ID);
+        CompoundTag rawPlayerHomeAndWaypoints = tag.getCompoundOrEmpty(SetHomeWaypoints.MOD_ID);
 
         HashMap<UUID, PlayerHomeAndWaypoints> playersHomeAndWaypoints = new HashMap<>();
 
         rawPlayerHomeAndWaypoints
-                .getAllKeys()
+                .keySet()
                 .forEach(uuid -> playersHomeAndWaypoints.put(
                         UUID.fromString(uuid),
-                        playerHomeAndWaypointsMapper.fromCompoundTag(rawPlayerHomeAndWaypoints.getCompound(uuid))));
+                        playerHomeAndWaypointsMapper.fromCompoundTag(rawPlayerHomeAndWaypoints.getCompoundOrEmpty(uuid))));
 
         return new SetHomeAndWaypointsSavedData(playersHomeAndWaypoints);
     }
