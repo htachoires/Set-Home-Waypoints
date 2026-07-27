@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "shw",
+  "version": "${version}",
+  "name": "Set Home & Waypoints",
+  "description": "Set Home & Waypoints allows players to set a home and waypoints. The development was focused on user experience (autocomplete, key bind, command feedback, colors...).",
+  "authors": [
+    "DodgeMan_"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/set-home-waypoints",
+    "sources": "https://github.com/htachoires/Set-Home-Waypoints"
+  },
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.dodgeman.shw.fabric.SetHomeWaypointsFabric"
+    ],
+    "client": [
+      "com.dodgeman.shw.fabric.client.SetHomeWaypointsFabricClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "architectury": ">=9.0.0"
+  }
+}

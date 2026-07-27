@@ -1,13 +1,19 @@
 pluginManagement {
     repositories {
+        maven { name = "Architectury"; url = "https://maven.architectury.dev/" }
+        maven { name = "Fabric";       url = "https://maven.fabricmc.net/" }
+        maven { name = "Forge";        url = "https://maven.minecraftforge.net/" }
         gradlePluginPortal()
-        maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
-        }
+        mavenCentral()
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.8.0"
 }
+
+rootProject.name = "set-home-waypoints"
+
+include("common")
+include("fabric")
+include("forge")
