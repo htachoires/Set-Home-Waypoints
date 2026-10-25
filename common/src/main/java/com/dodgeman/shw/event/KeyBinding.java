@@ -4,7 +4,6 @@ import com.dodgeman.shw.SetHomeWaypoints;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Client-only key mapping. Loaded exclusively from the client entry points, never on a
@@ -20,6 +19,8 @@ public class KeyBinding {
     public static final KeyMapping.Category KEY_CATEGORY_GO_HOME =
             KeyMapping.Category.register(Identifier.fromNamespaceAndPath(SetHomeWaypoints.MOD_ID, "main"));
 
+    // MC 26.3 replaced GLFW with SDL3: Type.KEYSYM became Type.KEYBOARD and key codes now
+    // come from InputConstants.KEY_* instead of GLFW.GLFW_KEY_*.
     public static final KeyMapping GO_HOME_KEY = new KeyMapping(KEY_GO_HOME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, KEY_CATEGORY_GO_HOME);
+            InputConstants.Type.KEYBOARD, InputConstants.KEY_H, KEY_CATEGORY_GO_HOME);
 }
